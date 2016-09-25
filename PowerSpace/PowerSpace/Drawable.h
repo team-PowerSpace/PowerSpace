@@ -3,10 +3,10 @@
 
 class IDrawable {
 public:
-	virtual ~IDrawable() {}
+    virtual ~IDrawable() {}
 protected:
-	int id;
-	COLORREF color;
-	RECT position;
-	//transform;
+    int id;
+    COLORREF color;
+    RECT position;
+    //transform;
 };
