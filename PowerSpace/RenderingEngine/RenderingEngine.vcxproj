@@ -19,8 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{6D10274D-931C-4841-ADBD-0ED624920482}</ProjectGuid>
-    <RootNamespace>EventHandler</RootNamespace>
+    <ProjectGuid>{5474F267-19EB-43EF-BA44-4E644DD451C9}</ProjectGuid>
+    <RootNamespace>RenderingEngine</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />

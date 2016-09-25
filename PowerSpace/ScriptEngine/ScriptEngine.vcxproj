@@ -19,8 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{0140B5A7-8ACA-4522-A209-803BA1822A59}</ProjectGuid>
-    <RootNamespace>Viewer</RootNamespace>
+    <ProjectGuid>{12AEFC13-BDBE-48D8-8E50-90DAA97347FA}</ProjectGuid>
+    <RootNamespace>ScriptEngine</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
