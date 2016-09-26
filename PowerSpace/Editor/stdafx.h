@@ -1,19 +1,21 @@
+// stdafx.h: включаемый файл для стандартных системных включаемых файлов
+// или включаемых файлов для конкретного проекта, которые часто используются, но
+// не часто изменяются
+//
+
 #pragma once
 
-#define WIN32_LEAN_AND_MEAN     
-#include <windows.h>
-#include <CommCtrl.h>
+#include "targetver.h"
 
+#define WIN32_LEAN_AND_MEAN             // Исключите редко используемые компоненты из заголовков Windows
+// Файлы заголовков Windows:
+#include <windows.h>
+
+// Файлы заголовков C RunTime
 #include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
 
 
-#include <vector>
-#include <memory>
-#include <map>
-#include <string>
-#include <cmath>
-#include <algorithm>
-#include <sstream>
+// TODO: Установите здесь ссылки на дополнительные заголовки, требующиеся для программы
