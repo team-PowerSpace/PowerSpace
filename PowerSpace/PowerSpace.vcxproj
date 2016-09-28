@@ -141,12 +141,14 @@
   <ItemGroup>
     <ClInclude Include="Common\Drawable.h" />
     <ClInclude Include="Common\Script.h" />
+    <ClInclude Include="Editor.h" />
     <ClInclude Include="PowerSpace.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Editor.cpp" />
     <ClCompile Include="PowerSpace.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

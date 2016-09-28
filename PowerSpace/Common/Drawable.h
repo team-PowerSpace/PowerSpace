@@ -1,7 +1,8 @@
 #pragma once
 #include <Windows.h>
 
-class IDrawable {
+class IDrawable
+{
 public:
     virtual ~IDrawable() {}
 protected:

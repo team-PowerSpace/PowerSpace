@@ -80,6 +80,9 @@
     <ClInclude Include="Common\Drawable.h">
       <Filter>Common\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Editor.h">
+      <Filter>Editor\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -87,6 +90,9 @@
     </ClCompile>
     <ClCompile Include="PowerSpace.cpp">
       <Filter>Root\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor.cpp">
+      <Filter>Editor\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
