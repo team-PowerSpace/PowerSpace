@@ -62,9 +62,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h">
-      <Filter>Root\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>Root\Header Files</Filter>
     </ClInclude>
@@ -74,24 +71,57 @@
     <ClInclude Include="PowerSpace.h">
       <Filter>Root\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Common\Script.h">
-      <Filter>Common\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Common\Drawable.h">
       <Filter>Common\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Editor.h">
+    <ClInclude Include="Common\Script.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Root\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Canvas.h">
+      <Filter>Editor\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Stage.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\Editor.h">
+      <Filter>Editor\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptEngine\ScriptEngine.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewer\Viewer.h">
       <Filter>Editor\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Root\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="PowerSpace.cpp">
       <Filter>Root\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Editor.cpp">
+    <ClCompile Include="Common\Drawable.cpp">
+      <Filter>Common\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Script.cpp">
+      <Filter>Common\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Root\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Canvas.cpp">
+      <Filter>Editor\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Stage.cpp">
+      <Filter>Common\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\Editor.cpp">
+      <Filter>Editor\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptEngine\ScriptEngine.cpp">
+      <Filter>Common\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewer\Viewer.cpp">
       <Filter>Editor\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

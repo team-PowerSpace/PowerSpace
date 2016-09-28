@@ -12,10 +12,13 @@
 #include <windows.h>
 
 // C RunTime Header Files
-#include <stdlib.h>
 #include <malloc.h>
 #include <memory.h>
+#include <stdlib.h>
 #include <tchar.h>
 
-
-// TODO: reference additional headers your program requires here
+// C++ RunTime Header Files
+#include <algorithm>
+#include <string>
+#include <unordered_map>
+#include <vector>
