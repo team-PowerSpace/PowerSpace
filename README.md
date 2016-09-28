@@ -93,8 +93,8 @@ __Детали реализации проекта__
 
 - Все обсуждения по проекту надо записывать и оформлять на будущее.
 
-__Code Style__
-1. Необходимо применить к своему коду Code Style, описанный в файле SourceFormatStyle.vssettings:
-    1.1. импортировать в Visual Studio настройки через Tools -> Import and Export Settings
-    1.2. применить эти настройки ко всем файлам через Edit -> Advanced -> Format Document
+__Code Style__  
+1. Необходимо применить к своему коду Code Style, описанный в файле SourceFormatStyle.vssettings:  
+    1.1. импортировать в Visual Studio настройки через Tools -> Import and Export Settings  
+    1.2. применить эти настройки ко всем файлам через Edit -> Advanced -> Format Document  
 2. Все комментарии и коммит-сообщения должны быть на английском языке.
