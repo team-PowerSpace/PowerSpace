@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{862c59e9-02c6-4013-ae6b-bf83ac221ed9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RenderingEngine">
+      <UniqueIdentifier>{c54502de-d724-4128-b889-2ea0f1a8b501}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine">
+      <UniqueIdentifier>{48be583c-959d-4265-b0b9-b48180de823e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\Header Files">
+      <UniqueIdentifier>{e5bd29be-598f-4e33-a7be-e0f5f4c556e2}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Editor\Source Files">
+      <UniqueIdentifier>{a6538c26-851f-451d-b5ff-3c0952c2487c}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ScriptEngine\Header Files">
+      <UniqueIdentifier>{7ec588e0-a4ed-488f-a8e9-73dd3deb6c00}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="ScriptEngine\Source Files">
+      <UniqueIdentifier>{d8a68bc2-1549-4a81-8b23-727079508eaf}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="RenderingEngine\Header Files">
+      <UniqueIdentifier>{e385bc7e-0e65-49b5-916a-1ba92d2166a4}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="RenderingEngine\Source Files">
+      <UniqueIdentifier>{1d93dbfc-c062-4398-a948-b7909d4aed7b}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{848ab43a-f3f4-4f23-8b31-94784b87c238}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Header Files">
+      <UniqueIdentifier>{30d4d996-6a8d-4dd2-993d-f9a2ce3d32bb}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Common\Source Files">
+      <UniqueIdentifier>{3087bec9-8c28-4423-9ab1-d4fd957f1218}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Root">
+      <UniqueIdentifier>{f0742041-bc26-43c0-818a-75771f5bb68f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Root\Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Root\Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Root\Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Root\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Root\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Root\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PowerSpace.h">
+      <Filter>Root\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Script.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Drawable.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Root\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PowerSpace.cpp">
+      <Filter>Root\Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="PowerSpace.rc">
+      <Filter>Root\Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>Root\Resource Files</Filter>
+    </Image>
+    <Image Include="PowerSpace.ico">
+      <Filter>Root\Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
