@@ -38,17 +38,7 @@ void CDrawable::AddScript( EventType eventType, CScript script )
     scripts[eventType].push_back( script );
 }
 
-const std::vector<CScript>& CDrawable::GetScripts( EventType eventType ) const
-{
-    std::vector<CScript> result;
-    auto scriptsIt = scripts.find( eventType );
-    if( scriptsIt != scripts.end() ) {
-        result = scriptsIt->second;
-    }
-    return result;
-}
-
-std::vector<CScript> CDrawable::GetScripts( EventType eventType )
+const std::vector<CScript>& CDrawable::GetScripts( EventType eventType )
 {
     return scripts[eventType];
 }

@@ -13,10 +13,10 @@ enum class EventType
 class CScript
 {
 public:
-    CScript( TPath _path );
+    explicit CScript( TPath _path );
 
     // returns path to the file with python script
-    TPath GetPath() const;
+    const TPath& GetPath() const;
 private:
     TPath path;
 };

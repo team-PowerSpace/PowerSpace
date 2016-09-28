@@ -1,8 +1,12 @@
 #pragma once
 #include "Script.h"
 
+class IDrawable;
+
 // this type represents logical position of an object on the stage
 using TPosition = RECT;
+using IDrawablePtr = std::shared_ptr<IDrawable>;
+using IDrawablePtrConst = std::shared_ptr<const IDrawable>;
 
 // this interface describes functional of every object that can be drawn on canvas
 class IDrawable
@@ -46,8 +50,7 @@ public:
     void AddScript( EventType eventType, CScript script );
 
     // getters for scripts field
-    const std::vector<CScript>& GetScripts( EventType eventType ) const;
-    std::vector<CScript> GetScripts( EventType eventType );
+    const std::vector<CScript>& GetScripts( EventType eventType );
 protected:
     // a unique identifier linked to the object
     int id;

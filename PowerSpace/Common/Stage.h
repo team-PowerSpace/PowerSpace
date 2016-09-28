@@ -7,13 +7,13 @@ class CStage
 {
 public:
     // getters of objects field
-    const std::unordered_map<int, IDrawable>& GetObjects() const;
-    std::unordered_map<int, IDrawable> GetObjects();
+    const std::unordered_map<int, IDrawablePtr>& CStage::GetObjects() const;
+    std::unordered_map<int, IDrawablePtr> GetObjects();
 
     // get object by its id
-    const IDrawable& GetObject( int objectId ) const;
-    IDrawable& GetObject( int objectId );
+    IDrawablePtrConst GetObjectById( int objectId ) const;
+    IDrawablePtr GetObjectById( int objectId );
 private:
     // vector of all the objects that were created on canvas
-    std::unordered_map<int, IDrawable> objects;
+    std::unordered_map<int, IDrawablePtr> objects;
 };

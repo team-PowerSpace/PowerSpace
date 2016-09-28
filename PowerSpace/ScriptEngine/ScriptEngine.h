@@ -5,7 +5,7 @@
 class CScriptEngine
 {
 public:
-    CScriptEngine( CStage& _stage );
+    explicit CScriptEngine( CStage& _stage );
 
     // evaluates python scripts from "scripts", modifying the stage;
     // objectId - id of the object, which caused the event

@@ -2,22 +2,22 @@
 #include "Stage.h"
 
 
-const std::unordered_map<int, IDrawable>& CStage::GetObjects() const
+const std::unordered_map<int, IDrawablePtr>& CStage::GetObjects() const
 {
     return objects;
 }
 
-std::unordered_map<int, IDrawable> CStage::GetObjects()
+std::unordered_map<int, IDrawablePtr> CStage::GetObjects()
 {
-    return const_cast<std::unordered_map<int, IDrawable>&>(static_cast<const CStage&>(*this).GetObjects());
+    return const_cast<std::unordered_map<int, IDrawablePtr>&>(static_cast<const CStage&>(*this).GetObjects());
 }
 
-const IDrawable& CStage::GetObject( int objectId ) const
+IDrawablePtrConst CStage::GetObjectById( int objectId ) const
 {
     return objects.at( objectId );
 }
 
-IDrawable& CStage::GetObject( int objectId )
+IDrawablePtr CStage::GetObjectById( int objectId )
 {
-    return const_cast<IDrawable&>(static_cast<const CStage&>(*this).GetObject( objectId ));
+    return objects.at( objectId );
 }
