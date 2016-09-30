@@ -8,7 +8,7 @@ class CStage
 public:
     // getters of objects field
     const std::unordered_map<int, IDrawablePtr>& CStage::GetObjects() const;
-    std::unordered_map<int, IDrawablePtr> GetObjects();
+    std::unordered_map<int, IDrawablePtr>& GetObjects();
 
     // get object by its id
     IDrawablePtrConst GetObjectById( int objectId ) const;
