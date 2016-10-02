@@ -95,6 +95,9 @@
     <ClInclude Include="Viewer\Viewer.h">
       <Filter>Editor\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Editor\RenderingWindow.h">
+      <Filter>Editor\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PowerSpace.cpp">
@@ -122,6 +125,9 @@
       <Filter>Common\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Viewer\Viewer.cpp">
+      <Filter>Editor\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\RenderingWindow.cpp">
       <Filter>Editor\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
