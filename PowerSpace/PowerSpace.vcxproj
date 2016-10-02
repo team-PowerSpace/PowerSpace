@@ -146,6 +146,7 @@
     <ClInclude Include="Common\Canvas.h" />
     <ClInclude Include="Common\Drawable.h" />
     <ClInclude Include="Editor\Editor.h" />
+    <ClInclude Include="Editor\EditorWindow.h" />
     <ClInclude Include="Editor\RenderingWindow.h" />
     <ClInclude Include="PowerSpace.h" />
     <ClInclude Include="Resource.h" />
@@ -169,6 +170,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="Editor\EditorWindow.cpp" />
     <ClCompile Include="Editor\RenderingWindow.cpp" />
     <ClCompile Include="PowerSpace.cpp" />
     <ClCompile Include="Common\Script.cpp">

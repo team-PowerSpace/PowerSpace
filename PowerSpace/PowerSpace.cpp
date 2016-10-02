@@ -1,15 +1,15 @@
 #include "stdafx.h"
-#include "Editor\RenderingWindow.h"
+#include "Editor\EditorWindow.h"
 
 
 #pragma warning(push)
 #pragma warning(disable:4100)
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
 {
-	if( !CRenderingWindow::RegisterClass() ) {
+	if( !CEditorWindow::RegisterClass() ) {
 		return 1;
 	}
-	CRenderingWindow window;
+	CEditorWindow window;
 	if( !window.Create() ) {
 		return 3;
 	}
