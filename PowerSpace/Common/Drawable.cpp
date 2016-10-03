@@ -1,4 +1,4 @@
-#include "../stdafx.h"
+#include "stdafx.h"
 #include "Drawable.h"
 
 int CDrawable::maxId = 0;

@@ -1,4 +1,4 @@
-#include "../stdafx.h"
+#include "stdafx.h"
 #include "Script.h"
 
 CScript::CScript( TPath _path )
