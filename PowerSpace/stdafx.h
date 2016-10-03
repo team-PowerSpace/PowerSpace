@@ -7,8 +7,8 @@
 
 #include "targetver.h"
 
+#define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers
 // Windows Header Files:
-#define OEMRESOURCE 
 #include <windows.h>
 
 // C RunTime Header Files
@@ -16,7 +16,6 @@
 #include <memory.h>
 #include <stdlib.h>
 #include <tchar.h>
-#include <cassert>
 
 // C++ RunTime Header Files
 #include <algorithm>

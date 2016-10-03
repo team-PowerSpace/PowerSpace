@@ -89,7 +89,6 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)\Common;$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -146,8 +145,6 @@
     <ClInclude Include="Common\Canvas.h" />
     <ClInclude Include="Common\Drawable.h" />
     <ClInclude Include="Editor\Editor.h" />
-    <ClInclude Include="Editor\EditorWindow.h" />
-    <ClInclude Include="Editor\RenderingWindow.h" />
     <ClInclude Include="PowerSpace.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Common\Script.h" />
@@ -170,8 +167,6 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="Editor\EditorWindow.cpp" />
-    <ClCompile Include="Editor\RenderingWindow.cpp" />
     <ClCompile Include="PowerSpace.cpp" />
     <ClCompile Include="Common\Script.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../stdafx.h</PrecompiledHeaderFile>
