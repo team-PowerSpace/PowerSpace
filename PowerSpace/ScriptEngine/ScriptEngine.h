@@ -1,5 +1,5 @@
 #pragma once
-#include "Stage.h"
+#include "../Common/Stage.h"
 
 // this class processes python scripts and changes the stage
 class CScriptEngine
