@@ -1,4 +1,4 @@
-// PowerSpace.cpp : Defines the entry point for the application.
+Ôªø// PowerSpace.cpp : Defines the entry point for the application.
 //
 
 #include <stdafx.h>
@@ -152,7 +152,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
             CEllipseObject ellipse( RGB( 255, 0, 255 ), RECT{ 100, 100, 190, 190 } );
             ellipse.Draw( hdc, viewport, canvas );
 
-            CTextBoxObject textBox( RGB( 0, 255, 255 ), RECT{ 200, 200, 390, 390 }, L"œ–»¬≈“, Ã»–!" );
+            CTextBoxObject textBox( RGB( 0, 255, 255 ), RECT{ 200, 200, 390, 390 }, L"–ü–†–ò–í–ï–¢, –ú–ò–†!" );
             textBox.Draw( hdc, viewport, canvas );
         }
 
