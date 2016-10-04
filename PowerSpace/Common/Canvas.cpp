@@ -3,25 +3,24 @@
 
 void CCanvas::DrawRectangle( HDC hdc, TBox box, COLORREF color ) const
 {
-    // TODO: implement this method
-    UNREFERENCED_PARAMETER( hdc );
-    UNREFERENCED_PARAMETER( box );
-    UNREFERENCED_PARAMETER( color );
+    HBRUSH brush = ::CreateSolidBrush( color );
+    ::FillRect( hdc, &box, brush );
+    ::DeleteObject( brush );
 }
 
 void CCanvas::DrawEllipse( HDC hdc, TBox box, COLORREF color ) const
 {
-    // TODO: implement this method
-    UNREFERENCED_PARAMETER( hdc );
-    UNREFERENCED_PARAMETER( box );
-    UNREFERENCED_PARAMETER( color );
+    HBRUSH brush = ::CreateSolidBrush( color );
+    HBRUSH brushOld = static_cast<HBRUSH>(::SelectObject( hdc, brush ));
+    ::Ellipse( hdc, box.left, box.top, box.right, box.bottom );
+    ::SelectObject( hdc, brushOld );
+    ::DeleteObject( brush );
 }
 
-void CCanvas::DrawTextBox( HDC hdc, TBox box, COLORREF color ) const
+void CCanvas::DrawTextBox( HDC hdc, TBox box, COLORREF color, const std::wstring& text, UINT format ) const
 {
-    // TODO: implement this method
-    UNREFERENCED_PARAMETER( hdc );
-    UNREFERENCED_PARAMETER( box );
-    UNREFERENCED_PARAMETER( color );
+    COLORREF colorOld = ::SetTextColor( hdc, color );
+    ::DrawText( hdc, text.c_str(), -1, &box, format );
+    ::SetTextColor( hdc, colorOld );
 }
 
