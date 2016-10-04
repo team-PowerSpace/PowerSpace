@@ -1,7 +1,6 @@
 #include <stdafx.h>
 #include "Viewport.h"
 
-
 std::vector<int> CViewport::ClipObjects( const std::vector<IDrawablePtrConst>& objects ) const
 {
     // TODO: implement this method
@@ -9,10 +8,8 @@ std::vector<int> CViewport::ClipObjects( const std::vector<IDrawablePtrConst>& o
     return std::vector<int>();
 }
 
-RECT CViewport::ConvertToCoordinates( TPosition logicalPosition ) const
+TBox CViewport::ConvertToCoordinates( TBox box ) const
 {
     // TODO: implement this method
-    UNREFERENCED_PARAMETER( logicalPosition );
-    RECT rect = {};
-    return rect;
+    return box;
 }

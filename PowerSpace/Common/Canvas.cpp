@@ -1,24 +1,27 @@
 #include <stdafx.h>
 #include "Canvas.h"
 
-void CCanvas::DrawRectangle( HDC hdc, IDrawablePtrConst rectangle ) const
+void CCanvas::DrawRectangle( HDC hdc, TBox box, COLORREF color ) const
 {
     // TODO: implement this method
     UNREFERENCED_PARAMETER( hdc );
-    UNREFERENCED_PARAMETER( rectangle );
+    UNREFERENCED_PARAMETER( box );
+    UNREFERENCED_PARAMETER( color );
 }
 
-void CCanvas::DrawCircle( HDC hdc, IDrawablePtrConst circle ) const
+void CCanvas::DrawEllipse( HDC hdc, TBox box, COLORREF color ) const
 {
     // TODO: implement this method
     UNREFERENCED_PARAMETER( hdc );
-    UNREFERENCED_PARAMETER( circle );
+    UNREFERENCED_PARAMETER( box );
+    UNREFERENCED_PARAMETER( color );
 }
 
-void CCanvas::DrawText( HDC hdc, IDrawablePtrConst text ) const
+void CCanvas::DrawTextBox( HDC hdc, TBox box, COLORREF color ) const
 {
     // TODO: implement this method
     UNREFERENCED_PARAMETER( hdc );
-    UNREFERENCED_PARAMETER( text );
+    UNREFERENCED_PARAMETER( box );
+    UNREFERENCED_PARAMETER( color );
 }
 

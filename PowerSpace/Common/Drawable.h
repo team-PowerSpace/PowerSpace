@@ -6,7 +6,7 @@ class CViewport;
 class IDrawable;
 
 // this type represents logical position of an object on the stage
-using TPosition = RECT;
+using TBox = RECT;
 using IDrawablePtr = std::shared_ptr<IDrawable>;
 using IDrawablePtrConst = std::shared_ptr<const IDrawable>;
 
@@ -19,9 +19,9 @@ public:
     // returns a unique identifier linked to the object
     virtual int GetId() const = 0;
 
-    // getter and setter for position field
-    virtual TPosition GetPosition() const = 0;
-    virtual void SetPosition( TPosition poisition ) = 0;
+    // getter and setter for containingBox field
+    virtual TBox GetContainingBox() const = 0;
+    virtual void SetContainingBox( TBox box ) = 0;
 
     // getter and setter for color field
     virtual COLORREF GetColor() const = 0;
@@ -35,13 +35,13 @@ public:
 class CDrawable : public IDrawable
 {
 public:
-    CDrawable( COLORREF _color, TPosition _position );
+    CDrawable( COLORREF _color, TBox _box );
     virtual ~CDrawable() {}
 
     int GetId() const;
 
-    TPosition GetPosition() const;
-    void SetPosition( TPosition newPosition );
+    TBox GetContainingBox() const;
+    void SetContainingBox( TBox newPosition );
 
     COLORREF GetColor() const;
     void SetColor( COLORREF newColor );
@@ -60,8 +60,8 @@ protected:
     // color of the object
     COLORREF color;
 
-    // logical position of the object on stage
-    TPosition position;
+    // the rectangle (position and size) that contains the object on stage
+    TBox containingBox;
 
     // maps event type to a list of scripts that are linked to the object;
     // this map supports the idea that an object can have multiple scripts attached to an event type

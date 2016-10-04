@@ -3,8 +3,8 @@
 
 int CDrawable::maxId = 0;
 
-CDrawable::CDrawable( COLORREF _color, TPosition _position )
-    : color( _color ), position( _position )
+CDrawable::CDrawable( COLORREF _color, TBox _box )
+    : color( _color ), containingBox( _box )
 {
     id = generateNewId();
 }
@@ -14,13 +14,14 @@ int CDrawable::GetId() const
     return id;
 }
 
-TPosition CDrawable::GetPosition() const
+TBox CDrawable::GetContainingBox() const
 {
-    return position;
+    return containingBox;
 }
-void CDrawable::SetPosition( TPosition newPosition )
+
+void CDrawable::SetContainingBox( TBox newBox )
 {
-    position = newPosition;
+    containingBox = newBox;
 }
 
 COLORREF CDrawable::GetColor() const

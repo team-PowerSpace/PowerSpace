@@ -1,7 +1,6 @@
 #include <stdafx.h>
 #include "Stage.h"
 
-
 const std::unordered_map<int, IDrawablePtr>& CStage::GetObjects() const
 {
     return objects;

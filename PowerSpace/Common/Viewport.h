@@ -12,6 +12,6 @@ public:
 
     // converts logical coordinates (i.e. coordinates on stage) of an object 
     // to real coordinates (i.e. coordinates on canvas)
-    RECT ConvertToCoordinates( TPosition logicalPosition ) const;
+    TBox ConvertToCoordinates( TBox box ) const;
 };
 

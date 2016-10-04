@@ -6,14 +6,14 @@ class CCanvas
 public:
     // draws rectangle on canvas
     // TODO: replace IDrawable with the class that implements IDrawable
-    void DrawRectangle( HDC hdc, IDrawablePtrConst rectangle ) const;
+    void DrawRectangle( HDC hdc, TBox box, COLORREF color ) const;
 
     // draws circle on canvas
     // TODO: replace IDrawable with the class that implements IDrawable
-    void DrawCircle( HDC hdc, IDrawablePtrConst circle ) const;
+    void DrawEllipse( HDC hdc, TBox box, COLORREF color ) const;
 
     // draws text on canvas
     // TODO: replace IDrawable with the class that implements IDrawable
-    void DrawText( HDC hdc, IDrawablePtrConst text ) const;
+    void DrawTextBox( HDC hdc, TBox box, COLORREF color ) const;
 };
 

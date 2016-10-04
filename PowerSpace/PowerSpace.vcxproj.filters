@@ -98,6 +98,9 @@
     <ClInclude Include="Common\Viewport.h">
       <Filter>Common\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Common\StageObjects.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PowerSpace.cpp">
@@ -128,6 +131,9 @@
       <Filter>RenderingEngine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Common\Viewport.cpp">
+      <Filter>Common\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\StageObjects.cpp">
       <Filter>Common\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
