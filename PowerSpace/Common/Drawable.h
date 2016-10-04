@@ -1,6 +1,8 @@
 #pragma once
 #include "Script.h"
 
+class CCanvas;
+class CViewport;
 class IDrawable;
 
 // this type represents logical position of an object on the stage
@@ -26,7 +28,7 @@ public:
     virtual void SetColor( COLORREF color ) = 0;
 
     // draws object on canvas
-    virtual void Draw( HDC hdc ) const = 0;
+    virtual void Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const = 0;
 };
 
 // this abstract class should be the base class for every object that can be drawn on the stage
@@ -44,7 +46,7 @@ public:
     COLORREF GetColor() const;
     void SetColor( COLORREF newColor );
 
-    virtual void Draw( HDC hdc ) const = 0;
+    virtual void Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const = 0;
 
     // links new script to the object
     void AddScript( EventType eventType, CScript script );
