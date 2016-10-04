@@ -17,6 +17,6 @@ CPyObjectBuilder::CPyObjectBuilder(std::shared_ptr<IDrawable> object) {
 	}
 }
 
-PyObject* CPyObjectBuilder::GetpObject() {
+std::shared_ptr<PyObject> CPyObjectBuilder::GetpObject() {
 	return pObject;
 }

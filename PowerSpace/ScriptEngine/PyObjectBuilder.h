@@ -6,7 +6,7 @@
 class CPyObjectBuilder {
 public:
 	CPyObjectBuilder(std::shared_ptr<IDrawable> object);
-	PyObject* GetpObject();
+	std::shared_ptr<PyObject> GetpObject();
 private:
-	PyObject* pObject;
+	std::shared_ptr<PyObject> pObject;
 };

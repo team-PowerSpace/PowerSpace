@@ -95,13 +95,13 @@
     <ClInclude Include="Viewer\Viewer.h">
       <Filter>Editor\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ScriptEngine\ScriptSolverr.h">
-      <Filter>ScriptEngine\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ScriptEngine\PyObjectBuilder.h">
       <Filter>ScriptEngine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ScriptEngine\CDrawableBuilder.h">
+      <Filter>ScriptEngine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptEngine\ScriptSolver.h">
       <Filter>ScriptEngine\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
