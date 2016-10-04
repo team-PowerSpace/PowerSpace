@@ -1,5 +1,5 @@
 #pragma once
-#include "../Common/Stage.h"
+#include "Stage.h"
 
 class CViewer
 {
