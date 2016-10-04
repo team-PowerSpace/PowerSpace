@@ -14,6 +14,6 @@ std::vector<int> CViewport::ClipObjects( const std::vector<IDrawablePtrConst>& o
 
 TBox CViewport::ConvertToCoordinates( TBox box ) const
 {
-    // TODO: implement this method
+    // TODO: implement this method, now it returns box
     return box;
 }

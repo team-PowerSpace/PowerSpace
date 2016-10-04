@@ -141,7 +141,21 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
         PAINTSTRUCT ps;
         HDC hdc = BeginPaint( hWnd, &ps );
         // TODO: Add any drawing code that uses hdc here...
-        UNREFERENCED_PARAMETER( hdc );
+        // TODO: Remove this test and implement useful stuff
+        { // simple testing of CCanvas
+            CViewport viewport;
+            CCanvas canvas;
+
+            CRectangleObject rectangle( RGB( 255, 255, 0 ), RECT{ 10, 10, 90, 90 } );
+            rectangle.Draw( hdc, viewport, canvas );
+
+            CEllipseObject ellipse( RGB( 255, 0, 255 ), RECT{ 100, 100, 190, 190 } );
+            ellipse.Draw( hdc, viewport, canvas );
+
+            CTextBoxObject textBox( RGB( 0, 255, 255 ), RECT{ 200, 200, 390, 390 }, L"œ–»¬≈“, Ã»–!" );
+            textBox.Draw( hdc, viewport, canvas );
+        }
+
         EndPaint( hWnd, &ps );
     }
     break;
