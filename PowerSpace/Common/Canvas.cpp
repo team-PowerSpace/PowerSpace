@@ -1,4 +1,4 @@
-#include "../stdafx.h"
+#include <stdafx.h>
 #include "Canvas.h"
 
 void CCanvas::DrawRectangle( HDC hdc, IDrawablePtrConst rectangle ) const
