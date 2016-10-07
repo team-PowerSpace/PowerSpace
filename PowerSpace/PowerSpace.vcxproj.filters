@@ -101,6 +101,12 @@
     <ClInclude Include="Common\StageObjects.h">
       <Filter>Common\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Editor\RenderingWindow.h">
+      <Filter>Editor\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorWindow.h">
+      <Filter>Editor\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PowerSpace.cpp">
@@ -135,6 +141,12 @@
     </ClCompile>
     <ClCompile Include="Common\StageObjects.cpp">
       <Filter>Common\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\RenderingWindow.cpp">
+      <Filter>Editor\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditorWindow.cpp">
+      <Filter>Editor\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
