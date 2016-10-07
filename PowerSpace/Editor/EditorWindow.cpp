@@ -52,7 +52,7 @@ void CEditorWindow::DrawContent( HDC paintDC, const int width, const int height 
 
 bool CEditorWindow::Create()
 {
-	return CRenderingWindow::Create( ClassName );
+	return CEditorRenderingWindow::Create( ClassName );
 }
 
 const wchar_t* CEditorWindow::ClassName = L"CEditorWindow";

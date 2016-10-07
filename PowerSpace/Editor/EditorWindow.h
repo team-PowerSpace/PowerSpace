@@ -1,5 +1,5 @@
 #pragma once
-#include "RenderingWindow.h"
+#include "EditorRenderingWindow.h"
 #include "Stage.h"
 #include "Resource.h"
 
@@ -8,7 +8,7 @@
 // CEditorWindow is business-logic (mostly), work with model coordinates
 
 class CEditorWindow :
-	public CRenderingWindow {
+	public CEditorRenderingWindow {
 public:
 	CEditorWindow();
 

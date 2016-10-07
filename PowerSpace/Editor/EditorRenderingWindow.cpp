@@ -1,33 +1,33 @@
 #include <stdafx.h>
-#include "RenderingWindow.h"
+#include "EditorRenderingWindow.h"
 #include "Resource.h"
 #include <Winuser.h>
 
 #define MAX_RESOURCE_LENGTH 100
 
-CRenderingWindow::CRenderingWindow() :
+CEditorRenderingWindow::CEditorRenderingWindow() :
 	bitmap( 0 ), bitmapContext( 0 ), bitmapHeight( 1 ), bitmapWidth( 1 ), backgroundBrush( 0 ),
 	markerBrush( 0 ), markerPen( 0 )
 {
 }
 
-CRenderingWindow::~CRenderingWindow()
+CEditorRenderingWindow::~CEditorRenderingWindow()
 {
 	// This destructor is virtual thats why it is essential to create this code 
 }
 
 
-void CRenderingWindow::Show() const
+void CEditorRenderingWindow::Show() const
 {
 	::ShowWindow( handle, SW_MAXIMIZE );
 }
 
-HWND CRenderingWindow::GetHandle() const
+HWND CEditorRenderingWindow::GetHandle() const
 {
 	return handle;
 }
 
-bool CRenderingWindow::Create( const wchar_t * classname )
+bool CEditorRenderingWindow::Create( const wchar_t * classname )
 {
 	HINSTANCE instance = GetModuleHandleW( nullptr );
 	wchar_t title[MAX_RESOURCE_LENGTH];
@@ -43,7 +43,7 @@ bool CRenderingWindow::Create( const wchar_t * classname )
 	return (handle != 0);
 }
 
-void CRenderingWindow::OnDestroy()
+void CEditorRenderingWindow::OnDestroy()
 {
 	destroyDoubleBuffer();
 	::DeleteObject( backgroundBrush );
@@ -53,13 +53,13 @@ void CRenderingWindow::OnDestroy()
 	::PostQuitMessage( 0 );
 }
 
-const int CRenderingWindow::DefaultHeight = 600;
-const int CRenderingWindow::DefaultWidth = 1000;
-const int CRenderingWindow::MarkerHalfSize = 5;
-const COLORREF CRenderingWindow::BackgroundColor = RGB( 255, 255, 255 );
-const COLORREF CRenderingWindow::MarkerColor = RGB( 0, 0, 255 );
+const int CEditorRenderingWindow::DefaultHeight = 600;
+const int CEditorRenderingWindow::DefaultWidth = 1000;
+const int CEditorRenderingWindow::MarkerHalfSize = 5;
+const COLORREF CEditorRenderingWindow::BackgroundColor = RGB( 255, 255, 255 );
+const COLORREF CEditorRenderingWindow::MarkerColor = RGB( 0, 0, 255 );
 
-LRESULT CRenderingWindow::WindowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam )
+LRESULT CEditorRenderingWindow::WindowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam )
 {
 	if( message == WM_NCCREATE ) {
 		SetWindowLongPtr( handle, 0, reinterpret_cast<LONG_PTR>(
@@ -67,7 +67,7 @@ LRESULT CRenderingWindow::WindowProc( HWND handle, UINT message, WPARAM wParam, 
 		return DefWindowProc( handle, message, wParam, lParam );
 	}
 
-	CRenderingWindow* wndPtr = reinterpret_cast<CRenderingWindow*>(GetWindowLongPtr( handle, 0 ));
+	CEditorRenderingWindow* wndPtr = reinterpret_cast<CEditorRenderingWindow*>(GetWindowLongPtr( handle, 0 ));
 	LRESULT result;
 	switch( message ) {
 		case WM_DESTROY:
@@ -107,7 +107,7 @@ LRESULT CRenderingWindow::WindowProc( HWND handle, UINT message, WPARAM wParam, 
 
 }
 
-void CRenderingWindow::onPaint()
+void CEditorRenderingWindow::onPaint()
 {
 	PAINTSTRUCT paintStruct;
 	HDC paintDC = ::BeginPaint( handle, &paintStruct );
@@ -134,7 +134,7 @@ void CRenderingWindow::onPaint()
 
 #pragma warning(push)
 #pragma warning(disable:4100)
-void CRenderingWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
+void CEditorRenderingWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 {
 	// TODO: impliment this
 	// Planned functions:
@@ -144,7 +144,7 @@ void CRenderingWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 }
 #pragma warning (pop)
 
-void CRenderingWindow::onResize( const RECT * area )
+void CEditorRenderingWindow::onResize( const RECT * area )
 {
 	destroyDoubleBuffer();
 	HDC tmp = GetDC( handle );
@@ -159,7 +159,7 @@ void CRenderingWindow::onResize( const RECT * area )
 	ReleaseDC( handle, tmp );
 }
 
-void CRenderingWindow::drawEraseRectangle( HDC paintDC, const int width, const int height ) const
+void CEditorRenderingWindow::drawEraseRectangle( HDC paintDC, const int width, const int height ) const
 {
 	RECT clientContext;
 	clientContext.bottom = height;
@@ -169,7 +169,7 @@ void CRenderingWindow::drawEraseRectangle( HDC paintDC, const int width, const i
 	FillRect( paintDC, &clientContext, backgroundBrush );
 }
 
-void CRenderingWindow::DrawSizeableRectangle( HDC paintDC, const RECT & rectangle, const int id )
+void CEditorRenderingWindow::DrawSizeableRectangle( HDC paintDC, const RECT & rectangle, const int id )
 {
 	::Rectangle( paintDC, rectangle.left, rectangle.top, rectangle.right, rectangle.bottom );
 
@@ -180,7 +180,7 @@ void CRenderingWindow::DrawSizeableRectangle( HDC paintDC, const RECT & rectangl
 		rectangle.top - rectangle.bottom, id );
 }
 
-void CRenderingWindow::addMarkersForRectangle( HDC paintDC, const int x, const  int y, const int width, const  int height, const int id )
+void CEditorRenderingWindow::addMarkersForRectangle( HDC paintDC, const int x, const  int y, const int width, const  int height, const int id )
 {
 	addMarker( paintDC, x, y, MarkerType::LeftTop, id );
 	addMarker( paintDC, x + width / 2, y, MarkerType::Top, id );
@@ -193,7 +193,7 @@ void CRenderingWindow::addMarkersForRectangle( HDC paintDC, const int x, const  
 }
 
 
-void  CRenderingWindow::addMarker( HDC paintDC, const int x, const int y, const MarkerType type, const int id )
+void  CEditorRenderingWindow::addMarker( HDC paintDC, const int x, const int y, const MarkerType type, const int id )
 {
 	RECT location;
 	location.left = x - MarkerHalfSize;
@@ -204,7 +204,7 @@ void  CRenderingWindow::addMarker( HDC paintDC, const int x, const int y, const 
 	markers.emplace_back( location, type, id );
 }
 
-void CRenderingWindow::destroyDoubleBuffer()
+void CEditorRenderingWindow::destroyDoubleBuffer()
 {
 	if( (bitmapContext != 0) || (bitmap != 0) ) {
 		DeleteDC( bitmapContext );

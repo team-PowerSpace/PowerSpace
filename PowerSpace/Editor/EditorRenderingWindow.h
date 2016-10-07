@@ -22,10 +22,10 @@ private:
 	int id;
 };
 
-class CRenderingWindow {
+class CEditorRenderingWindow {
 public:
-	CRenderingWindow();
-	virtual ~CRenderingWindow();
+	CEditorRenderingWindow();
+	virtual ~CEditorRenderingWindow();
 
 	void Show() const;
 
