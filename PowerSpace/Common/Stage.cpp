@@ -7,7 +7,7 @@ const std::unordered_map<int, IDrawablePtr>& CStage::GetObjects() const
     return objects;
 }
 
-std::unordered_map<int, IDrawablePtr> CStage::GetObjects()
+std::unordered_map<int, IDrawablePtr>& CStage::GetObjects()
 {
     return const_cast<std::unordered_map<int, IDrawablePtr>&>(static_cast<const CStage&>(*this).GetObjects());
 }

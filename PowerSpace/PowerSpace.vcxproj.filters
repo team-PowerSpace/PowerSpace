@@ -80,20 +80,20 @@
     <ClInclude Include="stdafx.h">
       <Filter>Root\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Common\Canvas.h">
-      <Filter>Editor\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Common\Stage.h">
       <Filter>Common\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Editor\Editor.h">
       <Filter>Editor\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ScriptEngine\ScriptEngine.h">
+    <ClInclude Include="Common\Canvas.h">
       <Filter>Common\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ScriptEngine\ScriptEngine.h">
+      <Filter>ScriptEngine\Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="Viewer\Viewer.h">
-      <Filter>Editor\Header Files</Filter>
+      <Filter>RenderingEngine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ScriptEngine\PyObjectBuilder.h">
       <Filter>ScriptEngine\Header Files</Filter>
@@ -118,20 +118,20 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Root\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Common\Canvas.cpp">
-      <Filter>Editor\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Common\Stage.cpp">
       <Filter>Common\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Editor\Editor.cpp">
       <Filter>Editor\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ScriptEngine\ScriptEngine.cpp">
+    <ClCompile Include="Common\Canvas.cpp">
       <Filter>Common\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ScriptEngine\ScriptEngine.cpp">
+      <Filter>ScriptEngine\Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Viewer\Viewer.cpp">
-      <Filter>Editor\Source Files</Filter>
+      <Filter>RenderingEngine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ScriptEngine\ScriptSolver.cpp">
       <Filter>ScriptEngine\Source Files</Filter>
