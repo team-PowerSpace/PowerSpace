@@ -29,7 +29,7 @@ bool CEditorWindow::RegisterClass()
 	WNDCLASSEX windowClassInforamtion;
 	windowClassInforamtion.cbSize = sizeof( WNDCLASSEX );
 	windowClassInforamtion.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
-	windowClassInforamtion.lpfnWndProc = windowProc;
+	windowClassInforamtion.lpfnWndProc = WindowProc;
 	windowClassInforamtion.cbClsExtra = 0;
 	windowClassInforamtion.cbWndExtra = 2 * sizeof( LONG_PTR );
 	windowClassInforamtion.hInstance = instance;
@@ -43,7 +43,7 @@ bool CEditorWindow::RegisterClass()
 	return (::RegisterClassEx( &windowClassInforamtion ) == 0 ? false : true);
 }
 
-void CEditorWindow::drawContent( HDC paintDC, const int width, const int height )
+void CEditorWindow::DrawContent( HDC paintDC, const int width, const int height )
 {
 	UNREFERENCED_PARAMETER( paintDC );
 	UNREFERENCED_PARAMETER( width );

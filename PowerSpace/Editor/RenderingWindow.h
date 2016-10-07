@@ -36,9 +36,9 @@ protected:
 
 	void OnDestroy();
 
-	virtual void drawContent( HDC paintDC, const int width, const int height ) = 0;
+	virtual void DrawContent( HDC paintDC, const int width, const int height ) = 0;
 
-	static LRESULT __stdcall windowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
+	static LRESULT __stdcall WindowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
 
 	// This metod should be calles in heir-class to draw frame and sizeable marker.
 	// Rectangle is stored in this class for moving and sizing.
@@ -78,9 +78,9 @@ private:
 	void drawEraseRectangle( HDC paintDC, const int width, const int height ) const;
 
 
-	void AddMarkersForRectangle( HDC paintDC, const int x, const int y, const int width, const int height, const int id );
+	void addMarkersForRectangle( HDC paintDC, const int x, const int y, const int width, const int height, const int id );
 
-	void AddMarker( HDC paintDC, const int x, const int y, const MarkerType type, const int id );
+	void addMarker( HDC paintDC, const int x, const int y, const MarkerType type, const int id );
 
 	void destroyDoubleBuffer();
 

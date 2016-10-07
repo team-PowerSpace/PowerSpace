@@ -59,7 +59,7 @@ const int CRenderingWindow::MarkerHalfSize = 5;
 const COLORREF CRenderingWindow::BackgroundColor = RGB( 255, 255, 255 );
 const COLORREF CRenderingWindow::MarkerColor = RGB( 0, 0, 255 );
 
-LRESULT CRenderingWindow::windowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam )
+LRESULT CRenderingWindow::WindowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam )
 {
 	if( message == WM_NCCREATE ) {
 		SetWindowLongPtr( handle, 0, reinterpret_cast<LONG_PTR>(
@@ -120,7 +120,7 @@ void CRenderingWindow::onPaint()
 	rectanglesIds.clear();
 	rectangles.clear();
 	markers.clear();
-	drawContent( bitmapContext, bitmapWidth, bitmapHeight );
+	DrawContent( bitmapContext, bitmapWidth, bitmapHeight );
 
 
 	BOOL code = BitBlt( paintDC, 0, 0, bitmapWidth, bitmapHeight, bitmapContext, 0, 0, SRCCOPY );
@@ -176,24 +176,24 @@ void CRenderingWindow::DrawSizeableRectangle( HDC paintDC, const RECT & rectangl
 	rectangles.push_back( rectangle );
 	rectanglesIds.push_back( id );
 
-	AddMarkersForRectangle( paintDC, rectangle.left, rectangle.top, rectangle.right - rectangle.left,
+	addMarkersForRectangle( paintDC, rectangle.left, rectangle.top, rectangle.right - rectangle.left,
 		rectangle.top - rectangle.bottom, id );
 }
 
-void CRenderingWindow::AddMarkersForRectangle( HDC paintDC, const int x, const  int y, const int width, const  int height, const int id )
+void CRenderingWindow::addMarkersForRectangle( HDC paintDC, const int x, const  int y, const int width, const  int height, const int id )
 {
-	AddMarker( paintDC, x, y, MarkerType::LeftTop, id );
-	AddMarker( paintDC, x + width / 2, y, MarkerType::Top, id );
-	AddMarker( paintDC, x + width, y, MarkerType::RightTop, id );
-	AddMarker( paintDC, x + width, y + height / 2, MarkerType::Right, id );
-	AddMarker( paintDC, x + width, y + height, MarkerType::RightBottom, id );
-	AddMarker( paintDC, x + width / 2, y + height, MarkerType::Bottom, id );
-	AddMarker( paintDC, x, y + height, MarkerType::LeftBottom, id );
-	AddMarker( paintDC, x, y + height / 2, MarkerType::Left, id );
+	addMarker( paintDC, x, y, MarkerType::LeftTop, id );
+	addMarker( paintDC, x + width / 2, y, MarkerType::Top, id );
+	addMarker( paintDC, x + width, y, MarkerType::RightTop, id );
+	addMarker( paintDC, x + width, y + height / 2, MarkerType::Right, id );
+	addMarker( paintDC, x + width, y + height, MarkerType::RightBottom, id );
+	addMarker( paintDC, x + width / 2, y + height, MarkerType::Bottom, id );
+	addMarker( paintDC, x, y + height, MarkerType::LeftBottom, id );
+	addMarker( paintDC, x, y + height / 2, MarkerType::Left, id );
 }
 
 
-void  CRenderingWindow::AddMarker( HDC paintDC, const int x, const int y, const MarkerType type, const int id )
+void  CRenderingWindow::addMarker( HDC paintDC, const int x, const int y, const MarkerType type, const int id )
 {
 	RECT location;
 	location.left = x - MarkerHalfSize;

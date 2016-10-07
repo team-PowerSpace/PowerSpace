@@ -20,9 +20,11 @@ public:
 
 	static bool RegisterClass();
 
-	virtual void drawContent( HDC paintDC, const int width, const int height ) override;
-
 	bool Create();
+
+protected:
+	virtual void DrawContent( HDC paintDC, const int width, const int height ) override;
+
 
 private:
 	static const wchar_t* ClassName;
