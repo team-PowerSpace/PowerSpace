@@ -1,6 +1,4 @@
 #pragma once
-#include "stdafx.h"
-
 
 enum MarkerType {
 	LeftTop, Top, RightTop, Right, RightBottom, Bottom, LeftBottom, Left

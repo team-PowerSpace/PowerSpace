@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include <stdafx.h>
 #include "RenderingWindow.h"
 #include "Resource.h"
 #include <Winuser.h>
