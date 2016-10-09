@@ -63,16 +63,16 @@ TBox CViewport::ConvertToModelCoordinates( const TBox& box ) const
 TPoint CViewport::ConvertToScreenCoordinates( const TPoint & point ) const
 {
 	TPoint result;
-	result.x = point.x * scale + zeroLocation.x;
-	result.y = point.y * scale + zeroLocation.y;
+	result.x = static_cast<long>(point.x * scale) + zeroLocation.x;
+	result.y = static_cast<long>(point.y * scale) + zeroLocation.y;
 	return result;
 }
 
 TPoint CViewport::ConvertToModelCoordinates( const TPoint & point ) const
 {
 	TPoint result;
-	result.x = (point.x - zeroLocation.x) / scale;
-	result.y = (point.y - zeroLocation.y) / scale;
+	result.x = static_cast<long>((point.x - zeroLocation.x) / scale);
+	result.y = static_cast<long>((point.y - zeroLocation.y) / scale);
 	return result;
 }
 
