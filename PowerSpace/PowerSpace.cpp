@@ -1,15 +1,16 @@
 ﻿#include <stdafx.h>
 #include "Editor\EditorWindow.h"
+#include "Editor\Editor.h"
 
 
 #pragma warning(push)
 #pragma warning(disable:4100)
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
 {
-	if( !CEditorWindow::RegisterClass() ) {
+	if( !CEditor::RegisterClass() ) {
 		return 1;
 	}
-	CEditorWindow window;
+	CEditor window;
 	if( !window.Create() ) {
 		return 3;
 	}
@@ -17,7 +18,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	std::vector<std::shared_ptr<IDrawable>> temp;
 
 
-	window.Show();
+	window.Show(nCmdShow);
 
 	MSG message;
 	BOOL getMessageResult = 0;

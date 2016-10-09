@@ -31,12 +31,13 @@ public:
 
 	HWND GetHandle() const;
 
+	bool Create(const wchar_t* classname);
+
 protected:
-	bool Create( const wchar_t* classname );
 
 	void OnDestroy();
 
-	virtual void DrawContent( HDC paintDC, const int width, const int height ) = 0;
+	virtual void DrawContent(HDC paintDC, const int width, const int height) {};
 
 	static LRESULT __stdcall WindowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
 
