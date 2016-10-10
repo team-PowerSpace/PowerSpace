@@ -1,5 +1,6 @@
 #pragma once
 #include "../Common/Stage.h"
+#include "CDrawableBuilder.h"
 
 // this class processes python scripts and changes the stage
 class CScriptEngine

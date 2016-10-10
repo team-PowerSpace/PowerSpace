@@ -3,7 +3,7 @@
 #include <iostream>
 
 CScriptSolver::CScriptSolver(std::shared_ptr<IDrawable> obj, std::string path_,
-	std::string func_) : path(path_), func(func_) {
+	std::string func_) : path(path_), func(func_), object(obj) {
 	std::pair<std::string, long> xPos(std::string("x"), obj->GetPosition().left);
 	std::pair<std::string, long> yPos(std::string("y"), obj->GetPosition().top);
 	std::pair<std::string, long> width(std::string("width"), obj->GetPosition().right - obj->GetPosition().left);
@@ -41,15 +41,14 @@ std::shared_ptr<IDrawable> CScriptSolver::Run() {
 		Py_DECREF(pModule);
 	}
 	Py_Finalize();
-	std::shared_ptr<IDrawable> answer;
-	answer->SetColor(members.find(std::string("color"))->second);
+	object->SetColor(members.find(std::string("color"))->second);
 	RECT rect;
 	rect.top = members.find(std::string("y"))->second;
 	rect.left = members.find(std::string("x"))->second;
 	rect.bottom = rect.top + members.find(std::string("heigth"))->second;
 	rect.right = rect.left + members.find(std::string("width"))->second;
-	answer->SetPosition(rect);
-	return answer;
+	object->SetPosition(rect);
+	return object;
 }
 
 void CScriptSolver::FillDict(PyObject* dict) {

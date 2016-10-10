@@ -16,4 +16,5 @@ private:
 	std::map<std::string, long> members;
 	std::string path;
 	std::string  func;
+	std::shared_ptr<IDrawable> object;
 };

@@ -9,16 +9,6 @@ CScriptEngine::CScriptEngine( CStage& _stage )
     : stage( _stage )
 {}
 
-void CScriptEngine::setNewValues(CDrawableBuilder::CDrawableStruct& newData, std::shared_ptr<IDrawable> workingObject)
-{
-	workingObject->SetColor(newData.color);
-	TPosition rect;
-	rect.left = newData.xPos;
-	rect.top = newData.yPos;
-	rect.right = newData.xPos + newData.width;
-	rect.bottom = newData.yPos + newData.height;
-	workingObject->SetPosition(rect);
-}
 
 std::vector<int> CScriptEngine::RunScripts(int objectId, const std::vector<CScript>& scripts )
 {
@@ -35,12 +25,8 @@ std::vector<int> CScriptEngine::RunScripts(int objectId, const std::vector<CScri
 	{
 		TPath wstrPath((*i).GetPath());
 		std::string strPath = converter.to_bytes(wstrPath);
-		CScriptSolver solver(pyObject, strPath, emptyString); //Empty string left for ability to call different functions located in single script
-		std::shared_ptr<PyObject> changedObject = solver.Run();
-		CDrawableBuilder::CDrawableStruct newData;
-		assert( (PyArg_ParseTuple(changedObject.get(), "k", newData.color, //Check that extracted data corresponds correctly with types
-			"i" , newData.xPos, "i" , newData.yPos, "i", newData.width, "i", newData.height)) > 0);
-		setNewValues(newData, workingObject);
+		CScriptSolver solver(workingObject, strPath, emptyString); //Empty string left for ability to call different functions located in single script
+		std::shared_ptr<IDrawable> changedObject = solver.Run();   //returns shared_ptr to changed object, but values already set in the scene
 	}
     return std::vector<int>(); //Not used for now, but later will allow to return list of objects changed (if needed) for 
 }
