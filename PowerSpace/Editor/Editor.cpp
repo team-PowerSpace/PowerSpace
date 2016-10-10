@@ -173,7 +173,18 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 					GetText();
 				} else {
 					if( (HWND)lParam == setColorButton ) {
-						//set color
+						CHOOSECOLOR chooseColor;
+						static COLORREF customColors[16];
+						ZeroMemory( &chooseColor, sizeof( chooseColor ) );
+						chooseColor.lStructSize = sizeof( chooseColor );
+						chooseColor.hwndOwner = handle;
+						chooseColor.lpCustColors = reinterpret_cast<LPDWORD>(customColors);
+						chooseColor.Flags = CC_FULLOPEN | CC_RGBINIT;
+						chooseColor.rgbResult = stage->GetObjectById(activeId)->GetColor();
+						if( ::ChooseColor( &chooseColor ) ) {
+							stage->GetObjectById( activeId )->SetColor( chooseColor.rgbResult );
+							renderingWindow.ReDraw();
+						}
 					} else {
 						if( (HWND)lParam == addScriptButton ) {
 							//add Script
