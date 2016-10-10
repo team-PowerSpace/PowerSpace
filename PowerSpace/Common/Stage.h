@@ -11,6 +11,9 @@ public:
     // getters of objects field
     const std::unordered_map<int, IDrawablePtr>& CStage::GetObjects() const;
     std::unordered_map<int, IDrawablePtr>& GetObjects();
+
+	// method for transforming objects to vector
+	std::vector<IDrawablePtrConst> GetObjectsAsVector() const;
     
     // get object by its id
     IDrawablePtrConst GetObjectById( int objectId ) const;
@@ -20,6 +23,12 @@ public:
     void DrawObjects( HDC hdc, const std::vector<IDrawablePtrConst>& objectList ) const;
     // draws only visible objects from "objects" on canvas
     void ClipAndDrawObjects( HDC hdc, const std::vector<IDrawablePtrConst>& objectList ) const;
+
+	// not-const getter of viewport
+	CViewport& GetViewPort();
+
+	// getter of viewport
+	const CViewport& GetViewPort() const;
 private:
     // vector of all the objects that were created on canvas
     std::unordered_map<int, IDrawablePtr> objects;

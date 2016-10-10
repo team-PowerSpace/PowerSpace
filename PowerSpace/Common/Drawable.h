@@ -7,6 +7,7 @@ class IDrawable;
 
 // this type represents logical position of an object on the stage
 using TBox = RECT;
+using TPoint = POINT;
 using IDrawablePtr = std::shared_ptr<IDrawable>;
 using IDrawablePtrConst = std::shared_ptr<const IDrawable>;
 
