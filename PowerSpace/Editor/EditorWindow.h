@@ -3,7 +3,7 @@
 #include "Stage.h"
 #include "Resource.h"
 
-// This class in made to divide GUI and busines-logic
+// This class in made to divide GUI and business-logic
 // CRenderingWindow is GUI, work with screen coordinates
 // CEditorWindow is business-logic (mostly), work with model coordinates
 

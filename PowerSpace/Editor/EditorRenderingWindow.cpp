@@ -13,12 +13,6 @@ CEditorRenderingWindow::CEditorRenderingWindow() :
 	canvasPoint.y = 0;
 }
 
-CEditorRenderingWindow::~CEditorRenderingWindow()
-{
-	// This destructor is virtual thats why it is essential to create this code 
-}
-
-
 void CEditorRenderingWindow::Show( int cmdShow ) const
 {
 	::ShowWindow( handle, cmdShow );
@@ -269,7 +263,7 @@ void CEditorRenderingWindow::destroyDoubleBuffer()
 
 LPCTSTR CEditorRenderingWindow::getCursor( const POINT & point ) const
 {
-	for( int i = markers.size() - 1; i >= 0; i-- ) {
+	for( int i = static_cast<int>(markers.size()) - 1; i >= 0; i-- ) {
 		if( contains( markers[i].GetLocation(), point ) ) {
 			return markers[i].GetCursor();
 		}
@@ -335,7 +329,7 @@ bool CEditorRenderingWindow::contains( const RECT & rect, const POINT & point )
 void CEditorRenderingWindow::onMouseDown( const LPARAM lparam )
 {
 	POINT point = getPointByLParam( lparam );
-	for( int i = markers.size() - 1; i >= 0; i-- ) {
+	for( int i = static_cast<int>(markers.size()) - 1; i >= 0; i-- ) {
 		if( contains( markers[i].GetLocation(), point ) ) {
 			int id = markers[i].GetId();
 			sizingMarkerType = markers[i].GetType();
@@ -348,7 +342,7 @@ void CEditorRenderingWindow::onMouseDown( const LPARAM lparam )
 			return;
 		}
 	}
-	for( int i = rectangles.size() - 1; i >= 0; i-- ) {
+	for( int i = static_cast<int>(rectangles.size()) - 1; i >= 0; i-- ) {
 		if( contains( rectangles[i], point ) ) {
 			currentMovingState = TMovingState::MS_Moving;
 			startSize = rectangles[i];

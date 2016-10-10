@@ -20,20 +20,22 @@ public:
 
 	void SetStage( std::shared_ptr<CStage> stage_ );
 
-	static CEditor * GetWindowByHandle( HWND handle );
+	static CEditor* GetWindowByHandle( HWND handle );
 
 	void SetActiveId( const int id );
 
 protected:
-	// WM_DESTROY
+	// WM_DESTROY message handler
 	void OnDestroy();
-	//WM_NCCREATE
+	// WM_NCCREATE message handler
 	void OnNCCreate( HWND handle );
-	//WM_CREATE
+	// WM_CREATE message handler
 	void OnCreate();
-	// WM_COMMAND, lParam=0
+	// WM_COMMAND message handlers
 	void OnCommandMenu( WPARAM wParam, LPARAM lParam );
 	void OnCommand( WPARAM wParam, LPARAM lParam );
+
+    // WM_RESIZE message handlers
 	void OnSize();
 	void GetText();
 

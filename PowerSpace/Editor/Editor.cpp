@@ -1,6 +1,5 @@
-#include <Windows.h>
+#include <stdafx.h>
 #include <iostream>
-#include "stdafx.h"
 #include "Editor.h"
 #include "resource.h"
 #include "EditControlWindow.h"
@@ -80,13 +79,13 @@ void CEditor::OnCreate()
 	renderingWindow.Create( handle );
 	saveTextButton = CreateWindow( L"BUTTON", L"Save Text", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
 		10, 10, 100, 100, handle, (HMENU)IDC_MAIN_BUTTON,
-		(HINSTANCE)GetWindowLong( handle, GWL_HINSTANCE ), NULL );
+		*(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
 	setColorButton = CreateWindow( L"BUTTON", L"Set Color", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
 		10, 10, 100, 100, handle, (HMENU)IDC_MAIN_BUTTON,
-		(HINSTANCE)GetWindowLong( handle, GWL_HINSTANCE ), NULL );
+        *(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
 	addScriptButton = CreateWindow( L"BUTTON", L"Add Scrypt", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
 		10, 10, 100, 100, handle, (HMENU)IDC_MAIN_BUTTON,
-		(HINSTANCE)GetWindowLong( handle, GWL_HINSTANCE ), NULL );
+        *(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
 
 	EnableWindow( editControl.GetHandle(), false );
 	EnableWindow( saveTextButton, false );
@@ -95,9 +94,9 @@ void CEditor::OnCreate()
 
 }
 
-CEditor * CEditor::GetWindowByHandle( HWND handle )
+CEditor* CEditor::GetWindowByHandle( HWND handle )
 {
-	return reinterpret_cast<CEditor*>(GetWindowLong( handle, GWLP_USERDATA ));
+	return reinterpret_cast<CEditor*>(GetWindowLongPtr( handle, GWLP_USERDATA ));
 }
 
 void  CEditor::SetActiveId( const int id )
@@ -134,7 +133,7 @@ void CEditor::OnSize()
 
 void CEditor::GetText()
 {
-	int length = SendMessage( editControl.GetHandle(), WM_GETTEXTLENGTH, 0, 0 );
+	int length = static_cast<int>(SendMessage( editControl.GetHandle(), WM_GETTEXTLENGTH, 0, 0 ));
 	wchar_t *text = new wchar_t[length + 1];
 	SendMessage( editControl.GetHandle(), WM_GETTEXT, length + 1, reinterpret_cast<LPARAM>(text) );
 	//add functions here
@@ -163,7 +162,7 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 		}
 		case ID_PLAY_LAUNCHPLAYER:
 		{
-			CViewer viewer( *stage );
+			CViewer viewer( *stage, CViewport() );
 			break;
 		}
 		case IDC_MAIN_BUTTON:
@@ -277,7 +276,7 @@ LRESULT CEditor::windowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lP
 		{
 			CEditor* window = (CEditor*)((CREATESTRUCT*)lParam)->lpCreateParams;
 			SetLastError( 0 );
-			SetWindowLongPtr( handle, GWLP_USERDATA, (LONG)window );
+			SetWindowLongPtr( handle, GWLP_USERDATA, (LONG_PTR)window );
 			if( GetLastError() != 0 ) {
 				return GetLastError();
 			}

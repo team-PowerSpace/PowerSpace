@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include <stdafx.h>
 #include "EditControlWindow.h"
 
 CEditControlWindow::CEditControlWindow()
@@ -12,10 +12,8 @@ CEditControlWindow::~CEditControlWindow()
 
 void CEditControlWindow::initializeText() {
 	HMODULE module = GetModuleHandle(0);
-	//HRSRC resourceHandle = FindResource(module, MAKEINTRESOURCE(IDR_TEXT3), L"TEXT");
-	//HGLOBAL handleData = LoadResource(module, resourceHandle);
-	//DWORD size = SizeofResource(module, resourceHandle);
-	//LPVOID data = LockResource(handleData);
+    UNREFERENCED_PARAMETER( module );
+    // TODO: implement this method
 	SetWindowText(handle, reinterpret_cast<LPCWSTR>(""));
 }
 

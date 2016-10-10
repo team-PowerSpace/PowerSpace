@@ -29,7 +29,7 @@ enum TMovingState {
 class CEditorRenderingWindow {
 public:
 	CEditorRenderingWindow();
-	virtual ~CEditorRenderingWindow();
+    virtual ~CEditorRenderingWindow() {};
 
 	void Show(int cmdShow) const;
 
