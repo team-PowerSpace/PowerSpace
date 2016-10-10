@@ -36,7 +36,7 @@ bool CEditor::RegisterClass()
 
 bool CEditor::Create()
 {
-	CreateWindowEx( 0, L"CEditor", L"My Window", WS_OVERLAPPEDWINDOW,
+	handle = CreateWindowEx( 0, L"CEditor", L"My Window", WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, GetModuleHandle( 0 ), this );
 	return (handle != 0);
 }
@@ -88,6 +88,28 @@ void CEditor::OnCreate()
 		10, 10, 100, 100, handle, (HMENU)IDC_MAIN_BUTTON,
 		(HINSTANCE)GetWindowLong( handle, GWL_HINSTANCE ), NULL );
 
+	EnableWindow( editControl.GetHandle(), false );
+	EnableWindow( saveTextButton, false );
+	EnableWindow( setColorButton, false );
+	EnableWindow( addScriptButton, false );
+
+}
+
+CEditor * CEditor::GetWindowByHandle( HWND handle )
+{
+	return reinterpret_cast<CEditor*>(GetWindowLong( handle, GWLP_USERDATA ));
+}
+
+void  CEditor::SetActiveId( const int id )
+{
+	activeId = id;
+	if( id < 0 ) {
+		EnableWindow( setColorButton, false );
+		EnableWindow( addScriptButton, false );
+	} else {
+		EnableWindow( setColorButton, true );
+		EnableWindow( addScriptButton, true );
+	}
 }
 
 
@@ -149,10 +171,14 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 			{
 				if( (HWND)lParam == saveTextButton ) {
 					GetText();
-				} else if( (HWND)lParam == setColorButton ) {
-					//set color
-				} else if( (HWND)lParam == addScriptButton ) {
-					//add Script
+				} else {
+					if( (HWND)lParam == setColorButton ) {
+						//set color
+					} else {
+						if( (HWND)lParam == addScriptButton ) {
+							//add Script
+						}
+					}
 				}
 				break;
 			}

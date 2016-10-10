@@ -20,6 +20,10 @@ public:
 
 	void SetStage( std::shared_ptr<CStage> stage_ );
 
+	static CEditor * GetWindowByHandle( HWND handle );
+
+	void SetActiveId( const int id );
+
 protected:
 	// WM_DESTROY
 	void OnDestroy();
@@ -45,6 +49,7 @@ private:
 	HWND addScriptButton;
 
 	std::shared_ptr<CStage> stage;
+	int activeId;
 
 	static LRESULT __stdcall windowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
 

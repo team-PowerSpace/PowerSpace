@@ -1,5 +1,6 @@
 #include <stdafx.h>
 #include "EditorWindow.h"
+#include "Editor.h"
 
 
 CEditorWindow::CEditorWindow()
@@ -75,8 +76,7 @@ void CEditorWindow::Scaling( const int direction )
 
 void CEditorWindow::SelectRectangle( const int id )
 {
-	// TODO: will be essential when work with OVerlappedWindow
-	UNREFERENCED_PARAMETER( id );
+	CEditor::GetWindowByHandle( GetParent( GetHandle() ) )->SetActiveId( id );
 }
 
 bool CEditorWindow::Create( HWND hWndParent )

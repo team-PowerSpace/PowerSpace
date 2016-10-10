@@ -34,12 +34,14 @@ bool CEditorRenderingWindow::Create( HWND hWndParent, const wchar_t * classname 
 	HINSTANCE instance = GetModuleHandleW( nullptr );
 	wchar_t title[MAX_RESOURCE_LENGTH];
 	::LoadString( instance, IDS_APP_TITLE, title, MAX_RESOURCE_LENGTH );
-	handle = CreateWindowEx( 0, classname, title, WS_CHILD | WS_BORDER, CW_USEDEFAULT, CW_USEDEFAULT,
+	this->handle = CreateWindowEx( 0, classname, title, WS_CHILD | WS_BORDER, CW_USEDEFAULT, CW_USEDEFAULT,
 		CW_USEDEFAULT, CW_USEDEFAULT, hWndParent, 0, instance, this );
 
 	// Will be destroyed in OnDestroy
 	markerPen = CreatePen( PS_DASH, 1, MarkerColor );
 	markerBrush = CreateSolidBrush( MarkerColor );
+	accentMarkerPen = CreatePen( PS_DASH, 1, AccentMarkerColor );
+	accentMarkerBrush = CreateSolidBrush( AccentMarkerColor );
 	backgroundBrush = CreateSolidBrush( BackgroundColor );
 
 	return (handle != 0);
@@ -51,6 +53,8 @@ void CEditorRenderingWindow::OnDestroy()
 	::DeleteObject( backgroundBrush );
 	::DeleteObject( markerBrush );
 	::DeleteObject( markerPen );
+	::DeleteObject( accentMarkerBrush );
+	::DeleteObject( accentMarkerPen );
 
 	::PostQuitMessage( 0 );
 }
@@ -60,12 +64,14 @@ const int CEditorRenderingWindow::DefaultWidth = 1000;
 const int CEditorRenderingWindow::MarkerHalfSize = 5;
 const COLORREF CEditorRenderingWindow::BackgroundColor = RGB( 255, 255, 255 );
 const COLORREF CEditorRenderingWindow::MarkerColor = RGB( 0, 0, 255 );
+const COLORREF CEditorRenderingWindow::AccentMarkerColor = RGB( 0, 255, 0 );
 
 LRESULT CEditorRenderingWindow::WindowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam )
 {
 	if( message == WM_NCCREATE ) {
 		SetWindowLongPtr( handle, 0, reinterpret_cast<LONG_PTR>(
 			reinterpret_cast<CREATESTRUCT*>(lParam)->lpCreateParams) );
+
 		return DefWindowProc( handle, message, wParam, lParam );
 	}
 
@@ -215,7 +221,11 @@ void CEditorRenderingWindow::drawEraseRectangle( HDC paintDC, const int width, c
 void CEditorRenderingWindow::DrawSizeableRectangle( HDC paintDC, const RECT & rectangle, const int id )
 {
 	SelectObject( paintDC, GetStockObject( NULL_BRUSH ) );
-	SelectObject( paintDC, markerPen );
+	if( id == selectedId ) {
+		SelectObject( paintDC, accentMarkerPen );
+	} else {
+		SelectObject( paintDC, markerPen );
+	}
 	Rectangle( paintDC, rectangle.left, rectangle.top, rectangle.right, rectangle.bottom );
 
 	rectangles.push_back( rectangle );
@@ -245,7 +255,7 @@ void  CEditorRenderingWindow::addMarker( HDC paintDC, const int x, const int y, 
 	location.top = y - MarkerHalfSize;
 	location.right = x + MarkerHalfSize;
 	location.bottom = y + MarkerHalfSize;
-	::FillRect( paintDC, &location, markerBrush );
+	::FillRect( paintDC, &location, ((id == selectedId) ? accentMarkerBrush : markerBrush) );
 	markers.emplace_back( location, type, id );
 }
 
@@ -343,13 +353,15 @@ void CEditorRenderingWindow::onMouseDown( const LPARAM lparam )
 			currentMovingState = TMovingState::MS_Moving;
 			startSize = rectangles[i];
 			lastSize = startSize;
-			SelectRectangle( i );
+			SelectRectangle( rectanglesIds[i] );
 			selectedId = rectanglesIds[i];
 			ReDraw();
 			return;
 		}
 	}
 	lastPoint = point;
+	selectedId = -1;
+	SelectRectangle( -1 );
 	currentMovingState = TMovingState::MS_MovingCanvas;
 }
 

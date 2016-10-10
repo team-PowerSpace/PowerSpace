@@ -68,6 +68,8 @@ private:
 	HBRUSH backgroundBrush;
 	HBRUSH markerBrush;
 	HPEN markerPen;
+	HBRUSH accentMarkerBrush;
+	HPEN accentMarkerPen;
 
 	int bitmapWidth;
 	int bitmapHeight;
@@ -82,6 +84,7 @@ private:
 	static const int MarkerHalfSize;
 	static const COLORREF BackgroundColor;
 	static const COLORREF MarkerColor;
+	static const COLORREF AccentMarkerColor;
 
 	POINT canvasPoint;
 	TMovingState currentMovingState;
