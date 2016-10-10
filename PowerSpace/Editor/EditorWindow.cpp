@@ -76,6 +76,7 @@ void CEditorWindow::Scaling( const int direction )
 void CEditorWindow::SelectRectangle( const int id )
 {
 	// TODO: will be essential when work with OVerlappedWindow
+	UNREFERENCED_PARAMETER( id );
 }
 
 bool CEditorWindow::Create()

@@ -155,7 +155,7 @@ void CEditorRenderingWindow::onMouseMove( const WPARAM wParam, const LPARAM lPar
 void CEditorRenderingWindow::onMouseMove( const LPARAM lParam )
 {
 	POINT point = getPointByLParam( lParam );
-	long dx = (point.x - lastPoint.y);
+	long dx = (point.x - lastPoint.x);
 	long dy = (point.y - lastPoint.y);
 	lastPoint = point;
 	// Actions which reuire redraw finished by break, others by return
@@ -219,7 +219,7 @@ void CEditorRenderingWindow::DrawSizeableRectangle( HDC paintDC, const RECT & re
 	rectanglesIds.push_back( id );
 
 	addMarkersForRectangle( paintDC, rectangle.left, rectangle.top, rectangle.right - rectangle.left,
-		rectangle.top - rectangle.bottom, id );
+		rectangle.bottom - rectangle.top, id );
 }
 
 void CEditorRenderingWindow::addMarkersForRectangle( HDC paintDC, const int x, const  int y, const int width, const  int height, const int id )
@@ -282,6 +282,7 @@ RECT CEditorRenderingWindow::resizeRect( const POINT & point )
 	switch( sizingMarkerType ) {
 		case TMarkerType::MT_Left:
 			newSize.left = min( startSize.right, point.x );
+			break;
 		case TMarkerType::MT_Top:
 			newSize.top = min( startSize.bottom, point.y );
 			break;
@@ -333,6 +334,7 @@ void CEditorRenderingWindow::onMouseDown( const LPARAM lparam )
 			SelectRectangle( id );
 			startSize = rectangles[id];
 			lastSize = startSize;
+			selectedId = id;
 			reDraw();
 			return;
 		}
@@ -343,9 +345,12 @@ void CEditorRenderingWindow::onMouseDown( const LPARAM lparam )
 			startSize = rectangles[i];
 			lastSize = startSize;
 			SelectRectangle( i );
+			selectedId = rectanglesIds[i];
 			reDraw();
 		}
 	}
+	lastPoint = point;
+	currentMovingState = TMovingState::MS_MovingCanvas;
 }
 
 void CEditorRenderingWindow::onMouseUpOrLeave( const LPARAM lparam )

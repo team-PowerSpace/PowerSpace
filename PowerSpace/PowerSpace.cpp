@@ -1,5 +1,7 @@
 ﻿#include <stdafx.h>
-#include "Editor\EditorWindow.h"
+#include "EditorWindow.h"
+#include "Stage.h"
+#include "StageObjects.h"
 
 
 #pragma warning(push)
@@ -14,8 +16,17 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 		return 3;
 	}
 
-	std::vector<std::shared_ptr<IDrawable>> temp;
-
+	// code for testing. May be delted
+	std::shared_ptr<CStage> stage = std::make_shared<CStage>();
+	TBox box;
+	box.left = 10;
+	box.top = 10;
+	box.right = 100;
+	box.bottom = 200;
+	CRectangleObject rect( RGB( 11, 22, 33 ), box );
+	stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( 0, std::dynamic_pointer_cast<IDrawable,
+		CRectangleObject>(std::make_shared<CRectangleObject>( RGB( 11, 22, 33 ), box )) ) );
+	window.SetStage( stage );
 
 	window.Show();
 
