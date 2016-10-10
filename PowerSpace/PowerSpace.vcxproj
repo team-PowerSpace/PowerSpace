@@ -157,7 +157,7 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="Viewer\Viewer.h" />
-    <ClInclude Include="Viewer\ViewerRenderingWindow.h" />
+    <ClInclude Include="Viewer\ViewerWIndow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\Canvas.cpp">
@@ -197,7 +197,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
-    <ClCompile Include="Viewer\ViewerRenderingWindow.cpp" />
+    <ClCompile Include="Viewer\ViewerWIndow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PowerSpace.rc" />
