@@ -1,13 +1,13 @@
-#include "stdafx.h"
+#include <stdafx.h>
 #include "ScriptSolver.h"
 #include <iostream>
 
 CScriptSolver::CScriptSolver(std::shared_ptr<IDrawable> obj, std::string path_,
 	std::string func_) : path(path_), func(func_), object(obj) {
-	std::pair<std::string, long> xPos(std::string("x"), obj->GetPosition().left);
-	std::pair<std::string, long> yPos(std::string("y"), obj->GetPosition().top);
-	std::pair<std::string, long> width(std::string("width"), obj->GetPosition().right - obj->GetPosition().left);
-	std::pair<std::string, long> heigth(std::string("heigth"), obj->GetPosition().bottom - obj->GetPosition().top);
+	std::pair<std::string, long> xPos(std::string("x"), obj->GetContainingBox().left);
+	std::pair<std::string, long> yPos(std::string("y"), obj->GetContainingBox().top);
+	std::pair<std::string, long> width(std::string("width"), obj->GetContainingBox().right - obj->GetContainingBox().left);
+	std::pair<std::string, long> heigth(std::string("heigth"), obj->GetContainingBox().bottom - obj->GetContainingBox().top);
 	std::pair<std::string, long> color(std::string("color"), obj->GetColor());
 	members.insert(xPos);
 	members.insert(yPos);
@@ -47,7 +47,7 @@ std::shared_ptr<IDrawable> CScriptSolver::Run() {
 	rect.left = members.find(std::string("x"))->second;
 	rect.bottom = rect.top + members.find(std::string("heigth"))->second;
 	rect.right = rect.left + members.find(std::string("width"))->second;
-	object->SetPosition(rect);
+	object->SetContainingBox(rect);
 	return object;
 }
 

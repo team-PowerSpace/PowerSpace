@@ -1,6 +1,6 @@
 #pragma once
 #include <Python.h>
-#include "Common\Drawable.h"
+#include "Drawable.h"
 #include <memory>
 
 class CPyObjectBuilder {

@@ -2,7 +2,7 @@
 #include <Python.h>
 #include <Windows.h>
 #include "structmember.h"
-#include "Common\Drawable.h"
+#include "Drawable.h"
 #include <memory>
 
 class CDrawableBuilder {

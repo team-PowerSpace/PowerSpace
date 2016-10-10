@@ -4,7 +4,7 @@
 #include <memory>
 #include <map>
 
-#include "Common\Drawable.h"
+#include "Drawable.h"
 
 class CScriptSolver {
 public:

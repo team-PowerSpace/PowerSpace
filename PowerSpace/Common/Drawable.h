@@ -58,7 +58,7 @@ public:
     // getters for scripts field
     const std::vector<CScript>& GetScripts( EventType eventType );
 
-	virtual DrawableType GetType();
+	virtual DrawableType GetType() const;
 protected:
     // a unique identifier linked to the object
     int id;

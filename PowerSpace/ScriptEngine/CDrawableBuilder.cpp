@@ -1,4 +1,4 @@
-#include "stdafx.h" 
+#include <stdafx.h>
 #include "CDrawableBuilder.h"
 
 void CDrawableBuilder::CDrawableRedable(CDrawableStruct* self) {
@@ -81,8 +81,8 @@ CDrawableBuilder::CDrawableBuilder(std::shared_ptr<IDrawable> object) {
 			pObject = nullptr;
 		}
 		else {
-			RECT rect = object->GetPosition();
-			pObject = std::make_shared<PyObject>(&CDrawableType);
+			RECT rect = object->GetContainingBox();
+            pObject = std::shared_ptr<PyObject>( (PyObject*)PyObject_NEW( CDrawableStruct, &CDrawableType ) );
 			PyObject* args = PyTuple_New(5);
 			PyTuple_SetItem(args, 0, PyLong_FromUnsignedLong(object->GetColor()));
 			PyTuple_SetItem(args, 1, PyLong_FromLong(rect.left));

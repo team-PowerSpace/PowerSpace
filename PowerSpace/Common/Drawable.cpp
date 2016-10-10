@@ -49,6 +49,6 @@ int CDrawable::generateNewId()
     return maxId++;
 }
 
-CDrawable::DrawableType CDrawable::GetType() {
+CDrawable::DrawableType CDrawable::GetType() const {
 	return DrawableType::CDrawable;
 }
