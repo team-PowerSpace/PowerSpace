@@ -20,7 +20,7 @@ public:
 
 	static bool RegisterClass();
 
-	bool Create();
+	bool Create(HWND hWndParent);
 
 protected:
 	virtual void DrawContent( HDC paintDC, const int width, const int height ) override;

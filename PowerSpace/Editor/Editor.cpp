@@ -10,8 +10,7 @@
 CEditor::CEditor()
 {
 	menu = 0;
-	//renderingWindow = CEditorRenderingWindow();
-	ellipseWindow = CEllipseWindow();
+	renderingWindow = CEditorWindow();
 	editControl = CEditControlWindow();
 	saveTextButton = {};
 }
@@ -43,8 +42,7 @@ bool CEditor::Create()
 void CEditor::Show( int cmdShow )
 {
 	ShowWindow( handle, cmdShow );
-	//renderingWindow.Show();
-	ellipseWindow.Show( cmdShow );
+	renderingWindow.Show(cmdShow);
 	ShowWindow( saveTextButton, cmdShow );
 }
 
@@ -61,15 +59,13 @@ void CEditor::OnNCCreate( HWND _handle ) {
 void CEditor::OnCreate()
 {
 	editControl.Create(handle);
-	//CEditorRenderingWindow::RegisterClass();
-	CEllipseWindow::RegisterClass();
+	CEditorWindow::RegisterClass();
 	menu = LoadMenu( GetModuleHandle( 0 ), MAKEINTRESOURCE( IDR_MENU1 ) );
-	//renderingWindow.Create( L"CEditor" );
-	ellipseWindow.Create(handle);
+	renderingWindow.Create(handle);
 	saveTextButton = CreateWindow(
 		L"BUTTON",  // Predefined class; Unicode assumed 
 		L"Save Text",      // Button text 
-		WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,  // Styles 
+		WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON ,  // Styles 
 		10,         // x position 
 		10,         // y position 
 		100,        // Button width
@@ -90,8 +86,7 @@ void CEditor::OnSize()
 	middleX = ( rect.left + rect.right ) / 4;
 	nWidth = ( rect.right - rect.left ) * 3 / 4;
 	nHeight = ( rect.bottom - rect.top );
-	//SetWindowPos( renderingWindow.GetHandle(), HWND_TOP, middleX, rect.top, nWidth, nHeight, 0 );
-	SetWindowPos(ellipseWindow.getHandle(), HWND_TOP, middleX, rect.top, nWidth, nHeight, 0);
+	SetWindowPos( renderingWindow.GetHandle(), HWND_TOP, middleX, rect.top, nWidth, nHeight, 0 );
 	SetWindowPos(editControl.GetHandle(), HWND_TOP, rect.left, rect.top, nWidth / 3, 
 		nHeight * 3 / 4, 0);
 	SetWindowPos(saveTextButton, HWND_TOP, rect.left, rect.top + nHeight * 3 / 4, nWidth / 3,
@@ -136,7 +131,6 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 
 void CEditor::OnCommand( WPARAM wParam, LPARAM lParam )
 {
-	//WORD x =HIWORD( wParam );
 	switch ( HIWORD( wParam ) )
 	{
 	case 0:

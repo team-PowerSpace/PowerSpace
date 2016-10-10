@@ -27,13 +27,13 @@ public:
 	CEditorRenderingWindow();
 	virtual ~CEditorRenderingWindow();
 
-	void Show() const;
+	void Show(int cmdShow) const;
 
 	HWND GetHandle() const;
 
-	bool Create( const wchar_t* classname );
-
 protected:
+
+	bool Create(HWND hWndParent, const wchar_t* classname);
 
 	void OnDestroy();
 

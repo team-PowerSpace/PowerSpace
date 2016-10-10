@@ -2,8 +2,8 @@
 #include <Windows.h>
 #include <string>
 #include "EditorRenderingWindow.h"
-#include "EllipseWindow.h"
 #include "EditControlWindow.h"
+#include "EditorWindow.h"
 
 class CEditor {
 public:
@@ -31,11 +31,9 @@ protected:
 private:
 	HWND handle;
 	HMENU menu;
-	CEditorRenderingWindow renderingWindow;
+	CEditorWindow renderingWindow;
 	CEditControlWindow editControl;
 	HWND saveTextButton;
-
-	CEllipseWindow ellipseWindow;
 
 	static LRESULT __stdcall windowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
 };
