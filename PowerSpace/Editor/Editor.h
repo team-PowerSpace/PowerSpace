@@ -15,6 +15,11 @@ public:
 	bool Create();
 	void Show( int cmdShow );
 
+
+	std::shared_ptr<CStage>& GetStage();
+
+	void SetStage( std::shared_ptr<CStage> stage_ );
+
 protected:
 	// WM_DESTROY
 	void OnDestroy();
@@ -34,6 +39,8 @@ private:
 	CEditorWindow renderingWindow;
 	CEditControlWindow editControl;
 	HWND saveTextButton;
+
+	std::shared_ptr<CStage> stage;
 
 	static LRESULT __stdcall windowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
 };

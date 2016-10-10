@@ -46,6 +46,17 @@ void CEditor::Show( int cmdShow )
 	ShowWindow( saveTextButton, cmdShow );
 }
 
+std::shared_ptr<CStage>& CEditor::GetStage()
+{
+	return stage;
+}
+
+void CEditor::SetStage( std::shared_ptr<CStage> stage_ )
+{
+	stage = stage_;
+	renderingWindow.SetStage( stage_ );
+}
+
 void CEditor::OnDestroy()
 {
 	DestroyMenu(menu);

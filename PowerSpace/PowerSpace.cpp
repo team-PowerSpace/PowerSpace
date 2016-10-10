@@ -1,4 +1,5 @@
 ﻿#include <stdafx.h>
+#include "Editor.h"
 #include "EditorWindow.h"
 #include "Stage.h"
 #include "StageObjects.h"
@@ -26,8 +27,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	CRectangleObject rect( RGB( 11, 22, 33 ), box );
 	stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( 0, std::dynamic_pointer_cast<IDrawable,
 		CRectangleObject>(std::make_shared<CRectangleObject>( RGB( 11, 22, 33 ), box )) ) );
-	// TODO set stage
-	// window.SetStage( stage );
+	 window.SetStage( stage );
 
 	window.Show(nCmdShow);
 
