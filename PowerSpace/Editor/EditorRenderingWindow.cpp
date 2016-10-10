@@ -7,8 +7,10 @@
 
 CEditorRenderingWindow::CEditorRenderingWindow() :
 	bitmap( 0 ), bitmapContext( 0 ), bitmapHeight( 1 ), bitmapWidth( 1 ), backgroundBrush( 0 ),
-	markerBrush( 0 ), markerPen( 0 )
+	markerBrush( 0 ), markerPen( 0 ), currentMovingState( MS_None )
 {
+	canvasPoint.x = 0;
+	canvasPoint.y = 0;
 }
 
 CEditorRenderingWindow::~CEditorRenderingWindow()
@@ -99,6 +101,16 @@ LRESULT CEditorRenderingWindow::WindowProc( HWND handle, UINT message, WPARAM wP
 		case WM_MOUSEMOVE:
 			wndPtr->onMouseMove( wParam, lParam );
 			break;
+		case WM_MOUSEWHEEL:
+			wndPtr->onMouseWheel( wParam );
+			break;
+		case WM_LBUTTONDOWN:
+			wndPtr->onMouseDown( lParam );
+			break;
+		case WM_MOUSELEAVE:
+		case WM_LBUTTONUP:
+			wndPtr->onMouseUpOrLeave( lParam );
+			break;
 		default:
 			// Will be returned DefWindowProc
 			break;
@@ -132,17 +144,47 @@ void CEditorRenderingWindow::onPaint()
 	::EndPaint( handle, &paintStruct );
 }
 
-#pragma warning(push)
-#pragma warning(disable:4100)
 void CEditorRenderingWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 {
-	// TODO: impliment this
-	// Planned functions:
-	// a) Cursor changing
-	// b) Moving of objects
-	// c) Moving of canvas
+	onMouseMove( lParam );
+	if( !(wParam&MK_LBUTTON) ) {
+		currentMovingState = TMovingState::MS_None;
+	}
 }
-#pragma warning (pop)
+
+void CEditorRenderingWindow::onMouseMove( const LPARAM lParam )
+{
+	POINT point = getPointByLParam( lParam );
+	long dx = (point.x - lastPoint.y);
+	long dy = (point.y - lastPoint.y);
+	lastPoint = point;
+	// Actions which reuire redraw finished by break, others by return
+	switch( currentMovingState ) {
+		case TMovingState::MS_None:
+			lastPoint = point;
+			SetCursor( LoadCursor( 0, getCursor( point ) ) );
+			return;
+		case TMovingState::MS_MovingCanvas:
+			canvasPoint.x += dx;
+			canvasPoint.y += dy;
+			MoveCanvas( canvasPoint );
+			SetCursor( LoadCursor( 0, IDC_SIZEALL ) );
+			break;
+		case TMovingState::MS_Sizing:
+			MoveRectangle( selectedId, resizeRect( point ) );
+			break;
+		case TMovingState::MS_Moving:
+			lastSize.left += dx;
+			lastSize.right += dx;
+			lastSize.top += dy;
+			lastSize.bottom += dy;
+			MoveRectangle( selectedId, lastSize );
+			SetCursor( LoadCursor( 0, IDC_SIZEALL ) );
+			break;
+	}
+	reDraw();
+
+}
 
 void CEditorRenderingWindow::onResize( const RECT * area )
 {
@@ -182,18 +224,18 @@ void CEditorRenderingWindow::DrawSizeableRectangle( HDC paintDC, const RECT & re
 
 void CEditorRenderingWindow::addMarkersForRectangle( HDC paintDC, const int x, const  int y, const int width, const  int height, const int id )
 {
-	addMarker( paintDC, x, y, MarkerType::LeftTop, id );
-	addMarker( paintDC, x + width / 2, y, MarkerType::Top, id );
-	addMarker( paintDC, x + width, y, MarkerType::RightTop, id );
-	addMarker( paintDC, x + width, y + height / 2, MarkerType::Right, id );
-	addMarker( paintDC, x + width, y + height, MarkerType::RightBottom, id );
-	addMarker( paintDC, x + width / 2, y + height, MarkerType::Bottom, id );
-	addMarker( paintDC, x, y + height, MarkerType::LeftBottom, id );
-	addMarker( paintDC, x, y + height / 2, MarkerType::Left, id );
+	addMarker( paintDC, x, y, TMarkerType::MT_LeftTop, id );
+	addMarker( paintDC, x + width / 2, y, TMarkerType::MT_Top, id );
+	addMarker( paintDC, x + width, y, TMarkerType::MT_RightTop, id );
+	addMarker( paintDC, x + width, y + height / 2, TMarkerType::MT_Right, id );
+	addMarker( paintDC, x + width, y + height, TMarkerType::MT_RightBottom, id );
+	addMarker( paintDC, x + width / 2, y + height, TMarkerType::MT_Bottom, id );
+	addMarker( paintDC, x, y + height, TMarkerType::MT_LeftBottom, id );
+	addMarker( paintDC, x, y + height / 2, TMarkerType::MT_Left, id );
 }
 
 
-void  CEditorRenderingWindow::addMarker( HDC paintDC, const int x, const int y, const MarkerType type, const int id )
+void  CEditorRenderingWindow::addMarker( HDC paintDC, const int x, const int y, const TMarkerType type, const int id )
 {
 	RECT location;
 	location.left = x - MarkerHalfSize;
@@ -212,12 +254,120 @@ void CEditorRenderingWindow::destroyDoubleBuffer()
 	}
 }
 
-Marker::Marker( const RECT& location, const MarkerType type, const int id ) :
+LPCTSTR CEditorRenderingWindow::getCursor( const POINT & point ) const
+{
+	for( int i = markers.size() - 1; i >= 0; i-- ) {
+		if( contains( markers[i].GetLocation(), point ) ) {
+			return markers[i].GetCursor();
+		}
+	}
+	for( int i = rectangles.size() - 1; i >= 0; i-- ) {
+		if( contains( rectangles[i], point ) ) {
+			return IDC_CROSS;
+		}
+	}
+	return IDC_ARROW;
+}
+
+void CEditorRenderingWindow::reDraw() const
+{
+	RECT rect;
+	GetClientRect( handle, &rect );
+	InvalidateRect( handle, &rect, true );
+}
+
+RECT CEditorRenderingWindow::resizeRect( const POINT & point )
+{
+	RECT newSize = lastSize;
+	switch( sizingMarkerType ) {
+		case TMarkerType::MT_Left:
+			newSize.left = min( startSize.right, point.x );
+		case TMarkerType::MT_Top:
+			newSize.top = min( startSize.bottom, point.y );
+			break;
+		case TMarkerType::MT_Bottom:
+			newSize.bottom = startSize.top + max( 0, point.y - startSize.top );
+			break;
+		case TMarkerType::MT_Right:
+			newSize.right = startSize.left + max( 0, point.x - startSize.left );
+			break;
+		case TMarkerType::MT_LeftTop:
+			newSize.left = min( startSize.right, point.x );
+			newSize.top = min( startSize.bottom, point.y );
+			break;
+		case TMarkerType::MT_LeftBottom:
+			newSize.left = min( startSize.right, point.x );
+			newSize.bottom = startSize.top + max( 0, point.y - startSize.top );
+			break;
+		case TMarkerType::MT_RightBottom:
+			newSize.bottom = startSize.top + max( 0, point.y - startSize.top );
+			newSize.right = startSize.left + max( 0, point.x - startSize.left );
+			break;
+		case TMarkerType::MT_RightTop:
+			newSize.top = min( startSize.bottom, point.y );
+			newSize.right = startSize.left + max( 0, point.x - startSize.left );
+			break;
+	}
+	lastSize = newSize;
+	return newSize;
+}
+
+void CEditorRenderingWindow::onMouseWheel( WPARAM wParam )
+{
+	Scaling( HIWORD( wParam ) / WHEEL_DELTA );
+}
+
+bool CEditorRenderingWindow::contains( const RECT & rect, const POINT & point )
+{
+	return ((point.x <= rect.right) && (point.x >= rect.left) && (point.y >= rect.top) && (point.y <= rect.bottom));
+}
+
+void CEditorRenderingWindow::onMouseDown( const LPARAM lparam )
+{
+	POINT point = getPointByLParam( lparam );
+	for( int i = markers.size() - 1; i >= 0; i-- ) {
+		if( contains( markers[i].GetLocation(), point ) ) {
+			int id = markers[i].GetId();
+			sizingMarkerType = markers[i].GetType();
+			currentMovingState = TMovingState::MS_Sizing;
+			SelectRectangle( id );
+			startSize = rectangles[id];
+			lastSize = startSize;
+			reDraw();
+			return;
+		}
+	}
+	for( int i = rectangles.size() - 1; i >= 0; i-- ) {
+		if( contains( rectangles[i], point ) ) {
+			currentMovingState = TMovingState::MS_Moving;
+			startSize = rectangles[i];
+			lastSize = startSize;
+			SelectRectangle( i );
+			reDraw();
+		}
+	}
+}
+
+void CEditorRenderingWindow::onMouseUpOrLeave( const LPARAM lparam )
+{
+	onMouseMove( lparam );
+	currentMovingState = TMovingState::MS_None;
+}
+
+POINT CEditorRenderingWindow::getPointByLParam( const LPARAM & lparam )
+{
+	POINT result;
+	result.x = LOWORD( lparam );
+	result.y = HIWORD( lparam );
+	return result;
+}
+
+Marker::Marker( const RECT& location, const TMarkerType type, const int id ) :
 	location( location ), type( type ), id( id )
 {
 }
 
-const MarkerType & Marker::GetType() const
+const TMarkerType & Marker::GetType() const
 {
 	return type;
 }
@@ -232,21 +382,21 @@ const int Marker::GetId() const
 	return id;
 }
 
-DWORD Marker::GetCursor() const
+LPCTSTR Marker::GetCursor() const
 {
 	switch( type ) {
-		case MarkerType::Top:
-		case MarkerType::Bottom:
-			return OCR_SIZENS;
-		case MarkerType::Left:
-		case MarkerType::Right:
-			return OCR_SIZEWE;
-		case MarkerType::LeftBottom:
-		case MarkerType::RightTop:
-			return OCR_SIZENESW;
-		case MarkerType::RightBottom:
-		case MarkerType::LeftTop:
-			return OCR_SIZENWSE;
+		case TMarkerType::MT_Top:
+		case TMarkerType::MT_Bottom:
+			return IDC_SIZENS;
+		case TMarkerType::MT_Left:
+		case TMarkerType::MT_Right:
+			return IDC_SIZEWE;
+		case TMarkerType::MT_LeftBottom:
+		case TMarkerType::MT_RightTop:
+			return IDC_SIZENESW;
+		case TMarkerType::MT_RightBottom:
+		case TMarkerType::MT_LeftTop:
+			return IDC_SIZENWSE;
 		default:
 			assert( false );
 			return 0;

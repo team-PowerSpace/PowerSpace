@@ -45,9 +45,37 @@ bool CEditorWindow::RegisterClass()
 
 void CEditorWindow::DrawContent( HDC paintDC, const int width, const int height )
 {
-	UNREFERENCED_PARAMETER( paintDC );
+	std::unordered_map<int, IDrawablePtr>& objects = stage->GetObjects();
+	stage->ClipAndDrawObjects( paintDC, stage->GetObjectsAsVector() );
+	CViewport& viewport = stage->GetViewPort();
+	for( std::unordered_map<int, IDrawablePtr>::iterator i = objects.begin(); i != objects.end(); ++i ) {
+		DrawSizeableRectangle( paintDC, viewport.ConvertToScreenCoordinates( i->second->GetContainingBox() ), i->first );
+	}
+
 	UNREFERENCED_PARAMETER( width );
 	UNREFERENCED_PARAMETER( height );
+}
+
+void CEditorWindow::MoveCanvas( const POINT& point )
+{
+	CViewport& viewport = stage->GetViewPort();
+	viewport.SetZeroLocation( viewport.ConvertToModelCoordinates( point ) );
+}
+
+void CEditorWindow::MoveRectangle( const int id, const RECT & newSize )
+{
+	stage->GetObjectById( id )->SetContainingBox( stage->GetViewPort().ConvertToModelCoordinates( newSize ) );
+}
+
+void CEditorWindow::Scaling( const int direction )
+{
+	CViewport& viewport = stage->GetViewPort();
+	viewport.SetScale( viewport.GetScale() * pow( scalingFactor, direction / WHEEL_DELTA ) );
+}
+
+void CEditorWindow::SelectRectangle( const int id )
+{
+	// TODO: will be essential when work with OVerlappedWindow
 }
 
 bool CEditorWindow::Create()
@@ -56,3 +84,6 @@ bool CEditorWindow::Create()
 }
 
 const wchar_t* CEditorWindow::ClassName = L"CEditorWindow";
+
+const float CEditorWindow::scalingFactor = 1.2f;
+

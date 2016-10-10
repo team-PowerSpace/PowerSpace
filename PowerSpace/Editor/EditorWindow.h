@@ -23,11 +23,16 @@ public:
 	bool Create();
 
 protected:
+	// Унаследовано через CEditorRenderingWindow
 	virtual void DrawContent( HDC paintDC, const int width, const int height ) override;
+	virtual void MoveCanvas( const POINT& point ) override;
+	virtual void MoveRectangle( const int id, const RECT & newSize ) override;
+	virtual void Scaling( const int direction ) override;
+	virtual void SelectRectangle( const int id ) override;
 
 
 private:
 	static const wchar_t* ClassName;
 	std::shared_ptr<CStage> stage;
+	static const float scalingFactor;
 };
-
