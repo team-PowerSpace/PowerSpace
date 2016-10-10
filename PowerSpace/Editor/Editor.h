@@ -39,6 +39,8 @@ private:
 	CEditorWindow renderingWindow;
 	CEditControlWindow editControl;
 	HWND saveTextButton;
+	HWND setColorButton;
+	HWND addScriptButton;
 
 	std::shared_ptr<CStage> stage;
 
