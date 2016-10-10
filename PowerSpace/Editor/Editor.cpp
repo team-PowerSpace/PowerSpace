@@ -5,6 +5,7 @@
 #include "resource.h"
 #include "EditControlWindow.h"
 #include "Viewer.h"
+#include "Stage.h"
 #include "StageObjects.h"
 
 #define IDC_MAIN_BUTTON 101 
@@ -14,7 +15,6 @@ CEditor::CEditor()
 	menu = 0;
 	renderingWindow = CEditorWindow();
 	editControl = CEditControlWindow();
-	saveTextButton = {};
 }
 
 CEditor::~CEditor()
@@ -46,6 +46,8 @@ void CEditor::Show( int cmdShow )
 	ShowWindow( handle, cmdShow );
 	renderingWindow.Show( cmdShow );
 	ShowWindow( saveTextButton, cmdShow );
+	ShowWindow( setColorButton, cmdShow );
+	ShowWindow( addScriptButton, cmdShow );
 }
 
 std::shared_ptr<CStage>& CEditor::GetStage()
@@ -76,18 +78,15 @@ void CEditor::OnCreate()
 	CEditorWindow::RegisterClass();
 	menu = LoadMenu( GetModuleHandle( 0 ), MAKEINTRESOURCE( IDR_MENU1 ) );
 	renderingWindow.Create( handle );
-	saveTextButton = CreateWindow(
-		L"BUTTON",  // Predefined class; Unicode assumed 
-		L"Save Text",      // Button text 
-		WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,  // Styles 
-		10,         // x position 
-		10,         // y position 
-		100,        // Button width
-		100,        // Button height
-		handle,     // Parent window
-		(HMENU)IDC_MAIN_BUTTON,       // menu.
-		(HINSTANCE)GetWindowLong( handle, GWL_HINSTANCE ),
-		NULL );      // Pointer not needed.
+	saveTextButton = CreateWindow( L"BUTTON", L"Save Text", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
+		10, 10, 100, 100, handle, (HMENU)IDC_MAIN_BUTTON,
+		(HINSTANCE)GetWindowLong( handle, GWL_HINSTANCE ), NULL );
+	setColorButton = CreateWindow( L"BUTTON", L"Set Color", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
+		10, 10, 100, 100, handle, (HMENU)IDC_MAIN_BUTTON,
+		(HINSTANCE)GetWindowLong( handle, GWL_HINSTANCE ), NULL );
+	addScriptButton = CreateWindow( L"BUTTON", L"Add Scrypt", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
+		10, 10, 100, 100, handle, (HMENU)IDC_MAIN_BUTTON,
+		(HINSTANCE)GetWindowLong( handle, GWL_HINSTANCE ), NULL );
 
 }
 
@@ -103,8 +102,12 @@ void CEditor::OnSize()
 	SetWindowPos( renderingWindow.GetHandle(), HWND_TOP, middleX, rect.top, nWidth, nHeight, 0 );
 	SetWindowPos( editControl.GetHandle(), HWND_TOP, rect.left, rect.top, nWidth / 3,
 		nHeight * 3 / 4, 0 );
-	SetWindowPos( saveTextButton, HWND_TOP, rect.left, rect.top + nHeight * 3 / 4, nWidth / 3,
-		nHeight / 4, 0 );
+	SetWindowPos( saveTextButton, HWND_TOP, rect.left, rect.top + nHeight * 3 / 4,
+		nWidth / 3, nHeight / 12, 0 );
+	SetWindowPos( setColorButton, HWND_TOP, rect.left, rect.top + nHeight * 3 / 4 + nHeight / 12,
+		nWidth / 3, nHeight / 12, 0 );
+	SetWindowPos( addScriptButton, HWND_TOP, rect.left, rect.top + nHeight * 3 / 4 + nHeight / 6,
+		nWidth / 3, nHeight / 12, 0 );
 }
 
 void CEditor::GetText()
@@ -143,8 +146,16 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 		}
 		case IDC_MAIN_BUTTON:
 		{
-			GetText();
-			break;
+			{
+				if( (HWND)lParam == saveTextButton ) {
+					GetText();
+				} else if( (HWND)lParam == setColorButton ) {
+					//set color
+				} else if( (HWND)lParam == addScriptButton ) {
+					//add Script
+				}
+				break;
+			}
 		}
 	}
 	UNREFERENCED_PARAMETER( lParam );

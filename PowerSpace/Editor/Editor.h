@@ -41,6 +41,8 @@ private:
 	TBox generateDefaultBox() const;
 	int searchEmptyId() const;
 	HWND saveTextButton;
+	HWND setColorButton;
+	HWND addScriptButton;
 
 	std::shared_ptr<CStage> stage;
 
