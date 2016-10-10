@@ -101,6 +101,9 @@
     <ClInclude Include="Common\StageObjects.h">
       <Filter>Common\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Viewer\ViewerWindow.h">
+      <Filter>RenderingEngine\Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="ScriptEngine\PyObjectBuilder.h">
       <Filter>ScriptEngine\Header Files</Filter>
     </ClInclude>
@@ -144,6 +147,9 @@
     </ClCompile>
     <ClCompile Include="Common\StageObjects.cpp">
       <Filter>Common\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewer\ViewerWindow.cpp">
+      <Filter>RenderingEngine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ScriptEngine\ScriptSolver.cpp">
       <Filter>ScriptEngine\Source Files</Filter>
