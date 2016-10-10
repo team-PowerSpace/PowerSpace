@@ -98,3 +98,10 @@ __Code Style__
     1.1. импортировать в Visual Studio настройки через Tools -> Import and Export Settings;  
     1.2. применить эти настройки ко всем файлам через Edit -> Advanced -> Format Document.  
 2. Все комментарии и коммит-сообщения должны быть на английском языке.
+
+__Инструкции по сборке__  
+Перед сборкой проекта необходимо:  
+1. установить Python3;  
+2. выставить две переменные среды:  
+* Python_Include --- путь к папке <Python3 Installation Path>/include  
+* Python_Libs --- путь к папке <Python3 Installation Path>/libs
