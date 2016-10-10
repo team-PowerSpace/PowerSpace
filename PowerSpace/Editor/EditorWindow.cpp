@@ -59,7 +59,7 @@ void CEditorWindow::DrawContent( HDC paintDC, const int width, const int height 
 void CEditorWindow::MoveCanvas( const POINT& point )
 {
 	CViewport& viewport = stage->GetViewPort();
-	viewport.SetZeroLocation( viewport.ConvertToModelCoordinates( point ) );
+	viewport.SetZeroLocation( point );
 }
 
 void CEditorWindow::MoveRectangle( const int id, const RECT & newSize )
