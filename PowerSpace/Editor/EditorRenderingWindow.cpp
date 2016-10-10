@@ -262,11 +262,6 @@ LPCTSTR CEditorRenderingWindow::getCursor( const POINT & point ) const
 			return markers[i].GetCursor();
 		}
 	}
-	for( int i = rectangles.size() - 1; i >= 0; i-- ) {
-		if( contains( rectangles[i], point ) ) {
-			return IDC_CROSS;
-		}
-	}
 	return IDC_ARROW;
 }
 
@@ -349,6 +344,7 @@ void CEditorRenderingWindow::onMouseDown( const LPARAM lparam )
 			SelectRectangle( i );
 			selectedId = rectanglesIds[i];
 			ReDraw();
+			return;
 		}
 	}
 	lastPoint = point;
