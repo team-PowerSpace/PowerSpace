@@ -28,7 +28,7 @@ bool CEditorWindow::RegisterClass()
 
 	WNDCLASSEX windowClassInforamtion;
 	windowClassInforamtion.cbSize = sizeof( WNDCLASSEX );
-	windowClassInforamtion.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
+	windowClassInforamtion.style = CS_HREDRAW | CS_VREDRAW;
 	windowClassInforamtion.lpfnWndProc = WindowProc;
 	windowClassInforamtion.cbClsExtra = 0;
 	windowClassInforamtion.cbWndExtra = 2 * sizeof( LONG_PTR );
@@ -79,9 +79,9 @@ void CEditorWindow::SelectRectangle( const int id )
 	UNREFERENCED_PARAMETER( id );
 }
 
-bool CEditorWindow::Create()
+bool CEditorWindow::Create( HWND hWndParent )
 {
-	return CEditorRenderingWindow::Create( ClassName );
+	return CEditorRenderingWindow::Create(hWndParent, ClassName );
 }
 
 const wchar_t* CEditorWindow::ClassName = L"CEditorWindow";

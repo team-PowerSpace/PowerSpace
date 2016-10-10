@@ -19,9 +19,9 @@ CEditorRenderingWindow::~CEditorRenderingWindow()
 }
 
 
-void CEditorRenderingWindow::Show() const
+void CEditorRenderingWindow::Show(int cmdShow) const
 {
-	::ShowWindow( handle, SW_MAXIMIZE );
+	::ShowWindow( handle, cmdShow);
 }
 
 HWND CEditorRenderingWindow::GetHandle() const
@@ -29,13 +29,13 @@ HWND CEditorRenderingWindow::GetHandle() const
 	return handle;
 }
 
-bool CEditorRenderingWindow::Create( const wchar_t * classname )
+bool CEditorRenderingWindow::Create(HWND hWndParent,const wchar_t * classname )
 {
 	HINSTANCE instance = GetModuleHandleW( nullptr );
 	wchar_t title[MAX_RESOURCE_LENGTH];
 	::LoadString( instance, IDS_APP_TITLE, title, MAX_RESOURCE_LENGTH );
-	handle = CreateWindowEx( 0, classname, title, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
-		DefaultWidth, DefaultHeight, 0, 0, instance, this );
+	handle = CreateWindowEx( 0, classname, title, WS_CHILD | WS_BORDER, CW_USEDEFAULT, CW_USEDEFAULT,
+		CW_USEDEFAULT, CW_USEDEFAULT, hWndParent, 0, instance, this );
 
 	// Will be destroyed in OnDestroy
 	markerPen = CreatePen( PS_DASH, 1, MarkerColor );
@@ -112,6 +112,7 @@ LRESULT CEditorRenderingWindow::WindowProc( HWND handle, UINT message, WPARAM wP
 			wndPtr->onMouseUpOrLeave( lParam );
 			break;
 		default:
+			
 			// Will be returned DefWindowProc
 			break;
 	}

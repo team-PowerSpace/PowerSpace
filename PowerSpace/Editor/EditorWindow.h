@@ -20,7 +20,7 @@ public:
 
 	static bool RegisterClass();
 
-	bool Create();
+	bool Create(HWND hWndParent);
 
 protected:
 	// Унаследовано через CEditorRenderingWindow

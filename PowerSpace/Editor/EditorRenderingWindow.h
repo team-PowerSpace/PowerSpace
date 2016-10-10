@@ -31,16 +31,17 @@ public:
 	CEditorRenderingWindow();
 	virtual ~CEditorRenderingWindow();
 
-	void Show() const;
+	void Show(int cmdShow) const;
 
 	HWND GetHandle() const;
 
 protected:
-	bool Create( const wchar_t* classname );
+
+	bool Create(HWND hWndParent, const wchar_t* classname);
 
 	void OnDestroy();
 
-	virtual void DrawContent( HDC paintDC, const int width, const int height ) = 0;
+	virtual void DrawContent(HDC paintDC, const int width, const int height) {};
 
 	static LRESULT __stdcall WindowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
 

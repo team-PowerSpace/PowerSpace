@@ -8,15 +8,15 @@
 #pragma warning(disable:4100)
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
 {
-	if( !CEditorWindow::RegisterClass() ) {
+	if( !CEditor::RegisterClass() ) {
 		return 1;
 	}
-	CEditorWindow window;
+	CEditor window;
 	if( !window.Create() ) {
 		return 3;
 	}
 
-	// code for testing. May be delted
+	// code for testing. May be deleted
 	std::shared_ptr<CStage> stage = std::make_shared<CStage>();
 	TBox box;
 	box.left = 10;
@@ -26,9 +26,10 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	CRectangleObject rect( RGB( 11, 22, 33 ), box );
 	stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( 0, std::dynamic_pointer_cast<IDrawable,
 		CRectangleObject>(std::make_shared<CRectangleObject>( RGB( 11, 22, 33 ), box )) ) );
-	window.SetStage( stage );
+	// TODO set stage
+	// window.SetStage( stage );
 
-	window.Show();
+	window.Show(nCmdShow);
 
 	MSG message;
 	BOOL getMessageResult = 0;
