@@ -31,7 +31,7 @@ public:
 
 	HWND GetHandle() const;
 
-	bool Create(const wchar_t* classname);
+	bool Create( const wchar_t* classname );
 
 protected:
 

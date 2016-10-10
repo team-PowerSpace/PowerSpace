@@ -2,6 +2,8 @@
 #include <Windows.h>
 #include <string>
 #include "EditorRenderingWindow.h"
+#include "EllipseWindow.h"
+#include "EditControlWindow.h"
 
 class CEditor {
 public:
@@ -11,24 +13,29 @@ public:
 	static bool RegisterClass();
 
 	bool Create();
-	void Show(int cmdShow);
+	void Show( int cmdShow );
 
 protected:
 	// WM_DESTROY
 	void OnDestroy();
 	//WM_NCCREATE
-	void OnNCCreate(HWND handle);
+	void OnNCCreate( HWND handle );
 	//WM_CREATE
 	void OnCreate();
 	// WM_COMMAND, lParam=0
-	void OnCommandMenu(WPARAM wParam);
-	void OnCommand(WPARAM wParam);
+	void OnCommandMenu( WPARAM wParam, LPARAM lParam);
+	void OnCommand( WPARAM wParam, LPARAM lParam );
 	void OnSize();
+	void GetText();
 
 private:
 	HWND handle;
 	HMENU menu;
 	CEditorRenderingWindow renderingWindow;
+	CEditControlWindow editControl;
+	HWND saveTextButton;
 
-	static LRESULT __stdcall windowProc(HWND handle, UINT message, WPARAM wParam, LPARAM lParam);
+	CEllipseWindow ellipseWindow;
+
+	static LRESULT __stdcall windowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
 };

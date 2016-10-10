@@ -107,6 +107,12 @@
     <ClInclude Include="Editor\EditorRenderingWindow.h">
       <Filter>Editor\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="EllipseWindow.h">
+      <Filter>Editor\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EditControlWindow.h">
+      <Filter>Editor\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PowerSpace.cpp">
@@ -146,6 +152,12 @@
       <Filter>Editor\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Editor\EditorRenderingWindow.cpp">
+      <Filter>Editor\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EllipseWindow.cpp">
+      <Filter>Editor\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EditControlWindow.cpp">
       <Filter>Editor\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
