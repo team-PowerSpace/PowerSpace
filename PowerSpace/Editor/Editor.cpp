@@ -173,21 +173,10 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 					GetText();
 				} else {
 					if( (HWND)lParam == setColorButton ) {
-						CHOOSECOLOR chooseColor;
-						static COLORREF customColors[16];
-						ZeroMemory( &chooseColor, sizeof( chooseColor ) );
-						chooseColor.lStructSize = sizeof( chooseColor );
-						chooseColor.hwndOwner = handle;
-						chooseColor.lpCustColors = reinterpret_cast<LPDWORD>(customColors);
-						chooseColor.Flags = CC_FULLOPEN | CC_RGBINIT;
-						chooseColor.rgbResult = stage->GetObjectById(activeId)->GetColor();
-						if( ::ChooseColor( &chooseColor ) ) {
-							stage->GetObjectById( activeId )->SetColor( chooseColor.rgbResult );
-							renderingWindow.ReDraw();
-						}
+						onColorSelect();
 					} else {
 						if( (HWND)lParam == addScriptButton ) {
-							//add Script
+							onFileSelect();
 						}
 					}
 				}
@@ -232,6 +221,53 @@ int CEditor::searchEmptyId() const
 		}
 	}
 	return maxid + 1;
+}
+
+void CEditor::onColorSelect()
+{
+	CHOOSECOLOR chooseColor;
+	static COLORREF customColors[16];
+	ZeroMemory( &chooseColor, sizeof( chooseColor ) );
+	chooseColor.lStructSize = sizeof( chooseColor );
+	chooseColor.hwndOwner = handle;
+	chooseColor.lpCustColors = reinterpret_cast<LPDWORD>(customColors);
+	chooseColor.Flags = CC_FULLOPEN | CC_RGBINIT;
+	chooseColor.rgbResult = stage->GetObjectById( activeId )->GetColor();
+	if( ::ChooseColor( &chooseColor ) ) {
+		stage->GetObjectById( activeId )->SetColor( chooseColor.rgbResult );
+		renderingWindow.ReDraw();
+	}
+}
+
+void CEditor::onFileSelect()
+{
+	OPENFILENAMEW filename;
+	filename.lStructSize = sizeof( filename );
+	filename.hwndOwner = handle;
+	filename.hInstance = GetModuleHandleW( nullptr );
+	filename.lpstrFilter = L"Python script (*.py)\0*.py\0All Files (*.*)\0*.*\0\0";
+	filename.lpstrCustomFilter = 0;
+	filename.nFilterIndex = 1;
+	filename.nMaxFile = 1024;
+	std::unique_ptr<wchar_t[]> name( new wchar_t[filename.nMaxFile] );
+	filename.lpstrFile = name.get();
+	filename.lpstrFile[0] = 0;
+	filename.lpstrInitialDir = 0;
+	filename.lpstrTitle = L"Add script";
+	filename.nMaxFileTitle = 0;
+	filename.lpstrDefExt = L".py";
+	filename.lCustData = 0;
+	filename.lpfnHook = 0;
+	filename.lpTemplateName = 0;
+	filename.nFileOffset = 0;
+	filename.nFileExtension = 0;
+	filename.Flags = OFN_FILEMUSTEXIST;
+
+	if( ::GetOpenFileName( &filename ) ) {
+		CScript script( filename.lpstrFile );
+		// add script here. Next line will help in this
+		//stage->GetObjectById( activeId )->
+	}
 }
 
 LRESULT CEditor::windowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam )

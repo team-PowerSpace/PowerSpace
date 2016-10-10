@@ -51,6 +51,9 @@ private:
 	std::shared_ptr<CStage> stage;
 	int activeId;
 
+	void onColorSelect();
+	void onFileSelect();
+
 	static LRESULT __stdcall windowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
 
 	static const int defaultBoxMarginDividor;
