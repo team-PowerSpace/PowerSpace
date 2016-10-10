@@ -21,12 +21,20 @@ public:
 
 protected:
 
-	void OnDestroy();
+	void onDestroy();
 
 	static LRESULT __stdcall WindowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
 	
 private:
 	HWND handle;
+	HBITMAP bitmap;
+	HDC bitmapContext;
+	HBRUSH backgroundBrush;
+	HBRUSH markerBrush;
+	HPEN markerPen;
+
+	int bitmapWidth;
+	int bitmapHeight;
 
 	const CViewport& viewport;
 	const CCanvas& canvas;
@@ -35,4 +43,16 @@ private:
 	const int windowWidth;
 
 	static const wchar_t* ClassName;
+
+	void onCreate();
+
+	void onTimer();
+
+	void onPaint();
+
+	void onSize();
+
+	void onMouseMove( const WPARAM wParam, const LPARAM lParam );
+
+	void onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lParam );
 };

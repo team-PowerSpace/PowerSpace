@@ -29,4 +29,8 @@ private:
 
 	// win32 window of the viewer
 	CViewerWindow viewerWindow;
+
+	void tickHandler();
+
+	void clickHandler();
 };
