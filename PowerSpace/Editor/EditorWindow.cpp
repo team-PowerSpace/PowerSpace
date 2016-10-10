@@ -70,7 +70,7 @@ void CEditorWindow::MoveRectangle( const int id, const RECT & newSize )
 void CEditorWindow::Scaling( const int direction )
 {
 	CViewport& viewport = stage->GetViewPort();
-	viewport.SetScale( viewport.GetScale() * pow( scalingFactor, direction / WHEEL_DELTA ) );
+	viewport.SetScale( viewport.GetScale() * pow( scalingFactor, direction ) );
 }
 
 void CEditorWindow::SelectRectangle( const int id )

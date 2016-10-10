@@ -19,9 +19,9 @@ CEditorRenderingWindow::~CEditorRenderingWindow()
 }
 
 
-void CEditorRenderingWindow::Show(int cmdShow) const
+void CEditorRenderingWindow::Show( int cmdShow ) const
 {
-	::ShowWindow( handle, cmdShow);
+	::ShowWindow( handle, cmdShow );
 }
 
 HWND CEditorRenderingWindow::GetHandle() const
@@ -29,7 +29,7 @@ HWND CEditorRenderingWindow::GetHandle() const
 	return handle;
 }
 
-bool CEditorRenderingWindow::Create(HWND hWndParent,const wchar_t * classname )
+bool CEditorRenderingWindow::Create( HWND hWndParent, const wchar_t * classname )
 {
 	HINSTANCE instance = GetModuleHandleW( nullptr );
 	wchar_t title[MAX_RESOURCE_LENGTH];
@@ -112,7 +112,7 @@ LRESULT CEditorRenderingWindow::WindowProc( HWND handle, UINT message, WPARAM wP
 			wndPtr->onMouseUpOrLeave( lParam );
 			break;
 		default:
-			
+
 			// Will be returned DefWindowProc
 			break;
 	}
@@ -316,7 +316,8 @@ RECT CEditorRenderingWindow::resizeRect( const POINT & point )
 
 void CEditorRenderingWindow::onMouseWheel( WPARAM wParam )
 {
-	Scaling( HIWORD( wParam ) / WHEEL_DELTA );
+	Scaling( static_cast<signed short>(HIWORD( wParam )) / WHEEL_DELTA );
+	reDraw();
 }
 
 bool CEditorRenderingWindow::contains( const RECT & rect, const POINT & point )
