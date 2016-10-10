@@ -28,7 +28,7 @@ protected:
 	//WM_CREATE
 	void OnCreate();
 	// WM_COMMAND, lParam=0
-	void OnCommandMenu( WPARAM wParam, LPARAM lParam);
+	void OnCommandMenu( WPARAM wParam, LPARAM lParam );
 	void OnCommand( WPARAM wParam, LPARAM lParam );
 	void OnSize();
 	void GetText();
@@ -38,11 +38,13 @@ private:
 	HMENU menu;
 	CEditorWindow renderingWindow;
 	CEditControlWindow editControl;
-	TBox generateDefaultBox();
-	int searchEmptyId();
+	TBox generateDefaultBox() const;
+	int searchEmptyId() const;
 	HWND saveTextButton;
 
 	std::shared_ptr<CStage> stage;
 
 	static LRESULT __stdcall windowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
+
+	static const int defaultBoxMarginDividor;
 };

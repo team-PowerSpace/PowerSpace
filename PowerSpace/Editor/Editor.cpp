@@ -161,18 +161,21 @@ void CEditor::OnCommand( WPARAM wParam, LPARAM lParam )
 	}
 }
 
-// like a const of box
-TBox CEditor::generateDefaultBox()
+TBox CEditor::generateDefaultBox() const
 {
 	TBox box;
-	box.left = 5;
-	box.top = 5;
-	box.right = 300;
-	box.bottom = 200;
-	return box;
+	RECT rect;
+	GetWindowRect( renderingWindow.GetHandle(), &rect );
+	long width = rect.right - rect.left;
+	long height = rect.bottom - rect.top;
+	box.left = width / defaultBoxMarginDividor;
+	box.top = height / defaultBoxMarginDividor;
+	box.right = 3 * width / defaultBoxMarginDividor;
+	box.bottom = 3 * height / defaultBoxMarginDividor;
+	return stage->GetViewPort().ConvertToModelCoordinates( box );
 }
 
-int CEditor::searchEmptyId()
+int CEditor::searchEmptyId() const
 {
 	int maxid = 0;
 	for( auto i : stage->GetObjects() ) {
@@ -225,3 +228,5 @@ LRESULT CEditor::windowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lP
 			return DefWindowProc( handle, message, wParam, lParam );
 	}
 }
+
+const int CEditor::defaultBoxMarginDividor = 4;
