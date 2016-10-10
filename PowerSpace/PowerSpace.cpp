@@ -17,19 +17,20 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 		return 3;
 	}
 
-	// code for testing. May be deleted
 	std::shared_ptr<CStage> stage = std::make_shared<CStage>();
+
+	// code for testing. May be deleted
 	TBox box;
 	box.left = 10;
 	box.top = 10;
 	box.right = 100;
-	box.bottom = 200;
+	box.bottom = 250;
 	CRectangleObject rect( RGB( 11, 22, 33 ), box );
-	stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( 0, std::dynamic_pointer_cast<IDrawable,
-		CRectangleObject>(std::make_shared<CRectangleObject>( RGB( 11, 22, 33 ), box )) ) );
-	 window.SetStage( stage );
+	stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( 0, std::make_shared<CRectangleObject>( RGB( 11, 22, 33 ), box ) ) );
+	// end of test code
 
-	window.Show(nCmdShow);
+	window.SetStage( stage );
+	window.Show( nCmdShow );
 
 	MSG message;
 	BOOL getMessageResult = 0;

@@ -4,6 +4,8 @@
 #include "Editor.h"
 #include "resource.h"
 #include "EditControlWindow.h"
+#include "Viewer.h"
+#include "StageObjects.h"
 
 #define IDC_MAIN_BUTTON 101 
 
@@ -42,7 +44,7 @@ bool CEditor::Create()
 void CEditor::Show( int cmdShow )
 {
 	ShowWindow( handle, cmdShow );
-	renderingWindow.Show(cmdShow);
+	renderingWindow.Show( cmdShow );
 	ShowWindow( saveTextButton, cmdShow );
 }
 
@@ -59,32 +61,33 @@ void CEditor::SetStage( std::shared_ptr<CStage> stage_ )
 
 void CEditor::OnDestroy()
 {
-	DestroyMenu(menu);
-	PostQuitMessage(0);
+	DestroyMenu( menu );
+	PostQuitMessage( 0 );
 }
 
-void CEditor::OnNCCreate( HWND _handle ) {
+void CEditor::OnNCCreate( HWND _handle )
+{
 	handle = _handle;
 }
 
 void CEditor::OnCreate()
 {
-	editControl.Create(handle);
+	editControl.Create( handle );
 	CEditorWindow::RegisterClass();
 	menu = LoadMenu( GetModuleHandle( 0 ), MAKEINTRESOURCE( IDR_MENU1 ) );
-	renderingWindow.Create(handle);
+	renderingWindow.Create( handle );
 	saveTextButton = CreateWindow(
 		L"BUTTON",  // Predefined class; Unicode assumed 
 		L"Save Text",      // Button text 
-		WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON ,  // Styles 
+		WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,  // Styles 
 		10,         // x position 
 		10,         // y position 
 		100,        // Button width
 		100,        // Button height
 		handle,     // Parent window
 		(HMENU)IDC_MAIN_BUTTON,       // menu.
-		(HINSTANCE)GetWindowLong(handle, GWL_HINSTANCE),
-		NULL);      // Pointer not needed.
+		(HINSTANCE)GetWindowLong( handle, GWL_HINSTANCE ),
+		NULL );      // Pointer not needed.
 
 }
 
@@ -93,22 +96,22 @@ void CEditor::OnSize()
 {
 	RECT rect;
 	int middleX, nWidth, nHeight;
-	::GetClientRect(handle, &rect);
-	middleX = ( rect.left + rect.right ) / 4;
-	nWidth = ( rect.right - rect.left ) * 3 / 4;
-	nHeight = ( rect.bottom - rect.top );
+	::GetClientRect( handle, &rect );
+	middleX = (rect.left + rect.right) / 4;
+	nWidth = (rect.right - rect.left) * 3 / 4;
+	nHeight = (rect.bottom - rect.top);
 	SetWindowPos( renderingWindow.GetHandle(), HWND_TOP, middleX, rect.top, nWidth, nHeight, 0 );
-	SetWindowPos(editControl.GetHandle(), HWND_TOP, rect.left, rect.top, nWidth / 3, 
-		nHeight * 3 / 4, 0);
-	SetWindowPos(saveTextButton, HWND_TOP, rect.left, rect.top + nHeight * 3 / 4, nWidth / 3,
-		nHeight / 4, 0);
+	SetWindowPos( editControl.GetHandle(), HWND_TOP, rect.left, rect.top, nWidth / 3,
+		nHeight * 3 / 4, 0 );
+	SetWindowPos( saveTextButton, HWND_TOP, rect.left, rect.top + nHeight * 3 / 4, nWidth / 3,
+		nHeight / 4, 0 );
 }
 
 void CEditor::GetText()
 {
-	int length = SendMessage(editControl.GetHandle(), WM_GETTEXTLENGTH, 0, 0);
+	int length = SendMessage( editControl.GetHandle(), WM_GETTEXTLENGTH, 0, 0 );
 	wchar_t *text = new wchar_t[length + 1];
-	SendMessage(editControl.GetHandle(), WM_GETTEXT, length + 1, reinterpret_cast<LPARAM>(text));
+	SendMessage( editControl.GetHandle(), WM_GETTEXT, length + 1, reinterpret_cast<LPARAM>(text) );
 	//add functions here
 	delete[] text;
 }
@@ -117,80 +120,108 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 {
 	switch LOWORD( wParam )
 	{
-	case ID_ADD_RECTANGLE:
-	{
-		//add rectangle
-		break;
+		case ID_ADD_RECTANGLE:
+		{
+			// TODO const for color
+			stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( searchEmptyId(),
+				std::make_shared<CRectangleObject>( RGB( 100, 90, 80 ), generateDefaultBox() ) ) );
+			renderingWindow.ReDraw();
+			break;
+		}
+		case ID_ADD_ELLIPSE:
+		{
+			// TODO const for color
+			stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( searchEmptyId(),
+				std::make_shared<CEllipseObject>( RGB( 100, 90, 80 ), generateDefaultBox() ) ) );
+			renderingWindow.ReDraw();
+			break;
+		}
+		case ID_PLAY_LAUNCHPLAYER:
+		{
+			CViewer viewer( *stage );
+			break;
+		}
+		case IDC_MAIN_BUTTON:
+		{
+			GetText();
+			break;
+		}
 	}
-	case ID_ADD_ELLIPSE:
-	{
-		//add ellipse
-		break;
-	}
-	case ID_PLAY_LAUNCHPLAYER:
-	{
-		//launch player
-		break;
-	}
-	case IDC_MAIN_BUTTON:
-	{
-		GetText();
-		break;
-	}	
-	}
+	UNREFERENCED_PARAMETER( lParam );
 }
 
 void CEditor::OnCommand( WPARAM wParam, LPARAM lParam )
 {
-	switch ( HIWORD( wParam ) )
-	{
-	case 0:
-	{
-		OnCommandMenu( wParam, lParam );
-		break;
+	switch( HIWORD( wParam ) ) {
+		case 0:
+		{
+			OnCommandMenu( wParam, lParam );
+			break;
+		}
 	}
+}
+
+// like a const of box
+TBox CEditor::generateDefaultBox()
+{
+	TBox box;
+	box.left = 5;
+	box.top = 5;
+	box.right = 300;
+	box.bottom = 200;
+	return box;
+}
+
+int CEditor::searchEmptyId()
+{
+	int maxid = 0;
+	for( auto i : stage->GetObjects() ) {
+		if( i.first > maxid ) {
+			maxid = i.first;
+		}
 	}
+	return maxid + 1;
 }
 
 LRESULT CEditor::windowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam )
 {
-	switch ( message ) {
-	case WM_NCCREATE:
-	{
-		CEditor* window = (CEditor*)( (CREATESTRUCT*)lParam )->lpCreateParams;
-		SetLastError( 0 );
-		SetWindowLongPtr( handle, GWLP_USERDATA, (LONG)window );
-		if ( GetLastError() != 0 ) {
-			return GetLastError();
+	switch( message ) {
+		case WM_NCCREATE:
+		{
+			CEditor* window = (CEditor*)((CREATESTRUCT*)lParam)->lpCreateParams;
+			SetLastError( 0 );
+			SetWindowLongPtr( handle, GWLP_USERDATA, (LONG)window );
+			if( GetLastError() != 0 ) {
+				return GetLastError();
+			}
+			window->OnNCCreate( handle );
+			return DefWindowProc( handle, message, wParam, lParam );
 		}
-		window->OnNCCreate( handle );
-		return DefWindowProc( handle, message, wParam, lParam );
-	}
-	case WM_CREATE:
-	{
-		CEditor* window = (CEditor*)GetWindowLongPtr( handle, GWLP_USERDATA );
-		window->OnCreate();
-		return DefWindowProc( handle, message, wParam, lParam );
-	}
-	case WM_SIZE:
-	{
-		CEditor* window = (CEditor*)GetWindowLongPtr( handle, GWLP_USERDATA );
-		window->OnSize();
-		return DefWindowProc( handle, message, wParam, lParam );
-	}
-	case WM_COMMAND:
-	{
-		CEditor* window = (CEditor*)GetWindowLongPtr( handle, GWLP_USERDATA );
-		window->OnCommand( wParam, lParam );
-		return DefWindowProc( handle, message, wParam, lParam );
-	}
-	case WM_DESTROY:
-	{
-		CEditor* window = (CEditor*)GetWindowLongPtr( handle, GWLP_USERDATA );
-		window->OnDestroy();
-		return 0;
-	}
-	default:
-		return DefWindowProc( handle, message, wParam, lParam );
+		case WM_CREATE:
+		{
+			CEditor* window = (CEditor*)GetWindowLongPtr( handle, GWLP_USERDATA );
+			window->OnCreate();
+			return DefWindowProc( handle, message, wParam, lParam );
+		}
+		case WM_SIZE:
+		{
+			CEditor* window = (CEditor*)GetWindowLongPtr( handle, GWLP_USERDATA );
+			window->OnSize();
+			return DefWindowProc( handle, message, wParam, lParam );
+		}
+		case WM_COMMAND:
+		{
+			CEditor* window = (CEditor*)GetWindowLongPtr( handle, GWLP_USERDATA );
+			window->OnCommand( wParam, lParam );
+			return DefWindowProc( handle, message, wParam, lParam );
+		}
+		case WM_DESTROY:
+		{
+			CEditor* window = (CEditor*)GetWindowLongPtr( handle, GWLP_USERDATA );
+			window->OnDestroy();
+			return 0;
+		}
+		default:
+			return DefWindowProc( handle, message, wParam, lParam );
 	}
 }

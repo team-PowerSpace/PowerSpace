@@ -1,7 +1,7 @@
 #include <stdafx.h>
+#include <Winuser.h>
 #include "EditorRenderingWindow.h"
 #include "Resource.h"
-#include <Winuser.h>
 
 #define MAX_RESOURCE_LENGTH 100
 
@@ -183,7 +183,7 @@ void CEditorRenderingWindow::onMouseMove( const LPARAM lParam )
 			SetCursor( LoadCursor( 0, IDC_SIZEALL ) );
 			break;
 	}
-	reDraw();
+	ReDraw();
 
 }
 
@@ -270,7 +270,7 @@ LPCTSTR CEditorRenderingWindow::getCursor( const POINT & point ) const
 	return IDC_ARROW;
 }
 
-void CEditorRenderingWindow::reDraw() const
+void CEditorRenderingWindow::ReDraw() const
 {
 	RECT rect;
 	GetClientRect( handle, &rect );
@@ -317,7 +317,7 @@ RECT CEditorRenderingWindow::resizeRect( const POINT & point )
 void CEditorRenderingWindow::onMouseWheel( WPARAM wParam )
 {
 	Scaling( static_cast<signed short>(HIWORD( wParam )) / WHEEL_DELTA );
-	reDraw();
+	ReDraw();
 }
 
 bool CEditorRenderingWindow::contains( const RECT & rect, const POINT & point )
@@ -337,7 +337,7 @@ void CEditorRenderingWindow::onMouseDown( const LPARAM lparam )
 			startSize = rectangles[id];
 			lastSize = startSize;
 			selectedId = id;
-			reDraw();
+			ReDraw();
 			return;
 		}
 	}
@@ -348,7 +348,7 @@ void CEditorRenderingWindow::onMouseDown( const LPARAM lparam )
 			lastSize = startSize;
 			SelectRectangle( i );
 			selectedId = rectanglesIds[i];
-			reDraw();
+			ReDraw();
 		}
 	}
 	lastPoint = point;

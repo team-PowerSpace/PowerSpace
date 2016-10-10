@@ -35,13 +35,15 @@ public:
 
 	HWND GetHandle() const;
 
+	void ReDraw() const;
+
 protected:
 
 	bool Create(HWND hWndParent, const wchar_t* classname);
 
 	void OnDestroy();
 
-	virtual void DrawContent(HDC paintDC, const int width, const int height) {};
+	virtual void DrawContent(HDC paintDC, const int width, const int height) = 0;
 
 	static LRESULT __stdcall WindowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
 
@@ -110,7 +112,6 @@ private:
 
 	LPCTSTR getCursor( const POINT& point ) const;
 
-	void reDraw() const;
 
 	RECT resizeRect( const POINT& point );
 

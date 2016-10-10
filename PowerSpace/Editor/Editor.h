@@ -38,6 +38,8 @@ private:
 	HMENU menu;
 	CEditorWindow renderingWindow;
 	CEditControlWindow editControl;
+	TBox generateDefaultBox();
+	int searchEmptyId();
 	HWND saveTextButton;
 
 	std::shared_ptr<CStage> stage;
