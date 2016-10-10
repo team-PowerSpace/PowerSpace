@@ -29,6 +29,10 @@ public:
 
     // draws object on canvas
     virtual void Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const = 0;
+    enum DrawableType {
+        CDrawable, count
+    };
+    virtual DrawableType GetType() const = 0;
 };
 
 // this abstract class should be the base class for every object that can be drawn on the stage
@@ -53,6 +57,8 @@ public:
 
     // getters for scripts field
     const std::vector<CScript>& GetScripts( EventType eventType );
+
+	virtual DrawableType GetType();
 protected:
     // a unique identifier linked to the object
     int id;

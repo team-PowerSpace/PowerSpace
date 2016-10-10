@@ -1,5 +1,6 @@
 #pragma once
 #include "Stage.h"
+#include "CDrawableBuilder.h"
 
 // this class processes python scripts and changes the stage
 class CScriptEngine
@@ -12,5 +13,6 @@ public:
     // returns the vector of objects that were modified during the evaluation of the scripts
     std::vector<int> RunScripts( int objectId, const std::vector<CScript>& scripts );
 private:
+    void setNewValues(CDrawableBuilder::CDrawableStruct& newData, std::shared_ptr<IDrawable> workingObject);
     CStage& stage;
 };
