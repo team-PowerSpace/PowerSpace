@@ -214,7 +214,9 @@ void CEditorRenderingWindow::drawEraseRectangle( HDC paintDC, const int width, c
 
 void CEditorRenderingWindow::DrawSizeableRectangle( HDC paintDC, const RECT & rectangle, const int id )
 {
-	::Rectangle( paintDC, rectangle.left, rectangle.top, rectangle.right, rectangle.bottom );
+	SelectObject( paintDC, GetStockObject( NULL_BRUSH ) );
+	SelectObject( paintDC, markerPen );
+	Rectangle( paintDC, rectangle.left, rectangle.top, rectangle.right, rectangle.bottom );
 
 	rectangles.push_back( rectangle );
 	rectanglesIds.push_back( id );
