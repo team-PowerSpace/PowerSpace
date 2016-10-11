@@ -217,6 +217,9 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
             scriptEngine.RunScripts(pair.first, scripts);
         }
     }
+    RECT rect;
+    GetClientRect( handle, &rect );
+    InvalidateRect( handle, &rect, false );
 }
 
 void CViewerWindow::Show() const

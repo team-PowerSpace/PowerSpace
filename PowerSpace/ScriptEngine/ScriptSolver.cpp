@@ -26,7 +26,7 @@ std::shared_ptr<IDrawable> CScriptSolver::Run() {
 	Py_DECREF(pName);
 
 	if (pModule != nullptr) {
-		pFunc = PyObject_GetAttrString(pModule, path.c_str());
+		pFunc = PyObject_GetAttrString(pModule, func.c_str());
 		if (pFunc && PyCallable_Check(pFunc)) {
 			pArgs = PyTuple_New(1);
 			pDict = PyDict_New();
