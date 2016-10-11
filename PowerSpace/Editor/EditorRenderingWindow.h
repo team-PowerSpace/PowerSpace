@@ -11,7 +11,7 @@ public:
 	const RECT& GetLocation() const;
 
 	// Id indenity object on stage whitch this marker is related to
-	const int GetId() const;
+	const int GetIndex() const;
 
 	// Returns id of cursor for SetSystemCursor 
 	LPCTSTR GetCursor() const;
@@ -19,7 +19,7 @@ public:
 private:
 	TMarkerType type;
 	RECT location;
-	int id;
+	int index;
 };
 
 enum TMovingState {
@@ -52,6 +52,7 @@ protected:
 	// Drawing of object (not frame) should be in heir-class
 	void DrawSizeableRectangle( HDC paintDC, const RECT & rectangle, const int id );
 
+    
 	virtual void MoveCanvas( const POINT& point ) = 0;
 
 	virtual void MoveRectangle( const int id, const RECT& newSize) = 0;
@@ -107,11 +108,11 @@ private:
 	void drawEraseRectangle( HDC paintDC, const int width, const int height ) const;
 
 
-	void addMarkersForRectangle( HDC paintDC, const int x, const int y, const int width, const int height, const int id );
+    void addMarkersForRectangle( HDC paintDC, const int x, const int y, const int width, const int height, const int id, const int index );
 
-	void addMarker( HDC paintDC, const int x, const int y, const TMarkerType type, const int id );
+    void addMarker( HDC paintDC, const int x, const int y, const TMarkerType type, const int id, const int index );
 
-	void destroyDoubleBuffer();
+    void destroyDoubleBuffer();
 
 	LPCTSTR getCursor( const POINT& point ) const;
 
