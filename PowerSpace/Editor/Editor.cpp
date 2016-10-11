@@ -83,7 +83,7 @@ void CEditor::OnCreate()
 	setColorButton = CreateWindow( L"BUTTON", L"Set Color", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
 		10, 10, 100, 100, handle, (HMENU)IDC_MAIN_BUTTON,
         *(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
-	addScriptButton = CreateWindow( L"BUTTON", L"Add Scrypt", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
+	addScriptButton = CreateWindow( L"BUTTON", L"Add Script", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
 		10, 10, 100, 100, handle, (HMENU)IDC_MAIN_BUTTON,
         *(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
 
@@ -163,25 +163,20 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 		case ID_PLAY_LAUNCHPLAYER:
 		{
 			CViewer viewer( *stage, CViewport() );
+            viewer.Create();
 			break;
 		}
-		case IDC_MAIN_BUTTON:
-		{
-			{
-				if( (HWND)lParam == saveTextButton ) {
-					GetText();
-				} else {
-					if( (HWND)lParam == setColorButton ) {
-						onColorSelect();
-					} else {
-						if( (HWND)lParam == addScriptButton ) {
-							onFileSelect();
-						}
-					}
-				}
-				break;
-			}
-		}
+        case IDC_MAIN_BUTTON:
+        {
+            if( (HWND)lParam == saveTextButton ) {
+                GetText();
+            } else if( (HWND)lParam == setColorButton ) {
+                onColorSelect();
+            } else if( (HWND)lParam == addScriptButton ) {
+                onFileSelect();
+            }
+            break;
+        }
 	}
 	UNREFERENCED_PARAMETER( lParam );
 }
@@ -264,8 +259,7 @@ void CEditor::onFileSelect()
 
 	if( ::GetOpenFileName( &filename ) ) {
 		CScript script( filename.lpstrFile );
-		// add script here. Next line will help in this
-		//stage->GetObjectById( activeId )->
+        stage->GetObjectById( activeId )->AddScript( EventType::EventClick, script );
 	}
 }
 

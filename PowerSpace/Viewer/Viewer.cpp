@@ -11,7 +11,9 @@ CViewer::~CViewer()
 
 bool CViewer::Create()
 {
-	return viewerWindow.Create();
+    bool isCreated = viewerWindow.Create();
+    viewerWindow.Show();
+	return isCreated;
 }
 
 void CViewer::SetStage( CStage _stage )

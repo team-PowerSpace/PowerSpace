@@ -32,6 +32,10 @@ public:
 
     // draws object on canvas
     virtual void Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const = 0;
+
+    // links new script to the object
+    virtual void AddScript( EventType eventType, CScript script ) = 0;
+
     enum DrawableType {
         CDrawable, count
     };
