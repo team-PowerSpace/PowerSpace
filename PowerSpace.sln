@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PowerSpace", "PowerSpace\PowerSpace.vcxproj", "{D53004EC-D910-474B-9216-469A4A765DB8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PowerSpaceTest", "PowerSpaceTest\PowerSpaceTest.vcxproj", "{D08210C0-58D5-4C88-AACD-80F17918C123}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,14 @@ Global
 		{D53004EC-D910-474B-9216-469A4A765DB8}.Release|x64.Build.0 = Release|x64
 		{D53004EC-D910-474B-9216-469A4A765DB8}.Release|x86.ActiveCfg = Release|Win32
 		{D53004EC-D910-474B-9216-469A4A765DB8}.Release|x86.Build.0 = Release|Win32
+		{D08210C0-58D5-4C88-AACD-80F17918C123}.Debug|x64.ActiveCfg = Debug|x64
+		{D08210C0-58D5-4C88-AACD-80F17918C123}.Debug|x64.Build.0 = Debug|x64
+		{D08210C0-58D5-4C88-AACD-80F17918C123}.Debug|x86.ActiveCfg = Debug|Win32
+		{D08210C0-58D5-4C88-AACD-80F17918C123}.Debug|x86.Build.0 = Debug|Win32
+		{D08210C0-58D5-4C88-AACD-80F17918C123}.Release|x64.ActiveCfg = Release|x64
+		{D08210C0-58D5-4C88-AACD-80F17918C123}.Release|x64.Build.0 = Release|x64
+		{D08210C0-58D5-4C88-AACD-80F17918C123}.Release|x86.ActiveCfg = Release|Win32
+		{D08210C0-58D5-4C88-AACD-80F17918C123}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

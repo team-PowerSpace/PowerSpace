@@ -1,5 +1,7 @@
 #pragma once
 #include "Script.h"
+#include <memory>
+#include <unordered_map>
 
 class CCanvas;
 class CViewport;
