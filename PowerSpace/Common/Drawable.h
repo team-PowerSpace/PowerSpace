@@ -35,6 +35,7 @@ public:
 
     // links new script to the object
     virtual void AddScript( EventType eventType, CScript script ) = 0;
+    virtual const std::vector<CScript>& GetScripts( EventType eventType ) const = 0;
 
     enum DrawableType {
         CDrawable, count
@@ -63,7 +64,7 @@ public:
     void AddScript( EventType eventType, CScript script );
 
     // getters for scripts field
-    const std::vector<CScript>& GetScripts( EventType eventType );
+    const std::vector<CScript>& GetScripts( EventType eventType ) const;
 
 	virtual DrawableType GetType() const;
 protected:

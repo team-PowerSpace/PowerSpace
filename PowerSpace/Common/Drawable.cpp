@@ -4,7 +4,8 @@
 int CDrawable::maxId = 0;
 
 CDrawable::CDrawable( COLORREF _color, TBox _box )
-    : color( _color ), containingBox( _box )
+    : color( _color ), containingBox( _box ), scripts( { {EventType::EventClick, std::vector<CScript>()}, 
+    {EventType::EventTick, std::vector<CScript>()} } )
 {
     id = generateNewId();
 }
@@ -39,9 +40,9 @@ void CDrawable::AddScript( EventType eventType, CScript script )
     scripts[eventType].push_back( script );
 }
 
-const std::vector<CScript>& CDrawable::GetScripts( EventType eventType )
+const std::vector<CScript>& CDrawable::GetScripts( EventType eventType ) const
 {
-    return scripts[eventType];
+    return scripts.at(eventType);
 }
 
 int CDrawable::generateNewId()

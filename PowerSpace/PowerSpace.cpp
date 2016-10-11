@@ -3,13 +3,14 @@
 #include "EditorWindow.h"
 #include "Stage.h"
 #include "StageObjects.h"
+#include "ViewerWindow.h"
 
 
 #pragma warning(push)
 #pragma warning(disable:4100)
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
 {
-	if( !CEditor::RegisterClass() ) {
+	if( !CEditor::RegisterClass() || !CViewerWindow::RegisterClass() ) {
 		return 1;
 	}
 	CEditor window;
@@ -18,16 +19,6 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	}
 
 	std::shared_ptr<CStage> stage = std::make_shared<CStage>();
-
-	// code for testing. May be deleted
-	TBox box;
-	box.left = 10;
-	box.top = 10;
-	box.right = 100;
-	box.bottom = 250;
-	CRectangleObject rect( RGB( 11, 22, 33 ), box );
-	stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( 0, std::make_shared<CRectangleObject>( RGB( 11, 22, 33 ), box ) ) );
-	// end of test code
 
 	window.SetStage( stage );
 	window.Show( nCmdShow );

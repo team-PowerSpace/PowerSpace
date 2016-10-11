@@ -17,6 +17,8 @@ public:
 
 	CStage& GetStage();
 
+    const CViewerWindow& GetViewerWindow() const;
+
 private:
 	// copy of stage
     CStage stage;

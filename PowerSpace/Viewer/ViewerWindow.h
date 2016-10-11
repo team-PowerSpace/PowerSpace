@@ -1,12 +1,13 @@
 #pragma once
 #include "Stage.h"
 #include "Resource.h"
+#include "ScriptEngine.h"
 
 // win32 window of the viewer module
 // has references to viewport and canvas (to modify them easily)
 class CViewerWindow {
 public:
-	CViewerWindow( CViewport& _viewport, CCanvas& _canvas );
+	CViewerWindow( CStage& stage, CViewport& _viewport, CCanvas& _canvas );
 	~CViewerWindow();
 
 	// all the WinAPI stuff
@@ -37,6 +38,8 @@ private:
 
 	const CViewport& viewport;
 	const CCanvas& canvas;
+    CStage& stage;
+    CScriptEngine scriptEngine;
 
 	const int windowHeight;
 	const int windowWidth;

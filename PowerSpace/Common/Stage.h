@@ -19,10 +19,15 @@ public:
     IDrawablePtrConst GetObjectById( int objectId ) const;
     IDrawablePtr GetObjectById( int objectId );
 
-    // draws all objects in "objects" on canvas
+    // draws all objects in "objectList" on canvas
     void DrawObjects( HDC hdc, const std::vector<IDrawablePtrConst>& objectList ) const;
-    // draws only visible objects from "objects" on canvas
+    // draws all objects in "objects" on canvas
+    void DrawObjects( HDC hdc ) const;
+
+    // draws only visible objects from "objectList" on canvas
     void ClipAndDrawObjects( HDC hdc, const std::vector<IDrawablePtrConst>& objectList ) const;
+    // draws only visible objects from "objects" on canvas
+    void ClipAndDrawObjects( HDC hdc ) const;
 
 	// not-const getter of viewport
 	CViewport& GetViewPort();

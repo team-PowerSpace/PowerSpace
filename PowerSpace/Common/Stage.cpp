@@ -38,6 +38,13 @@ void CStage::DrawObjects( HDC hdc, const std::vector<IDrawablePtrConst>& objectL
 	}
 }
 
+void CStage::DrawObjects( HDC hdc ) const
+{
+    for( auto pair : objects ) {
+        pair.second->Draw( hdc, viewport, canvas );
+    }
+}
+
 void CStage::ClipAndDrawObjects( HDC hdc, const std::vector<IDrawablePtrConst>& objectList ) const
 {
 	std::vector<int> objectsClippedIndices = viewport.ClipObjects( objectList );
@@ -47,6 +54,12 @@ void CStage::ClipAndDrawObjects( HDC hdc, const std::vector<IDrawablePtrConst>& 
 		objectsClipped.push_back( objectList[i] );
 	}
 	DrawObjects( hdc, objectsClipped );
+}
+
+void CStage::ClipAndDrawObjects( HDC hdc ) const
+{
+    std::vector<IDrawablePtrConst> objectList = GetObjectsAsVector();
+    ClipAndDrawObjects(hdc, objectList);
 }
 
 CViewport & CStage::GetViewPort()

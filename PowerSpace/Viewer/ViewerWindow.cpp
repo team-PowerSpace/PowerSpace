@@ -4,8 +4,9 @@
 const wchar_t* CViewerWindow::ClassName = L"CViewerWindow";
 const UINT TICK_LENGTH = 10;
 
-CViewerWindow::CViewerWindow( CViewport& _viewport, CCanvas& _canvas) :
-	windowHeight( 600 ), windowWidth( 800 ), viewport(_viewport), canvas(_canvas), handle(nullptr)
+CViewerWindow::CViewerWindow( CStage& _stage, CViewport& _viewport, CCanvas& _canvas) :
+	windowHeight( 600 ), windowWidth( 800 ), viewport(_viewport), canvas(_canvas), 
+    handle(nullptr), stage(_stage), scriptEngine(stage)
 {
 }
 
@@ -23,21 +24,21 @@ bool CViewerWindow::RegisterClass()
 	HBRUSH backgroundBrush = reinterpret_cast<HBRUSH> (::GetStockObject( WHITE_BRUSH ));
 	HMODULE instance = GetModuleHandleW( nullptr );
 
-	WNDCLASSEX windowClassInforamtion;
-	windowClassInforamtion.cbSize = sizeof( WNDCLASSEX );
-	windowClassInforamtion.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
-	windowClassInforamtion.lpfnWndProc = WindowProc;
-	windowClassInforamtion.cbClsExtra = 0;
-	windowClassInforamtion.cbWndExtra = 2 * sizeof( LONG_PTR );
-	windowClassInforamtion.hInstance = instance;
-	windowClassInforamtion.hIcon = LoadIcon( instance, MAKEINTRESOURCE( IDI_SMALL ) );
-	windowClassInforamtion.hCursor = LoadCursor( nullptr, IDC_ARROW );
-	windowClassInforamtion.hbrBackground = backgroundBrush;
-	windowClassInforamtion.lpszMenuName = 0;
-	windowClassInforamtion.lpszClassName = ClassName;
-	windowClassInforamtion.hIconSm = LoadIcon( instance, MAKEINTRESOURCE( IDI_SMALL ) );
+	WNDCLASSEX windowClassInformation;
+	windowClassInformation.cbSize = sizeof( WNDCLASSEX );
+	windowClassInformation.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
+	windowClassInformation.lpfnWndProc = WindowProc;
+	windowClassInformation.cbClsExtra = 0;
+	windowClassInformation.cbWndExtra = 2 * sizeof( LONG_PTR );
+	windowClassInformation.hInstance = instance;
+	windowClassInformation.hIcon = LoadIcon( instance, MAKEINTRESOURCE( IDI_SMALL ) );
+	windowClassInformation.hCursor = LoadCursor( nullptr, IDC_ARROW );
+	windowClassInformation.hbrBackground = backgroundBrush;
+	windowClassInformation.lpszMenuName = 0;
+	windowClassInformation.lpszClassName = ClassName;
+	windowClassInformation.hIconSm = LoadIcon( instance, MAKEINTRESOURCE( IDI_SMALL ) );
 
-	return (::RegisterClassEx( &windowClassInforamtion ) != 0);
+	return (::RegisterClassEx( &windowClassInformation ) != 0);
 }
 
 //
@@ -75,6 +76,10 @@ LRESULT CViewerWindow::WindowProc( HWND handle, UINT msg, WPARAM wParam, LPARAM 
 		wndPtr->onCreate();
 		return 0;
 
+    case WM_CLOSE:
+        DestroyWindow(handle);
+        return 0;
+
 	case WM_DESTROY:
 		wndPtr->onDestroy();
 		return 0;
@@ -92,10 +97,6 @@ LRESULT CViewerWindow::WindowProc( HWND handle, UINT msg, WPARAM wParam, LPARAM 
 		return 0;
 
 	case WM_LBUTTONDOWN:
-		wndPtr->onMouseClick( msg, wParam, lParam );
-		return 0;
-
-	case WM_LBUTTONUP:
 		wndPtr->onMouseClick( msg, wParam, lParam );
 		return 0;
 
@@ -149,14 +150,13 @@ void CViewerWindow::onPaint()
 
 	::FillRect( Memhdc, &paintStruct.rcPaint, (HBRUSH)COLOR_WINDOW );
 
-	// Draw objects on hdc
+    stage.ClipAndDrawObjects( Memhdc );
 
 	BOOL result = ::BitBlt( hdc, 0, 0, winWidth, winHeight, Memhdc, 0, 0, SRCCOPY );
 	if( !result ) {
 		::MessageBox( handle, L"BitBlt : onPaint() : CViewerWindow", L"Error", MB_ICONERROR );
 		PostQuitMessage( NULL );
 	}
-
 	::DeleteObject( Membitmap );
 	::DeleteDC( Memhdc );
 
@@ -205,12 +205,18 @@ void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 //
 void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lParam )
 {
-	// handle mouse clicks on objects
-	UNREFERENCED_PARAMETER( msg );
-	UNREFERENCED_PARAMETER( wParam ); 
-	UNREFERENCED_PARAMETER( lParam );
+    UNREFERENCED_PARAMETER( lParam );
+    UNREFERENCED_PARAMETER( wParam );
+    UNREFERENCED_PARAMETER( msg );
 
-	//clickHandler();
+	// handle mouse clicks on objects
+    // todo: detect which object was clicked, now all the objects are activated
+    for( auto pair : stage.GetObjects() ) {
+        auto scripts = pair.second->GetScripts( EventType::EventClick );
+        if( !scripts.empty() ) {
+            scriptEngine.RunScripts(pair.first, scripts);
+        }
+    }
 }
 
 void CViewerWindow::Show() const

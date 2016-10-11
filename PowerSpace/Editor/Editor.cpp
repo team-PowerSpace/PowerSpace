@@ -163,7 +163,19 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 		case ID_PLAY_LAUNCHPLAYER:
 		{
 			CViewer viewer( *stage, CViewport() );
-            viewer.Create();
+            if( viewer.Create() ) {
+                const CViewerWindow& viewerWindow = viewer.GetViewerWindow();
+                HWND viewerHandle = viewerWindow.GetHandle();;
+                MSG message;
+                BOOL getMessageResult = 0;
+                while( (getMessageResult = ::GetMessage( &message, viewerHandle, 0, 0 )) != 0 ) {
+                    if( getMessageResult == -1 ) {
+                        break;
+                    }
+                    ::TranslateMessage( &message );
+                    ::DispatchMessage( &message );
+                }
+            }
 			break;
 		}
         case IDC_MAIN_BUTTON:
@@ -178,7 +190,6 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
             break;
         }
 	}
-	UNREFERENCED_PARAMETER( lParam );
 }
 
 void CEditor::OnCommand( WPARAM wParam, LPARAM lParam )
