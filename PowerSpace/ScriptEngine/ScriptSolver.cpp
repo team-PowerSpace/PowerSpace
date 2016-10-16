@@ -1,15 +1,14 @@
 #include <stdafx.h>
 #include "ScriptSolver.h"
 #include <iostream>
-#include <exception>
 
 CScriptSolver::CScriptSolver(std::shared_ptr<IDrawable> obj, std::string path_,
 	std::string func_) : path(path_), func(func_), object(obj) {
-	std::pair<std::string, long> xPos("x", obj->GetContainingBox().left);
-	std::pair<std::string, long> yPos("y", obj->GetContainingBox().top);
-	std::pair<std::string, long> width("width", obj->GetContainingBox().right - obj->GetContainingBox().left);
-	std::pair<std::string, long> heigth("heigth", obj->GetContainingBox().bottom - obj->GetContainingBox().top);
-	std::pair<std::string, long> color("color", obj->GetColor());
+	std::pair<std::string, long> xPos(std::string("x"), obj->GetContainingBox().left);
+	std::pair<std::string, long> yPos(std::string("y"), obj->GetContainingBox().top);
+	std::pair<std::string, long> width(std::string("width"), obj->GetContainingBox().right - obj->GetContainingBox().left);
+	std::pair<std::string, long> heigth(std::string("heigth"), obj->GetContainingBox().bottom - obj->GetContainingBox().top);
+	std::pair<std::string, long> color(std::string("color"), obj->GetColor());
 	members.insert(xPos);
 	members.insert(yPos);
 	members.insert(width);
@@ -22,6 +21,7 @@ std::shared_ptr<IDrawable> CScriptSolver::Run() {
 	PyObject *pArgs, *pValue;
 	Py_Initialize();
 	pName = PyUnicode_FromString(path.c_str());
+
 	pModule = PyImport_Import(pName);
 	Py_DECREF(pName);
 
@@ -41,12 +41,12 @@ std::shared_ptr<IDrawable> CScriptSolver::Run() {
 		Py_DECREF(pModule);
 	}
 	Py_Finalize();
-	object->SetColor(members.find("color")->second);
+	object->SetColor(members.find(std::string("color"))->second);
 	RECT rect;
-	rect.top = members.find("y")->second;
-	rect.left = members.find("x")->second;
-	rect.bottom = rect.top + members.find("heigth")->second;
-	rect.right = rect.left + members.find("width")->second;
+	rect.top = members.find(std::string("y"))->second;
+	rect.left = members.find(std::string("x"))->second;
+	rect.bottom = rect.top + members.find(std::string("heigth"))->second;
+	rect.right = rect.left + members.find(std::string("width"))->second;
 	object->SetContainingBox(rect);
 	return object;
 }
