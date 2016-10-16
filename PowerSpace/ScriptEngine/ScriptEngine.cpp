@@ -39,7 +39,7 @@ std::vector<int> CScriptEngine::RunScripts(int objectId, const std::vector<CScri
 		stream.close();
 
         //CScriptSolver solver( workingObject, strPath, std::string( "OnClick" ) ); //Empty string left for ability to call different functions located in single script
-        CScriptSolver solver( workingObject, std::string("script"), std::string("OnClick") );
+        CScriptSolver solver( workingObject, std::string("t"), std::string("OnClick") );
         std::shared_ptr<IDrawable> changedObject = solver.Run();   //Returns shared_ptr to changed object, but values already set in the scene
 		assert(changedObject == workingObject);
 	}
