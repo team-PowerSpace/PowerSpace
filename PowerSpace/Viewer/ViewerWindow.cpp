@@ -142,7 +142,18 @@ void CViewerWindow::onCreate()
 //
 void CViewerWindow::onTimer()
 {
-//	tickHandler();
+	// handle mouse clicks on objects
+	// todo: detect which object was clicked, now all the objects are activated
+	for( auto pair : stage.GetObjects() ) {
+		auto scripts = pair.second->GetScripts( EventType::EventTick );
+		if( !scripts.empty() ) {
+			scriptEngine.RunScripts( activeId, scripts );
+		}
+	}
+
+	RECT rect;
+	GetClientRect( handle, &rect );
+	InvalidateRect( handle, &rect, false );
 }
 
 //
