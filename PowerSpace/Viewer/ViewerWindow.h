@@ -44,8 +44,14 @@ private:
 	const int windowHeight;
 	const int windowWidth;
 
+	int activeId;
+
 	static const wchar_t* ClassName;
 	static const wchar_t* ViewerApplicationName;
+
+	POINT getMouseCoords( LPARAM lParam );
+
+	bool pointInBox( TBox box, POINT point );
 
 	void onCreate();
 

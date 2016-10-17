@@ -109,6 +109,27 @@ void CViewerWindow::onClose()
 	}
 }
 
+POINT CViewerWindow::getMouseCoords( LPARAM lParam )
+{
+	POINT mouseCoords;
+
+	mouseCoords.x = LOWORD( lParam );
+	mouseCoords.y = HIWORD( lParam );
+
+	return mouseCoords;
+}
+
+bool CViewerWindow::pointInBox( TBox box, POINT point )
+{
+	if( point.x <= box.right &&
+		point.x >= box.left &&
+		point.y <= box.bottom &&
+		point.y >= box.top )
+		return true;
+	else 
+		return false;
+}
+
 void CViewerWindow::onCreate()
 {
 	::SetTimer( handle, 1, TICK_LENGTH, nullptr );
@@ -204,18 +225,33 @@ void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 //
 void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lParam )
 {
-    UNREFERENCED_PARAMETER( lParam );
     UNREFERENCED_PARAMETER( wParam );
     UNREFERENCED_PARAMETER( msg );
 
+	POINT mouseCoords = getMouseCoords( lParam );
+
+	activeId = -1;
+
 	// handle mouse clicks on objects
     // todo: detect which object was clicked, now all the objects are activated
-    for( auto pair : stage.GetObjects() ) {
-        auto scripts = pair.second->GetScripts( EventType::EventClick );
-        if( !scripts.empty() ) {
-            scriptEngine.RunScripts(pair.first, scripts);
-        }
+	for( auto pair : stage.GetObjects() ) {
+		TBox curBox = pair.second->GetContainingBox();
+
+		if( pointInBox( curBox, mouseCoords ) ) {
+			activeId = pair.second->GetId();
+		}
+	}
+
+	if( activeId == -1 )
+		return;
+
+	//stage.GetObjectById( activeId )->SetColor(RGB(255, 255, 255));
+
+    auto scripts = stage.GetObjectById(activeId)->GetScripts( EventType::EventClick );
+    if( !scripts.empty() ) {
+        scriptEngine.RunScripts(activeId, scripts);
     }
+    
     RECT rect;
     GetClientRect( handle, &rect );
     InvalidateRect( handle, &rect, false );

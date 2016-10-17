@@ -47,7 +47,7 @@ const std::vector<CScript>& CDrawable::GetScripts( EventType eventType ) const
 
 int CDrawable::generateNewId()
 {
-    return maxId++;
+    return ++maxId;
 }
 
 CDrawable::DrawableType CDrawable::GetType() const {
