@@ -227,6 +227,37 @@ void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 
 	UNREFERENCED_PARAMETER( wParam );
 	UNREFERENCED_PARAMETER( lParam );
+
+	POINT mouseCoords = getMouseCoords( lParam );
+
+	int topId = -1;
+
+	for( auto pair : stage.GetObjects() ) {
+		TBox curBox = pair.second->GetContainingBox();
+
+		if( pointInBox( curBox, mouseCoords ) ) {
+			topId = pair.second->GetId();
+		}
+	}
+
+	if( topId == -1 )
+		return;
+
+	IDrawablePtr topObj = stage.GetObjectById( topId );
+
+	COLORREF color = topObj->GetColor();
+	topObj->SetColor( RGB( 0, 0, 0 ) );
+
+	RECT rect;
+	GetClientRect( handle, &rect );
+	InvalidateRect( handle, &rect, false );
+
+	onPaint();
+
+	topObj->SetColor( color );
+
+	GetClientRect( handle, &rect );
+	InvalidateRect( handle, &rect, false );
 }
 
 //
