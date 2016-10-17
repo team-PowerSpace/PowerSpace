@@ -95,11 +95,28 @@ CDrawableBuilder::CDrawableBuilder(std::shared_ptr<IDrawable> object) {
 			PyTuple_SetItem(args, 1, PyUnicode_FromString("xPos"));
 			PyTuple_SetItem(args, 2, PyUnicode_FromString("yPos"));
 			PyTuple_SetItem(args, 3, PyUnicode_FromString("width"));
-			PyTuple_SetItem(args, 4, PyUnicode_FromString("heigh"));
+			PyTuple_SetItem(args, 4, PyUnicode_FromString("height"));
 			pObject->ob_type->tp_init(pObject.get(), args, kwds);
 		}
 }
 
 std::shared_ptr<PyObject> CDrawableBuilder::GetpObject() {
 	return pObject;
+}
+
+bool decoderAndSetter(PyObject* obj, std::shared_ptr<IDrawable> toChange)
+{
+	int color, xPos, yPos, width, height;
+	if ( PyArg_ParseTuple(obj, "liii:decoder", &color, &xPos, &yPos, &width, &height) == 0)
+	{
+		return false;
+	}
+	toChange->SetColor(color);
+	RECT rect;
+	rect.top = yPos;
+	rect.left = xPos;
+	rect.bottom = rect.top + height;
+	rect.right = rect.left + width;
+	toChange->SetContainingBox(rect);
+	return true;
 }
