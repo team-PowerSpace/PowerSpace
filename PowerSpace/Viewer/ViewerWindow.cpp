@@ -2,6 +2,7 @@
 #include "ViewerWindow.h"
 
 const wchar_t* CViewerWindow::ClassName = L"CViewerWindow";
+const wchar_t* CViewerWindow::ViewerApplicationName = L"Powerspace Viewer";
 const UINT TICK_LENGTH = 10;
 
 CViewerWindow::CViewerWindow( CStage& _stage, CViewport& _viewport, CCanvas& _canvas) :
@@ -50,7 +51,7 @@ bool CViewerWindow::Create()
 {
 	HINSTANCE hInstance = GetModuleHandle( nullptr );
 
-	handle = CreateWindowEx( 0, ClassName, L"PowerSpace Viewer", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
+	handle = CreateWindowEx( 0, ClassName, ViewerApplicationName, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
 		windowHeight, windowWidth, nullptr, nullptr, hInstance, this );
 
 	return (handle != 0);
@@ -77,12 +78,8 @@ LRESULT CViewerWindow::WindowProc( HWND handle, UINT msg, WPARAM wParam, LPARAM 
 		return 0;
 
     case WM_CLOSE:
-        DestroyWindow(handle);
+		wndPtr->onClose();
         return 0;
-
-	case WM_DESTROY:
-		wndPtr->onDestroy();
-		return 0;
 
 	case WM_SIZE:
 		wndPtr->onSize();
@@ -105,9 +102,11 @@ LRESULT CViewerWindow::WindowProc( HWND handle, UINT msg, WPARAM wParam, LPARAM 
 	}
 }
 
-void CViewerWindow::onDestroy()
+void CViewerWindow::onClose()
 {
-	::PostQuitMessage( 0 );
+	if( ::MessageBox( handle, L"Really quit?", ViewerApplicationName, MB_OKCANCEL ) == IDOK ) {
+		::DestroyWindow( handle );
+	}
 }
 
 void CViewerWindow::onCreate()

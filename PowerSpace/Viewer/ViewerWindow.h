@@ -21,7 +21,7 @@ public:
 
 protected:
 
-	void onDestroy();
+	void onClose();
 
 	static LRESULT __stdcall WindowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
 	
@@ -45,6 +45,7 @@ private:
 	const int windowWidth;
 
 	static const wchar_t* ClassName;
+	static const wchar_t* ViewerApplicationName;
 
 	void onCreate();
 
