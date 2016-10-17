@@ -15,6 +15,15 @@ CScriptEngine::CScriptEngine( CStage& _stage )
 
 std::vector<int> CScriptEngine::RunScripts(int objectId, const std::vector<CScript>& scripts )
 {
+	if (!isPythonRunning)
+	{
+		Py_Initialize(); //starting up Python if first run
+	}
+	else if (objectId == -1) 
+	{
+		Py_Finalize(); //finlazing Python before turning the programm off
+		return std::vector<int>();
+	}
 	std::shared_ptr<IDrawable> workingObject = stage.GetObjectById(objectId);
 	
 	// Here was process of creation of PyObject,
@@ -23,7 +32,7 @@ std::vector<int> CScriptEngine::RunScripts(int objectId, const std::vector<CScri
 	using convert_type = std::codecvt_utf8<wchar_t>;
 	std::wstring_convert<convert_type, wchar_t> converter; //to convert from TPath (std::wstring) to std::string
 
-	std::string emptyString = ""; //see comment to line 41
+	std::string emptyString = ""; //see comment to line 50
 
 	for (auto i = scripts.begin(); i != scripts.end(); i++)
 	{
@@ -38,8 +47,8 @@ std::vector<int> CScriptEngine::RunScripts(int objectId, const std::vector<CScri
 		}
 		stream.close();
 
-        //CScriptSolver solver( workingObject, strPath, std::string( "OnClick" ) ); //Empty string left for ability to call different functions located in single script
-        CScriptSolver solver( workingObject, std::string("t"), std::string("OnClick") );
+        CScriptSolver solver( workingObject, strPath, std::string( "OnClick" ) ); //Empty string left for ability to call different functions located in single script
+        //CScriptSolver solver( workingObject, std::string("t"), std::string("OnClick") );
         std::shared_ptr<IDrawable> changedObject = solver.Run();   //Returns shared_ptr to changed object, but values already set in the scene
 		assert(changedObject == workingObject);
 	}
