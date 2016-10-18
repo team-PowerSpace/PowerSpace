@@ -20,7 +20,6 @@ CScriptSolver::CScriptSolver(std::shared_ptr<IDrawable> obj, std::wstring path_,
 std::shared_ptr<IDrawable> CScriptSolver::Run() {
 	PyObject *pName, *pModule, *pDict, *pFunc;
 	PyObject *pArgs, *pValue;
-	Py_Initialize();
 		
 	pName = PyUnicode_FromUnicode(path.c_str(), path.size());
 	pModule = PyImport_Import(pName);
@@ -41,7 +40,6 @@ std::shared_ptr<IDrawable> CScriptSolver::Run() {
 		Py_XDECREF(pFunc);
 		Py_DECREF(pModule);
 	}
-	Py_Finalize();
 	object->SetColor(members.find("color")->second);
 	RECT rect;
 	rect.top = members.find("y")->second;

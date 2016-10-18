@@ -37,14 +37,16 @@ std::vector<int> CScriptEngine::RunScripts(int objectId, const std::vector<CScri
 		}
 		stream.close();
 		
-		//Script name with extention
+		//Удаление пути и оставление 
 		std::wstring scriptName = wstrPath.substr(wstrPath.find_last_of(L"\\/") + 1);
-		//Script name without extention
 
+		//Script name without extention
 		std::wstring scriptNameWithoutExtention = scriptName.substr(0, scriptName.find(L"."));
-        //CScriptSolver solver( workingObject, strPath, std::string( "OnClick" ) ); //Empty string left for ability to call different functions located in single script
+
+		//Empty string left for ability to call different functions located in single script
         CScriptSolver solver( workingObject, scriptNameWithoutExtention, std::string("OnClick") );
-        std::shared_ptr<IDrawable> changedObject = solver.Run();   //Returns shared_ptr to changed object, but values already set in the scene
+        
+		std::shared_ptr<IDrawable> changedObject = solver.Run();   //Returns shared_ptr to changed object, but values already set in the scene
 		assert(changedObject == workingObject);
 	}
     return std::vector<int>(); //Not used for now, but later will allow to return list of objects changed (if needed) for 
