@@ -41,6 +41,8 @@ private:
     CStage& stage;
     CScriptEngine scriptEngine;
 
+	COLORREF colorBuf;
+
 	const int windowHeight;
 	const int windowWidth;
 

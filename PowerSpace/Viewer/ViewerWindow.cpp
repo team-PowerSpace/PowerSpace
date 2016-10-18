@@ -7,7 +7,7 @@ const UINT TICK_LENGTH = 10;
 
 CViewerWindow::CViewerWindow( CStage& _stage, CViewport& _viewport, CCanvas& _canvas) :
 	windowHeight( 600 ), windowWidth( 800 ), viewport(_viewport), canvas(_canvas), 
-    handle(nullptr), stage(_stage), scriptEngine(stage)
+    handle(nullptr), stage(_stage), scriptEngine(stage), colorBuf(RGB( 255, 255, 255 ))
 {
 }
 
@@ -272,6 +272,8 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 
 	POINT mouseCoords = getMouseCoords( lParam );
 
+//	int prevActiveId = activeId;
+
 	activeId = -1;
 
 	// handle mouse clicks on objects
@@ -287,8 +289,12 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 	if( activeId == -1 )
 		return;
 
-	//stage.GetObjectById( activeId )->SetColor(RGB(255, 255, 255));
+	/*stage.GetObjectById( prevActiveId )->SetColor( colorBuf );
 
+	colorBuf = stage.GetObjectById( activeId )->GetColor();
+	
+	stage.GetObjectById( activeId )->SetColor(RGB(0, 0, 0));
+	*/
     auto scripts = stage.GetObjectById(activeId)->GetScripts( EventType::EventClick );
     if( !scripts.empty() ) {
         scriptEngine.RunScripts(activeId, scripts);
