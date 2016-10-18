@@ -3,7 +3,7 @@
 #include <iostream>
 #include <exception>
 
-CScriptSolver::CScriptSolver(std::shared_ptr<IDrawable> obj, std::string path_,
+CScriptSolver::CScriptSolver(std::shared_ptr<IDrawable> obj, std::wstring path_,
 	std::string func_) : path(path_), func(func_), object(obj) {
 	std::pair<std::string, long> xPos("x", obj->GetContainingBox().left);
 	std::pair<std::string, long> yPos("y", obj->GetContainingBox().top);
@@ -21,7 +21,8 @@ std::shared_ptr<IDrawable> CScriptSolver::Run() {
 	PyObject *pName, *pModule, *pDict, *pFunc;
 	PyObject *pArgs, *pValue;
 	Py_Initialize();
-	pName = PyUnicode_FromString(path.c_str());
+		
+	pName = PyUnicode_FromUnicode(path.c_str(), path.size());
 	pModule = PyImport_Import(pName);
 	Py_DECREF(pName);
 

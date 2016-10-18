@@ -28,18 +28,22 @@ std::vector<int> CScriptEngine::RunScripts(int objectId, const std::vector<CScri
 	for (auto i = scripts.begin(); i != scripts.end(); i++)
 	{
 		TPath wstrPath((*i).GetPath());
-		std::string strPath = converter.to_bytes(wstrPath);
-		std::ifstream stream(strPath.data(), std::ifstream::in); //The best way to chek path validity is trying to open it
-		if (!stream)
+		std::ifstream stream(wstrPath.data(), std::ifstream::in); //The best way to chek path validity is trying to open it
+		if (!stream.good())
 		{
 			stream.close();
 			std::cout << "The file doesn't exist" << std::endl;
 			assert(false);
 		}
 		stream.close();
+		
+		//Script name with extention
+		std::wstring scriptName = wstrPath.substr(wstrPath.find_last_of(L"\\/") + 1);
+		//Script name without extention
 
+		std::wstring scriptNameWithoutExtention = scriptName.substr(0, scriptName.find(L"."));
         //CScriptSolver solver( workingObject, strPath, std::string( "OnClick" ) ); //Empty string left for ability to call different functions located in single script
-        CScriptSolver solver( workingObject, std::string("t"), std::string("OnClick") );
+        CScriptSolver solver( workingObject, scriptNameWithoutExtention, std::string("OnClick") );
         std::shared_ptr<IDrawable> changedObject = solver.Run();   //Returns shared_ptr to changed object, but values already set in the scene
 		assert(changedObject == workingObject);
 	}
