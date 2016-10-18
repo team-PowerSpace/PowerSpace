@@ -1,4 +1,4 @@
-#include <stdafx.h>
+п»ї#include <stdafx.h>
 #include "ScriptEngine.h"
 #include "ScriptSolver.h"
 #include "PyObjectBuilder.h"
@@ -32,7 +32,7 @@ std::vector<int> CScriptEngine::RunScripts(int objectId, const std::vector<CScri
 	using convert_type = std::codecvt_utf8<wchar_t>;
 	std::wstring_convert<convert_type, wchar_t> converter; //to convert from TPath (std::wstring) to std::string
 
-	std::string emptyString = ""; //see comment to line 50
+	std::string emptyString = ""; //see comment to line 55
 
 	for (auto i = scripts.begin(); i != scripts.end(); i++)
 	{
@@ -46,10 +46,10 @@ std::vector<int> CScriptEngine::RunScripts(int objectId, const std::vector<CScri
 		}
 		stream.close();
 
-		//Удаление пути и оставление 
+		//Deleteing the path and saving only script's filename (with extention)
 		std::wstring scriptName = wstrPath.substr(wstrPath.find_last_of(L"\\/") + 1);
 
-		//Script name without extention
+		//Deleting the extention of script
 		std::wstring scriptNameWithoutExtention = scriptName.substr(0, scriptName.find(L"."));
 
 		//Empty string left for ability to call different functions located in single script
