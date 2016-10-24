@@ -1,4 +1,6 @@
 #include <stdafx.h>
+#include "resource.h"
+#include "Resource.h"
 #include "ViewerWindow.h"
 
 const wchar_t* CViewerWindow::ClassName = L"CViewerWindow";
@@ -7,7 +9,8 @@ const UINT TICK_LENGTH = 10;
 
 CViewerWindow::CViewerWindow( CStage& _stage, CViewport& _viewport, CCanvas& _canvas ) :
 	windowHeight( 600 ), windowWidth( 800 ), viewport( _viewport ), canvas( _canvas ),
-	handle( nullptr ), stage( _stage ), scriptEngine( stage ), activeId(0), activeObjectColor(RGB(0, 0, 0))
+	handle( nullptr ), stage( _stage ), scriptEngine( stage ), activeId(0), activeObjectColor(RGB(0, 0, 0)),
+	viewerIsRunning( true )
 {}
 
 CViewerWindow::~CViewerWindow()
@@ -33,7 +36,7 @@ bool CViewerWindow::RegisterClass()
 	windowClassInformation.hIcon = LoadIcon( instance, MAKEINTRESOURCE( IDI_SMALL ) );
 	windowClassInformation.hCursor = LoadCursor( nullptr, IDC_ARROW );
 	windowClassInformation.hbrBackground = backgroundBrush;
-	windowClassInformation.lpszMenuName = 0;
+	windowClassInformation.lpszMenuName = MAKEINTRESOURCE( IDR_MENU2 );;
 	windowClassInformation.lpszClassName = ClassName;
 	windowClassInformation.hIconSm = LoadIcon( instance, MAKEINTRESOURCE( IDI_SMALL ) );
 
@@ -95,6 +98,10 @@ LRESULT CViewerWindow::WindowProc( HWND handle, UINT msg, WPARAM wParam, LPARAM 
 		wndPtr->onMouseClick( msg, wParam, lParam );
 		return 0;
 
+	case WM_COMMAND:
+		wndPtr->OnCommand( wParam, lParam );
+		return 0;
+
 	default:
 		return ::DefWindowProc( handle, msg, wParam, lParam );
 	}
@@ -140,8 +147,9 @@ void CViewerWindow::onCreate()
 //
 void CViewerWindow::onTimer()
 {
-	// handle mouse clicks on objects
-	// todo: detect which object was clicked, now all the objects are activated
+	if( !viewerIsRunning )
+		return;
+
 	for( auto pair : stage.GetObjects() ) {
 		auto scripts = pair.second->GetScripts( EventType::EventTick );
 		if( !scripts.empty() ) {
@@ -213,6 +221,42 @@ void CViewerWindow::onSize()
 	::DeleteDC( tmp );
 }
 
+void CViewerWindow::OnCommandMenu( WPARAM wParam, LPARAM lParam )
+{
+	UNREFERENCED_PARAMETER( lParam );
+
+	switch LOWORD( wParam )
+	{
+	case ID_CONTROL_PLAY:
+		viewerIsRunning = !viewerIsRunning;
+		
+		HMENU pMenu = ::GetMenu( handle );
+
+		if( pMenu != NULL ) {
+			if ( viewerIsRunning )
+				::CheckMenuItem(pMenu, ID_CONTROL_PLAY, MF_UNCHECKED | MF_BYCOMMAND);
+			else
+				::CheckMenuItem( pMenu, ID_CONTROL_PLAY, MF_CHECKED | MF_BYCOMMAND );
+		}
+		else 			{
+			::MessageBox( handle, L"Menu not found", L"Error", MB_ICONERROR );
+			PostQuitMessage( NULL );
+		}
+
+		::SetMenu( handle, pMenu );
+		break;
+	}
+}
+
+void CViewerWindow::OnCommand( WPARAM wParam, LPARAM lParam )
+{
+	switch( HIWORD( wParam ) ) {
+	case 0:
+		OnCommandMenu( wParam, lParam );
+		break;
+	}
+}
+
 void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 {
 	// TODO: handle mouse moving
@@ -263,6 +307,9 @@ void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 //
 void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lParam )
 {
+	if( !viewerIsRunning )
+		return;
+
 	UNREFERENCED_PARAMETER( wParam );
 	UNREFERENCED_PARAMETER( msg );
 

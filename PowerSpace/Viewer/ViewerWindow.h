@@ -43,6 +43,8 @@ private:
 
 	int activeId;
 
+	bool viewerIsRunning;
+
 	static const wchar_t* ClassName;
 	static const wchar_t* ViewerApplicationName;
 
@@ -61,6 +63,10 @@ private:
 	void onPaint();
 
 	void onSize();
+
+	void OnCommandMenu( WPARAM wParam, LPARAM lParam );
+
+	void OnCommand( WPARAM wParam, LPARAM lParam );
 
 	void onMouseMove( const WPARAM wParam, const LPARAM lParam );
 
