@@ -33,7 +33,7 @@ void CDrawableBuilder::CDrawableRedable( CDrawableStruct* self )
 	self->color = RGB( 255, 0, 0 );
 }
 
-void  CDrawableBuilder::CDrawableDealloc( CDrawableStruct* self )
+void CDrawableBuilder::CDrawableDealloc( CDrawableStruct* self )
 {
 	Py_TYPE( self )->tp_free( reinterpret_cast<PyObject*>(self) );
 }
@@ -107,20 +107,4 @@ PyTypeObject CDrawableBuilder::CDrawableType = {
 std::shared_ptr<PyObject> CDrawableBuilder::GetpObject()
 {
 	return pObject;
-}
-
-bool decoderAndSetter( PyObject* obj, std::shared_ptr<IDrawable> toChange )
-{
-	int color, xPos, yPos, width, height;
-	if( PyArg_ParseTuple( obj, "liiii:decoder", &color, &xPos, &yPos, &width, &height ) == 0 ) {
-		return false;
-	}
-	toChange->SetColor( color );
-	RECT rect;
-	rect.top = yPos;
-	rect.left = xPos;
-	rect.bottom = rect.top + height;
-	rect.right = rect.left + width;
-	toChange->SetContainingBox( rect );
-	return true;
 }

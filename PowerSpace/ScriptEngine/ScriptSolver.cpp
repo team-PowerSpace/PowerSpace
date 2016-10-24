@@ -121,5 +121,18 @@ PyObject *CScriptSolver::GetPyFunction( PyObject *pModule ) const
 
 void CScriptSolver::UpdateObject()
 {
-	//realisation of update
+	//CHECK: must be updated after script executing
+	PyObject* pythonObject = pObject->GetpObject().get();
+
+	int color, xPos, yPos, width, height;
+
+	if( PyArg_ParseTuple( pythonObject, "liiii:decoder", &color, &xPos, &yPos, &width, &height ) != 0 ) {
+		object->SetColor( color );
+		RECT rect;
+		rect.top = yPos;
+		rect.left = xPos;
+		rect.bottom = rect.top + height;
+		rect.right = rect.left + width;
+		object->SetContainingBox( rect );
+	}
 }
