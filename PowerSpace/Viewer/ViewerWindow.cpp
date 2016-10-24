@@ -7,7 +7,7 @@ const UINT TICK_LENGTH = 10;
 
 CViewerWindow::CViewerWindow( CStage& _stage, CViewport& _viewport, CCanvas& _canvas ) :
 	windowHeight( 600 ), windowWidth( 800 ), viewport( _viewport ), canvas( _canvas ),
-	handle( nullptr ), stage( _stage ), scriptEngine( stage ), activeId(0)
+	handle( nullptr ), stage( _stage ), scriptEngine( stage ), activeId(0), activeObjectColor(RGB(0, 0, 0))
 {}
 
 CViewerWindow::~CViewerWindow()
@@ -263,49 +263,47 @@ void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 //
 void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lParam )
 {
-/*
 	UNREFERENCED_PARAMETER( wParam );
 	UNREFERENCED_PARAMETER( msg );
 
 	POINT mouseCoords = getMouseCoords( lParam );
 
 	// storage space for usual color of currently active object
+	int prevActiveId = activeId;
+	activeId = 0;
+
 	static COLORREF colorBuf;
-	bool clickedOnObject = false;
 
 	for( auto pair : stage.GetObjects() ) {
 		TBox curBox = pair.second->GetContainingBox();
 
 		if( pointInBox( curBox, mouseCoords ) ) {
-			clickedOnObject = true;
-			stage.GetObjectById( activeId )->SetColor( colorBuf );
 			activeId = pair.second->GetId();
 		}
 	}
 
-	if( !clickedOnObject )
+	// same active object as before => no action needed
+	if( activeId == prevActiveId )
 		return;
 
-	colorBuf
+	if( prevActiveId != 0 ) // not the first click => we have to restore smth
+		stage.GetObjectById( prevActiveId )->SetColor( colorBuf ); // restore original color
 
-	/*stage.GetObjectById( prevActiveId )->SetColor( colorBuf );
+	// clicked on new object => have to process it
+	if( activeId != 0 ) {
+		colorBuf = stage.GetObjectById( activeId )->GetColor();
 
-	colorBuf = stage.GetObjectById( activeId )->GetColor();
+		stage.GetObjectById( activeId )->SetColor( activeObjectColor );
 
-	stage.GetObjectById( activeId )->SetColor(RGB(0, 0, 0));
-	
-	auto scripts = stage.GetObjectById( activeId )->GetScripts( EventType::EventClick );
-	if( !scripts.empty() ) {
-		scriptEngine.RunScripts( activeId, scripts );
+		auto scripts = stage.GetObjectById( activeId )->GetScripts( EventType::EventClick );
+		if( !scripts.empty() ) {
+			scriptEngine.RunScripts( activeId, scripts );
+		}
 	}
 
 	RECT rect;
 	GetClientRect( handle, &rect );
-	InvalidateRect( handle, &rect, false );*/
-
-	UNREFERENCED_PARAMETER( wParam );
-	UNREFERENCED_PARAMETER( msg );
-	UNREFERENCED_PARAMETER( lParam );
+	InvalidateRect( handle, &rect, false );
 }
 
 void CViewerWindow::Show() const
