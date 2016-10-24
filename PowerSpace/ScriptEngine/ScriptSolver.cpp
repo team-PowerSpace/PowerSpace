@@ -19,8 +19,7 @@ CScriptSolver::CScriptSolver( std::shared_ptr<IDrawable> obj, std::wstring scrip
 	members.insert( color );
 
 	//Creating and initialising PyObject from object
-	pObject = std::shared_ptr<CDrawableBuilder>( new CDrawableBuilder( obj ) );
-
+	//Previous variant cause triggered breakpoint error
 }
 
 std::shared_ptr<IDrawable> CScriptSolver::RunWithDict()
@@ -31,9 +30,9 @@ std::shared_ptr<IDrawable> CScriptSolver::RunWithDict()
 	if( !holder->isScriptIn( scriptName ) ) {
 		pName = PyUnicode_FromUnicode( scriptName.c_str(), scriptName.size() );
 		pModule = PyImport_Import( pName );
-		
+
 		holder->addScript( scriptName, pModule );
-		Py_DECREF( pName );
+		Py_XDECREF( pName );
 	} else {
 		pModule = holder->getScript( scriptName );
 	}
@@ -51,7 +50,7 @@ std::shared_ptr<IDrawable> CScriptSolver::RunWithDict()
 		}
 
 		Py_XDECREF( pFunc );
-		Py_DECREF( pModule );
+		Py_XDECREF( pModule );
 	}
 	object->SetColor( members.find( "color" )->second );
 	RECT rect;
@@ -72,7 +71,7 @@ std::shared_ptr<IDrawable> CScriptSolver::Run()
 		pName = PyUnicode_FromUnicode( scriptName.c_str(), scriptName.size() );
 		pModule = PyImport_Import( pName );
 		holder->addScript( scriptName, pModule );
-		Py_DECREF( pName );
+		Py_XDECREF( pName );
 	} else {
 		pModule = holder->getScript( scriptName );
 	}
@@ -87,7 +86,7 @@ std::shared_ptr<IDrawable> CScriptSolver::Run()
 		}
 
 		Py_XDECREF( pFunc );
-		Py_DECREF( pModule );
+		Py_XDECREF( pModule );
 	}
 	UpdateObject();
 	return object;
