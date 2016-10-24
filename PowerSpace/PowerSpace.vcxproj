@@ -165,6 +165,7 @@
     <ClInclude Include="Common\Script.h" />
     <ClInclude Include="Common\Stage.h" />
     <ClInclude Include="ScriptEngine\CDrawableBuilder.h" />
+    <ClInclude Include="ScriptEngine\CPyObjectManager.h" />
     <ClInclude Include="ScriptEngine\PyObjectBuilder.h" />
     <ClInclude Include="ScriptEngine\ScriptEngine.h" />
     <ClInclude Include="ScriptEngine\ScriptSolver.h" />
@@ -201,6 +202,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="ScriptEngine\CDrawableBuilder.cpp" />
+    <ClCompile Include="ScriptEngine\CPyObjectManager.cpp" />
     <ClCompile Include="ScriptEngine\PyObjectBuilder.cpp" />
     <ClCompile Include="ScriptEngine\ScriptEngine.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>

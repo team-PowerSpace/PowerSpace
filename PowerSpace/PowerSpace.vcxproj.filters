@@ -122,6 +122,9 @@
     <ClInclude Include="ScriptEngine\ScriptSolver.h">
       <Filter>ScriptEngine\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ScriptEngine\CPyObjectManager.h">
+      <Filter>ScriptEngine\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PowerSpace.cpp">
@@ -176,6 +179,9 @@
       <Filter>ScriptEngine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ScriptEngine\CDrawableBuilder.cpp">
+      <Filter>ScriptEngine\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptEngine\CPyObjectManager.cpp">
       <Filter>ScriptEngine\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

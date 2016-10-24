@@ -11,8 +11,8 @@ void  CDrawableBuilder::CDrawableDealloc(CDrawableStruct* self) {
 
 int CDrawableBuilder::CDrawableInit(CDrawableStruct *self, PyObject *args, 
 	PyObject *kwds) {
-	static char *kwlist[] = { "color", "xPos", "yPos", "width", "heigh", NULL };
-	if (!PyArg_ParseTupleAndKeywords(args, kwds, "|OOi", kwlist,
+	static char *kwlist[] = { "color", "xPos", "yPos", "width", "height", NULL };
+	if (!PyArg_ParseTupleAndKeywords(args, kwds, "|liiii", kwlist,
 		&self->color, &self->xPos, &self->yPos, &self->width, &self->height)) {
 		return -1;
 	}
@@ -24,7 +24,7 @@ PyMemberDef CDrawableBuilder::CDrawableMembers[] = {
 	{ "xPos", T_INT, offsetof(CDrawableStruct, xPos), 0, "xPos of left top corner" },
 	{ "yPos", T_INT, offsetof(CDrawableStruct, yPos), 0, "yPos of left top corner" },
 	{ "width", T_INT, offsetof(CDrawableStruct, width), 0, "width of rect" },
-	{ "heigh", T_INT, offsetof(CDrawableStruct, height), 0, "heigh of rect" },
+	{ "height", T_INT, offsetof(CDrawableStruct, height), 0, "height of rect" },
 	{ NULL }  /* Sentinel */
 };
 
@@ -107,7 +107,7 @@ std::shared_ptr<PyObject> CDrawableBuilder::GetpObject() {
 bool decoderAndSetter(PyObject* obj, std::shared_ptr<IDrawable> toChange)
 {
 	int color, xPos, yPos, width, height;
-	if ( PyArg_ParseTuple(obj, "liii:decoder", &color, &xPos, &yPos, &width, &height) == 0)
+	if ( PyArg_ParseTuple(obj, "liiii:decoder", &color, &xPos, &yPos, &width, &height) == 0)
 	{
 		return false;
 	}
