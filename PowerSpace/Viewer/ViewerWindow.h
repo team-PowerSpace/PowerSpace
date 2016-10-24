@@ -5,7 +5,8 @@
 
 // win32 window of the viewer module
 // has references to viewport and canvas (to modify them easily)
-class CViewerWindow {
+class CViewerWindow
+{
 public:
 	CViewerWindow( CStage& stage, CViewport& _viewport, CCanvas& _canvas );
 	~CViewerWindow();
@@ -19,12 +20,6 @@ public:
 
 	HWND GetHandle() const;
 
-protected:
-
-	void onClose();
-
-	static LRESULT __stdcall WindowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
-	
 private:
 	HWND handle;
 	HBITMAP bitmap;
@@ -38,10 +33,8 @@ private:
 
 	const CViewport& viewport;
 	const CCanvas& canvas;
-    CStage& stage;
-    CScriptEngine scriptEngine;
-
-	COLORREF colorBuf;
+	CStage& stage;
+	CScriptEngine scriptEngine;
 
 	const int windowHeight;
 	const int windowWidth;
@@ -50,6 +43,10 @@ private:
 
 	static const wchar_t* ClassName;
 	static const wchar_t* ViewerApplicationName;
+
+	void onClose();
+
+	static LRESULT __stdcall WindowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
 
 	POINT getMouseCoords( LPARAM lParam );
 

@@ -5,15 +5,13 @@ const wchar_t* CViewerWindow::ClassName = L"CViewerWindow";
 const wchar_t* CViewerWindow::ViewerApplicationName = L"Powerspace Viewer";
 const UINT TICK_LENGTH = 10;
 
-CViewerWindow::CViewerWindow( CStage& _stage, CViewport& _viewport, CCanvas& _canvas) :
-	windowHeight( 600 ), windowWidth( 800 ), viewport(_viewport), canvas(_canvas), 
-    handle(nullptr), stage(_stage), scriptEngine(stage), colorBuf(RGB( 255, 255, 255 ))
-{
-}
+CViewerWindow::CViewerWindow( CStage& _stage, CViewport& _viewport, CCanvas& _canvas ) :
+	windowHeight( 600 ), windowWidth( 800 ), viewport( _viewport ), canvas( _canvas ),
+	handle( nullptr ), stage( _stage ), scriptEngine( stage ), activeId(0)
+{}
 
 CViewerWindow::~CViewerWindow()
-{
-}
+{}
 
 //
 //  FUNCTION: RegisterClass()
@@ -77,9 +75,9 @@ LRESULT CViewerWindow::WindowProc( HWND handle, UINT msg, WPARAM wParam, LPARAM 
 		wndPtr->onCreate();
 		return 0;
 
-    case WM_CLOSE:
+	case WM_CLOSE:
 		wndPtr->onClose();
-        return 0;
+		return 0;
 
 	case WM_SIZE:
 		wndPtr->onSize();
@@ -126,7 +124,7 @@ bool CViewerWindow::pointInBox( TBox box, POINT point )
 		point.y <= box.bottom &&
 		point.y >= box.top )
 		return true;
-	else 
+	else
 		return false;
 }
 
@@ -164,9 +162,7 @@ void CViewerWindow::onTimer()
 void CViewerWindow::onPaint()
 {
 	PAINTSTRUCT paintStruct;
-
 	HDC hdc = ::BeginPaint( handle, &paintStruct );
-
 	RECT rect;
 	::GetClientRect( handle, &rect );
 
@@ -174,23 +170,20 @@ void CViewerWindow::onPaint()
 	int winHeight = rect.bottom + rect.left;
 
 	HDC Memhdc = ::CreateCompatibleDC( hdc );
-
 	HBITMAP Membitmap = ::CreateCompatibleBitmap( hdc, winWidth, winHeight );
-
 	::SelectObject( Memhdc, Membitmap );
-
 	::FillRect( Memhdc, &paintStruct.rcPaint, (HBRUSH)COLOR_WINDOW );
 
-    stage.ClipAndDrawObjects( Memhdc );
+	stage.ClipAndDrawObjects( Memhdc );
 
 	BOOL result = ::BitBlt( hdc, 0, 0, winWidth, winHeight, Memhdc, 0, 0, SRCCOPY );
 	if( !result ) {
 		::MessageBox( handle, L"BitBlt : onPaint() : CViewerWindow", L"Error", MB_ICONERROR );
 		PostQuitMessage( NULL );
 	}
+
 	::DeleteObject( Membitmap );
 	::DeleteDC( Memhdc );
-
 	::EndPaint( handle, &paintStruct );
 }
 
@@ -203,7 +196,6 @@ void CViewerWindow::onSize()
 {
 	RECT area;
 	::GetClientRect( handle, &area );
-
 	HDC tmp = ::GetDC( handle );
 	bitmapContext = ::CreateCompatibleDC( tmp );
 
@@ -218,15 +210,15 @@ void CViewerWindow::onSize()
 	}
 
 	::ReleaseDC( handle, tmp );
+	::DeleteDC( tmp );
 }
 
 void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
-{ 
+{
 	// TODO: handle mouse moving
 	// E.g. mouse is on the object => change the color
 
 	UNREFERENCED_PARAMETER( wParam );
-	UNREFERENCED_PARAMETER( lParam );
 
 	POINT mouseCoords = getMouseCoords( lParam );
 
@@ -243,6 +235,9 @@ void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 	if( topId == -1 )
 		return;
 
+	/*
+	in this case we can somehow mark the object, but it looks terrible
+
 	IDrawablePtr topObj = stage.GetObjectById( topId );
 
 	COLORREF color = topObj->GetColor();
@@ -258,6 +253,7 @@ void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 
 	GetClientRect( handle, &rect );
 	InvalidateRect( handle, &rect, false );
+	*/
 }
 
 //
@@ -267,42 +263,49 @@ void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 //
 void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lParam )
 {
-    UNREFERENCED_PARAMETER( wParam );
-    UNREFERENCED_PARAMETER( msg );
+/*
+	UNREFERENCED_PARAMETER( wParam );
+	UNREFERENCED_PARAMETER( msg );
 
 	POINT mouseCoords = getMouseCoords( lParam );
 
-//	int prevActiveId = activeId;
+	// storage space for usual color of currently active object
+	static COLORREF colorBuf;
+	bool clickedOnObject = false;
 
-	activeId = -1;
-
-	// handle mouse clicks on objects
-    // todo: detect which object was clicked, now all the objects are activated
 	for( auto pair : stage.GetObjects() ) {
 		TBox curBox = pair.second->GetContainingBox();
 
 		if( pointInBox( curBox, mouseCoords ) ) {
+			clickedOnObject = true;
+			stage.GetObjectById( activeId )->SetColor( colorBuf );
 			activeId = pair.second->GetId();
 		}
 	}
 
-	if( activeId == -1 )
+	if( !clickedOnObject )
 		return;
+
+	colorBuf
 
 	/*stage.GetObjectById( prevActiveId )->SetColor( colorBuf );
 
 	colorBuf = stage.GetObjectById( activeId )->GetColor();
-	
+
 	stage.GetObjectById( activeId )->SetColor(RGB(0, 0, 0));
-	*/
-    auto scripts = stage.GetObjectById(activeId)->GetScripts( EventType::EventClick );
-    if( !scripts.empty() ) {
-        scriptEngine.RunScripts(activeId, scripts);
-    }
-    
-    RECT rect;
-    GetClientRect( handle, &rect );
-    InvalidateRect( handle, &rect, false );
+	
+	auto scripts = stage.GetObjectById( activeId )->GetScripts( EventType::EventClick );
+	if( !scripts.empty() ) {
+		scriptEngine.RunScripts( activeId, scripts );
+	}
+
+	RECT rect;
+	GetClientRect( handle, &rect );
+	InvalidateRect( handle, &rect, false );*/
+
+	UNREFERENCED_PARAMETER( wParam );
+	UNREFERENCED_PARAMETER( msg );
+	UNREFERENCED_PARAMETER( lParam );
 }
 
 void CViewerWindow::Show() const
