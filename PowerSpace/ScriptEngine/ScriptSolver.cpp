@@ -32,7 +32,7 @@ std::shared_ptr<IDrawable> CScriptSolver::RunWithDict()
 	Py_DECREF( pName );
 
 	if( pModule != nullptr ) {
-		pFunc = PyObject_GetAttrString( pModule, func.c_str() );
+		pFunc = GetPyFunction( pModule );
 		if( pFunc && PyCallable_Check( pFunc ) ) {
 			pArgs = PyTuple_New( 1 );
 			pDict = PyDict_New();
@@ -121,7 +121,6 @@ PyObject *CScriptSolver::GetPyFunction( PyObject *pModule ) const
 
 void CScriptSolver::UpdateObject()
 {
-	//CHECK: must be updated after script executing
 	PyObject* pythonObject = pObject->GetpObject().get();
 
 	int color, xPos, yPos, width, height;

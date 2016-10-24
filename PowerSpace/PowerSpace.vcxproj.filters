@@ -181,9 +181,6 @@
     <ClCompile Include="ScriptEngine\CDrawableBuilder.cpp">
       <Filter>ScriptEngine\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CPyObjectManager.cpp">
-      <Filter>ScriptEngine\Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PowerSpace.rc">

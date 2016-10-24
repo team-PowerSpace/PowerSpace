@@ -13,7 +13,7 @@ CScriptEngine::CScriptEngine( CStage& _stage )
 {}
 
 
-std::vector<int> CScriptEngine::RunScripts( int objectId, const std::vector<CScript>& scripts )
+std::vector<int> CScriptEngine::RunScripts( const int objectId, const std::vector<CScript>& scripts )
 {
 	if( !isPythonRunning ) {
 		Py_Initialize(); //starting up Python if first run
@@ -29,9 +29,9 @@ std::vector<int> CScriptEngine::RunScripts( int objectId, const std::vector<CScr
 	using convert_type = std::codecvt_utf8<wchar_t>;
 	std::wstring_convert<convert_type, wchar_t> converter; //to convert from TPath (std::wstring) to std::string
 
-	for( auto i = scripts.begin(); i != scripts.end(); i++ ) {
-		TPath wstrPath( (*i).GetPath() );
-		std::ifstream stream( wstrPath.data(), std::ifstream::in ); //The best way to chek path validity is trying to open it
+	for( auto currentScript = scripts.begin(); currentScript != scripts.end(); currentScript++ ) {
+		TPath wstrPath( currentScript->GetPath() );
+		std::ifstream stream( wstrPath.data(), std::ifstream::in ); //The best way to check path validity is trying to open it
 		if( !stream.good() ) {
 			stream.close();
 			std::cout << "The file doesn't exist" << std::endl;
