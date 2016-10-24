@@ -7,11 +7,12 @@
 #include "Drawable.h"
 #include "CDrawableBuilder.h"
 
-class CScriptSolver {
+class CScriptSolver
+{
 public:
-	CScriptSolver(std::shared_ptr<IDrawable> object_, std::wstring path_, std::string func_);
-	void FillDict(PyObject* dict);
-	void UpdateDict(PyObject* dict);
+	CScriptSolver( std::shared_ptr<IDrawable> object_, std::wstring path_, std::string func_ );
+	void FillDict( PyObject* dict );
+	void UpdateDict( PyObject* dict );
 	std::shared_ptr<IDrawable> Run();
 	std::shared_ptr<IDrawable> RunWithDict();
 private:
@@ -21,6 +22,6 @@ private:
 	std::shared_ptr<IDrawable> object;
 	std::shared_ptr<CDrawableBuilder> pObject;
 
-	PyObject *GetPyFunction(PyObject *pModule) const;
+	PyObject *GetPyFunction( PyObject *pModule ) const;
 	void UpdateObject();
 };

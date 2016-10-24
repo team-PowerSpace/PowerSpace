@@ -9,54 +9,49 @@
 #include <fstream>
 
 CScriptEngine::CScriptEngine( CStage& _stage )
-    : stage( _stage ), isPythonRunning( false )
+	: stage( _stage ), isPythonRunning( false )
 {}
 
 
-std::vector<int> CScriptEngine::RunScripts(int objectId, const std::vector<CScript>& scripts )
+std::vector<int> CScriptEngine::RunScripts( int objectId, const std::vector<CScript>& scripts )
 {
-	if (!isPythonRunning)
-	{
+	if( !isPythonRunning ) {
 		Py_Initialize(); //starting up Python if first run
-	}
-	else if (objectId == -1) 
-	{
+	} else if( objectId == -1 ) {
 		Py_Finalize(); //finlazing Python before turning the programm off
 		return std::vector<int>();
 	}
-	std::shared_ptr<IDrawable> workingObject = stage.GetObjectById(objectId);
-	
+	std::shared_ptr<IDrawable> workingObject = stage.GetObjectById( objectId );
+
 	// Here was process of creation of PyObject,
 	// but for now we decided to use Dirs due to simplicity
 
 	using convert_type = std::codecvt_utf8<wchar_t>;
 	std::wstring_convert<convert_type, wchar_t> converter; //to convert from TPath (std::wstring) to std::string
 
-	for (auto i = scripts.begin(); i != scripts.end(); i++)
-	{
-		TPath wstrPath((*i).GetPath());
-		std::ifstream stream(wstrPath.data(), std::ifstream::in); //The best way to chek path validity is trying to open it
-		if (!stream.good())
-		{
+	for( auto i = scripts.begin(); i != scripts.end(); i++ ) {
+		TPath wstrPath( (*i).GetPath() );
+		std::ifstream stream( wstrPath.data(), std::ifstream::in ); //The best way to chek path validity is trying to open it
+		if( !stream.good() ) {
 			stream.close();
 			std::cout << "The file doesn't exist" << std::endl;
-			assert(false);
+			assert( false );
 		}
 		stream.close();
 
 		//Deleteing the path and saving only script's filename (with extention)
-		std::wstring scriptName = wstrPath.substr(wstrPath.find_last_of(L"\\/") + 1);
+		std::wstring scriptName = wstrPath.substr( wstrPath.find_last_of( L"\\/" ) + 1 );
 
 		//Deleting the extention of script
-		std::wstring scriptNameWithoutExtention = scriptName.substr(0, scriptName.find(L"."));
+		std::wstring scriptNameWithoutExtention = scriptName.substr( 0, scriptName.find( L"." ) );
 
 
 		//Empty string left for ability to call different functions located in single script
 		std::string emptyString = "";
 		CScriptSolver solver( workingObject, scriptNameWithoutExtention, emptyString );
-        
-        std::shared_ptr<IDrawable> changedObject = solver.RunWithDict();   //Returns shared_ptr to changed object, but values already set in the scene
-		assert(changedObject == workingObject);
+
+		std::shared_ptr<IDrawable> changedObject = solver.RunWithDict();   //Returns shared_ptr to changed object, but values already set in the scene
+		assert( changedObject == workingObject );
 	}
-    return std::vector<int>(); //Not used for now, but later will allow to return list of objects changed (if needed) for 
+	return std::vector<int>(); //Not used for now, but later will allow to return list of objects changed (if needed) for 
 }

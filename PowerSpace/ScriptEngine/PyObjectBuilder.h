@@ -3,9 +3,10 @@
 #include "Drawable.h"
 #include <memory>
 
-class CPyObjectBuilder {
+class CPyObjectBuilder
+{
 public:
-	CPyObjectBuilder(std::shared_ptr<IDrawable> object);
+	CPyObjectBuilder( std::shared_ptr<IDrawable> object );
 	std::shared_ptr<PyObject> GetpObject();
 private:
 	std::shared_ptr<PyObject> pObject;

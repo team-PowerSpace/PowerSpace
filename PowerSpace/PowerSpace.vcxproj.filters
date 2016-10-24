@@ -181,7 +181,7 @@
     <ClCompile Include="ScriptEngine\CDrawableBuilder.cpp">
       <Filter>ScriptEngine\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ScriptEngine\CPyObjectManager.cpp">
+    <ClCompile Include="CPyObjectManager.cpp">
       <Filter>ScriptEngine\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

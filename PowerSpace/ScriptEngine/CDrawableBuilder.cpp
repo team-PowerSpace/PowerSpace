@@ -1,30 +1,60 @@
 #include <stdafx.h>
 #include "CDrawableBuilder.h"
 
-void CDrawableBuilder::CDrawableRedable(CDrawableStruct* self) {
-	self->color = RGB(255, 0, 0);
+CDrawableBuilder::CDrawableBuilder( std::shared_ptr<IDrawable> object )
+{
+	std::shared_ptr<CDrawable> castedObject =
+		std::static_pointer_cast<CDrawable>(object);
+	if( PyType_Ready( &CDrawableType ) < 0 ) {
+		pObject = nullptr;
+	} else {
+		RECT rect = object->GetContainingBox();
+		pObject = std::shared_ptr<PyObject>( reinterpret_cast<PyObject*>(PyObject_NEW( CDrawableStruct, &CDrawableType )) );
+		PyObject* args = PyTuple_New( 5 );
+		PyTuple_SetItem( args, 0, PyLong_FromUnsignedLong( object->GetColor() ) );
+		PyTuple_SetItem( args, 1, PyLong_FromLong( rect.left ) );
+		PyTuple_SetItem( args, 2, PyLong_FromLong( rect.top ) );
+		PyTuple_SetItem( args, 3, PyLong_FromLong( rect.right - rect.left ) );
+		PyTuple_SetItem( args, 4, PyLong_FromLong( rect.bottom - rect.top ) );
+
+		PyObject* kwds = PyTuple_New( 5 );
+		PyTuple_SetItem( args, 0, PyUnicode_FromString( "color" ) );
+		PyTuple_SetItem( args, 1, PyUnicode_FromString( "xPos" ) );
+		PyTuple_SetItem( args, 2, PyUnicode_FromString( "yPos" ) );
+		PyTuple_SetItem( args, 3, PyUnicode_FromString( "width" ) );
+		PyTuple_SetItem( args, 4, PyUnicode_FromString( "height" ) );
+		pObject->ob_type->tp_init( pObject.get(), args, kwds );
+	}
 }
 
-void  CDrawableBuilder::CDrawableDealloc(CDrawableStruct* self) {
-	Py_TYPE(self)->tp_free((PyObject*)self);
+
+void CDrawableBuilder::CDrawableRedable( CDrawableStruct* self )
+{
+	self->color = RGB( 255, 0, 0 );
 }
 
-int CDrawableBuilder::CDrawableInit(CDrawableStruct *self, PyObject *args, 
-	PyObject *kwds) {
+void  CDrawableBuilder::CDrawableDealloc( CDrawableStruct* self )
+{
+	Py_TYPE( self )->tp_free( reinterpret_cast<PyObject*>(self) );
+}
+
+int CDrawableBuilder::CDrawableInit( CDrawableStruct *self, PyObject *args,
+	PyObject *kwds )
+{
 	static char *kwlist[] = { "color", "xPos", "yPos", "width", "height", NULL };
-	if (!PyArg_ParseTupleAndKeywords(args, kwds, "|liiii", kwlist,
-		&self->color, &self->xPos, &self->yPos, &self->width, &self->height)) {
+	if( !PyArg_ParseTupleAndKeywords( args, kwds, "|liiii", kwlist,
+		&self->color, &self->xPos, &self->yPos, &self->width, &self->height ) ) {
 		return -1;
 	}
 	return 0;
 }
 
 PyMemberDef CDrawableBuilder::CDrawableMembers[] = {
-	{ "color", T_ULONG, offsetof(CDrawableStruct, color), 0, "color" },
-	{ "xPos", T_INT, offsetof(CDrawableStruct, xPos), 0, "xPos of left top corner" },
-	{ "yPos", T_INT, offsetof(CDrawableStruct, yPos), 0, "yPos of left top corner" },
-	{ "width", T_INT, offsetof(CDrawableStruct, width), 0, "width of rect" },
-	{ "height", T_INT, offsetof(CDrawableStruct, height), 0, "height of rect" },
+	{ "color", T_ULONG, offsetof( CDrawableStruct, color ), 0, "color" },
+	{ "xPos", T_INT, offsetof( CDrawableStruct, xPos ), 0, "xPos of left top corner" },
+	{ "yPos", T_INT, offsetof( CDrawableStruct, yPos ), 0, "yPos of left top corner" },
+	{ "width", T_INT, offsetof( CDrawableStruct, width ), 0, "width of rect" },
+	{ "height", T_INT, offsetof( CDrawableStruct, height ), 0, "height of rect" },
 	{ NULL }  /* Sentinel */
 };
 
@@ -34,9 +64,9 @@ PyMethodDef CDrawableBuilder::CDrawableMethods[] = {
 };
 
 PyTypeObject CDrawableBuilder::CDrawableType = {
-	PyVarObject_HEAD_INIT(NULL, 0)
+	PyVarObject_HEAD_INIT( NULL, 0 )
 	"CDrawable",             /* tp_name */
-	sizeof(CDrawableStruct), /* tp_basicsize */
+	sizeof( CDrawableStruct ), /* tp_basicsize */
 	0,                         /* tp_itemsize */
 	(destructor)CDrawableDealloc,      /* tp_dealloc */
 	0,                         /* tp_print */
@@ -74,49 +104,23 @@ PyTypeObject CDrawableBuilder::CDrawableType = {
 	(initproc)CDrawableInit,      /* tp_init */
 };
 
-CDrawableBuilder::CDrawableBuilder(std::shared_ptr<IDrawable> object) {	
-		std::shared_ptr<CDrawable> castedObject =
-			std::static_pointer_cast<CDrawable>(object);		
-		if (PyType_Ready(&CDrawableType) < 0) {
-			pObject = nullptr;
-		}
-		else {
-			RECT rect = object->GetContainingBox();
-            pObject = std::shared_ptr<PyObject>( (PyObject*)PyObject_NEW( CDrawableStruct, &CDrawableType ) );
-			PyObject* args = PyTuple_New(5);
-			PyTuple_SetItem(args, 0, PyLong_FromUnsignedLong(object->GetColor()));
-			PyTuple_SetItem(args, 1, PyLong_FromLong(rect.left));
-			PyTuple_SetItem(args, 2, PyLong_FromLong(rect.top));
-			PyTuple_SetItem(args, 3, PyLong_FromLong(rect.right - rect.left));
-			PyTuple_SetItem(args, 4, PyLong_FromLong(rect.bottom - rect.top));
-
-			PyObject* kwds = PyTuple_New(5);
-			PyTuple_SetItem(args, 0, PyUnicode_FromString("color"));
-			PyTuple_SetItem(args, 1, PyUnicode_FromString("xPos"));
-			PyTuple_SetItem(args, 2, PyUnicode_FromString("yPos"));
-			PyTuple_SetItem(args, 3, PyUnicode_FromString("width"));
-			PyTuple_SetItem(args, 4, PyUnicode_FromString("height"));
-			pObject->ob_type->tp_init(pObject.get(), args, kwds);
-		}
-}
-
-std::shared_ptr<PyObject> CDrawableBuilder::GetpObject() {
+std::shared_ptr<PyObject> CDrawableBuilder::GetpObject()
+{
 	return pObject;
 }
 
-bool decoderAndSetter(PyObject* obj, std::shared_ptr<IDrawable> toChange)
+bool decoderAndSetter( PyObject* obj, std::shared_ptr<IDrawable> toChange )
 {
 	int color, xPos, yPos, width, height;
-	if ( PyArg_ParseTuple(obj, "liiii:decoder", &color, &xPos, &yPos, &width, &height) == 0)
-	{
+	if( PyArg_ParseTuple( obj, "liiii:decoder", &color, &xPos, &yPos, &width, &height ) == 0 ) {
 		return false;
 	}
-	toChange->SetColor(color);
+	toChange->SetColor( color );
 	RECT rect;
 	rect.top = yPos;
 	rect.left = xPos;
 	rect.bottom = rect.top + height;
 	rect.right = rect.left + width;
-	toChange->SetContainingBox(rect);
+	toChange->SetContainingBox( rect );
 	return true;
 }
