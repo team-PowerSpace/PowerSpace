@@ -19,6 +19,7 @@ CScriptSolver::CScriptSolver( std::shared_ptr<IDrawable> obj, std::wstring scrip
 	members.insert( color );
 
 	//Creating and initialising PyObject from object
+	pObject = std::shared_ptr<CDrawableBuilder>( new CDrawableBuilder( obj ) );
 
 }
 

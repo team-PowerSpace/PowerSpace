@@ -23,6 +23,7 @@ CDrawableBuilder::CDrawableBuilder( std::shared_ptr<IDrawable> object )
 		PyTuple_SetItem( args, 2, PyUnicode_FromString( "yPos" ) );
 		PyTuple_SetItem( args, 3, PyUnicode_FromString( "width" ) );
 		PyTuple_SetItem( args, 4, PyUnicode_FromString( "height" ) );
+
 		pObject->ob_type->tp_init( pObject.get(), args, kwds );
 	}
 }
