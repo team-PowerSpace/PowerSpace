@@ -23,7 +23,7 @@ std::shared_ptr<IDrawable> CScriptSolver::Run() {
 	PyObject *pName, *pModule, *pDict, *pFunc;
 	PyObject *pArgs, *pValue;
 		
-	
+	pName = nullptr;
 	
 	if (!holder->isScriptIn(path))
 	{

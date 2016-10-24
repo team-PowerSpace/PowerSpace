@@ -19,8 +19,7 @@ std::vector<int> CScriptEngine::RunScripts(int objectId, const std::vector<CScri
 	if (!isPythonRunning)
 	{
 		Py_Initialize(); //starting up Python if first run
-		ScriptHolder sHolder();
-		holder = std::shared_ptr<ScriptHolder> (sHolder);
+		holder = std::shared_ptr<ScriptHolder> (new ScriptHolder());
 		isPythonRunning = true;
 	}
 	else if (objectId == -1) 
