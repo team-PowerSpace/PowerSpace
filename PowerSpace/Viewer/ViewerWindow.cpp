@@ -343,7 +343,7 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 	if( activeId != 0 ) {
 		colorBuf = stage.GetObjectById( activeId )->GetColor();
 
-		stage.GetObjectById( activeId )->SetColor( activeObjectColor );
+		stage.GetObjectById( activeId )->SetColor( static_cast<COLORREF> (colorBuf * 0.8));
 
 		auto scripts = stage.GetObjectById( activeId )->GetScripts( EventType::EventClick );
 		if( !scripts.empty() ) {
