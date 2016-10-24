@@ -4,7 +4,7 @@
 #include <exception>
 
 CScriptSolver::CScriptSolver( std::shared_ptr<IDrawable> obj, std::wstring scriptName_,
-	std::string func_ ) : scriptName( scriptName_ ), func( func_ ), object( obj )
+	std::string func_, std::shared_ptr<ScriptHolder> holder_ ) : scriptName( scriptName_ ), func( func_ ), object( obj ), holder( holder_ )
 {
 	//Will be deleted after the testing of PyObject based solution
 	std::pair<std::string, long> xPos( "x", obj->GetContainingBox().left );
@@ -27,9 +27,15 @@ std::shared_ptr<IDrawable> CScriptSolver::RunWithDict()
 	PyObject *pName, *pModule, *pDict, *pFunc;
 	PyObject *pArgs, *pValue;
 
-	pName = PyUnicode_FromUnicode( scriptName.c_str(), scriptName.size() );
-	pModule = PyImport_Import( pName );
-	Py_DECREF( pName );
+	if( !holder->isScriptIn( scriptName ) ) {
+		pName = PyUnicode_FromUnicode( scriptName.c_str(), scriptName.size() );
+		pModule = PyImport_Import( pName );
+		
+		holder->addScript( scriptName, pModule );
+		Py_DECREF( pName );
+	} else {
+		pModule = holder->getScript( scriptName );
+	}
 
 	if( pModule != nullptr ) {
 		pFunc = GetPyFunction( pModule );
@@ -61,11 +67,14 @@ std::shared_ptr<IDrawable> CScriptSolver::Run()
 	PyObject *pName, *pModule, *pFunc;
 	PyObject *pArgs, *pValue;
 
-	//temprorary hard code will be replaced by using script manager {
-	pName = PyUnicode_FromUnicode( scriptName.c_str(), scriptName.size() );
-	pModule = PyImport_Import( pName );
-	Py_DECREF( pName );
-	//}
+	if( !holder->isScriptIn( scriptName ) ) {
+		pName = PyUnicode_FromUnicode( scriptName.c_str(), scriptName.size() );
+		pModule = PyImport_Import( pName );
+		holder->addScript( scriptName, pModule );
+		Py_DECREF( pName );
+	} else {
+		pModule = holder->getScript( scriptName );
+	}
 
 	if( pModule != nullptr ) {
 		pFunc = GetPyFunction( pModule );

@@ -1,8 +1,11 @@
 ﻿#include <stdafx.h>
+
 #include "ScriptEngine.h"
 #include "ScriptSolver.h"
 #include "PyObjectBuilder.h"
 #include "CDrawableBuilder.h"
+#include "CScriptHolder.h"
+
 #include <codecvt>
 #include <Exception>
 #include <iostream>
@@ -17,8 +20,11 @@ std::vector<int> CScriptEngine::RunScripts( const int objectId, const std::vecto
 {
 	if( !isPythonRunning ) {
 		Py_Initialize(); //starting up Python if first run
+		holder = std::shared_ptr<ScriptHolder>( new ScriptHolder() );
+		isPythonRunning = true;
 	} else if( objectId == -1 ) {
 		Py_Finalize(); //finlazing Python before turning the programm off
+		isPythonRunning = false;
 		return std::vector<int>();
 	}
 	std::shared_ptr<IDrawable> workingObject = stage.GetObjectById( objectId );
@@ -47,8 +53,7 @@ std::vector<int> CScriptEngine::RunScripts( const int objectId, const std::vecto
 
 
 		//Empty string left for ability to call different functions located in single script
-		std::string emptyString = "";
-		CScriptSolver solver( workingObject, scriptNameWithoutExtention, emptyString );
+		CScriptSolver solver( workingObject, scriptNameWithoutExtention, /*std::string("OnClick")*/std::string( "" ), holder );
 
 		std::shared_ptr<IDrawable> changedObject = solver.RunWithDict();   //Returns shared_ptr to changed object, but values already set in the scene
 		assert( changedObject == workingObject );

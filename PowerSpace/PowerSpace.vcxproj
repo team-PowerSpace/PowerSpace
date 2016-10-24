@@ -156,6 +156,7 @@
     <ClInclude Include="Common\Drawable.h" />
     <ClInclude Include="Common\StageObjects.h" />
     <ClInclude Include="Common\Viewport.h" />
+    <ClInclude Include="CScriptHolder.h" />
     <ClInclude Include="EditControlWindow.h" />
     <ClInclude Include="Editor\Editor.h" />
     <ClInclude Include="Editor\EditorWindow.h" />
@@ -185,6 +186,7 @@
     </ClCompile>
     <ClCompile Include="Common\StageObjects.cpp" />
     <ClCompile Include="Common\Viewport.cpp" />
+    <ClCompile Include="CScriptHolder.cpp" />
     <ClCompile Include="EditControlWindow.cpp" />
     <ClCompile Include="Editor\Editor.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
