@@ -9,7 +9,7 @@ const UINT TICK_LENGTH = 10;
 
 CViewerWindow::CViewerWindow( CStage& _stage, CViewport& _viewport, CCanvas& _canvas ) :
 	windowHeight( 600 ), windowWidth( 800 ), viewport( _viewport ), canvas( _canvas ),
-	handle( nullptr ), stage( _stage ), scriptEngine( stage ), activeId(0), activeObjectColor(RGB(0, 0, 0)),
+	handle( nullptr ), stage( _stage ), scriptEngine( stage ), activeId(0),
 	viewerIsRunning( true )
 {}
 
@@ -24,7 +24,7 @@ CViewerWindow::~CViewerWindow()
 bool CViewerWindow::RegisterClass()
 {
 	HBRUSH backgroundBrush = ::CreateHatchBrush( HS_CROSS, 0x66FF66 );
-	HMODULE instance = GetModuleHandleW( nullptr );
+	HMODULE instance = ::GetModuleHandleW( nullptr );
 
 	WNDCLASSEX windowClassInformation;
 	windowClassInformation.cbSize = sizeof( WNDCLASSEX );
@@ -33,12 +33,12 @@ bool CViewerWindow::RegisterClass()
 	windowClassInformation.cbClsExtra = 0;
 	windowClassInformation.cbWndExtra = 2 * sizeof( LONG_PTR );
 	windowClassInformation.hInstance = instance;
-	windowClassInformation.hIcon = LoadIcon( instance, MAKEINTRESOURCE( IDI_SMALL ) );
-	windowClassInformation.hCursor = LoadCursor( nullptr, IDC_ARROW );
+	windowClassInformation.hIcon = ::LoadIcon( instance, MAKEINTRESOURCE( IDI_SMALL ) );
+	windowClassInformation.hCursor = ::LoadCursor( nullptr, IDC_ARROW );
 	windowClassInformation.hbrBackground = backgroundBrush;
-	windowClassInformation.lpszMenuName = MAKEINTRESOURCE( IDR_MENU2 );;
+	windowClassInformation.lpszMenuName = MAKEINTRESOURCE( IDR_MENU2 );
 	windowClassInformation.lpszClassName = ClassName;
-	windowClassInformation.hIconSm = LoadIcon( instance, MAKEINTRESOURCE( IDI_SMALL ) );
+	windowClassInformation.hIconSm = ::LoadIcon( instance, MAKEINTRESOURCE( IDI_SMALL ) );
 
 	return (::RegisterClassEx( &windowClassInformation ) != 0);
 }
@@ -50,12 +50,24 @@ bool CViewerWindow::RegisterClass()
 //
 bool CViewerWindow::Create()
 {
-	HINSTANCE hInstance = GetModuleHandle( nullptr );
+	HINSTANCE hInstance = ::GetModuleHandle( nullptr );
 
-	handle = CreateWindowEx( 0, ClassName, ViewerApplicationName, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
-		windowHeight, windowWidth, nullptr, nullptr, hInstance, this );
+	handle = ::CreateWindowEx( 0, ClassName, ViewerApplicationName,
+		WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
+		windowHeight, windowWidth, nullptr, nullptr, 
+		hInstance, this );
 
 	return (handle != 0);
+}
+
+void CViewerWindow::Show() const
+{
+	::ShowWindow( handle, SW_MAXIMIZE );
+}
+
+HWND CViewerWindow::GetHandle() const
+{
+	return handle;
 }
 
 //
@@ -66,12 +78,12 @@ bool CViewerWindow::Create()
 LRESULT CViewerWindow::WindowProc( HWND handle, UINT msg, WPARAM wParam, LPARAM lParam )
 {
 	if( msg == WM_NCCREATE ) {
-		SetWindowLongPtr( handle, 0, reinterpret_cast<LONG_PTR>(reinterpret_cast<CREATESTRUCT*>(lParam)->lpCreateParams) );
+		::SetWindowLongPtr( handle, 0, reinterpret_cast<LONG_PTR>(reinterpret_cast<CREATESTRUCT*>(lParam)->lpCreateParams) );
 
-		return DefWindowProc( handle, msg, wParam, lParam );
+		return ::DefWindowProc( handle, msg, wParam, lParam );
 	}
 
-	CViewerWindow* wndPtr = reinterpret_cast<CViewerWindow*>(GetWindowLongPtr( handle, 0 ));
+	CViewerWindow* wndPtr = reinterpret_cast<CViewerWindow*>(::GetWindowLongPtr( handle, 0 ));
 
 	switch( msg ) {
 	case WM_CREATE:
@@ -82,12 +94,12 @@ LRESULT CViewerWindow::WindowProc( HWND handle, UINT msg, WPARAM wParam, LPARAM 
 		wndPtr->onClose();
 		return 0;
 
-	case WM_SIZE:
-		wndPtr->onSize();
-		return 0;
-
 	case WM_PAINT:
 		wndPtr->onPaint();
+		return 0;
+
+	case WM_SIZE:
+		wndPtr->onSize();
 		return 0;
 
 	case WM_MOUSEMOVE:
@@ -99,7 +111,7 @@ LRESULT CViewerWindow::WindowProc( HWND handle, UINT msg, WPARAM wParam, LPARAM 
 		return 0;
 
 	case WM_COMMAND:
-		wndPtr->OnCommand( wParam, lParam );
+		wndPtr->onCommand( wParam, lParam );
 		return 0;
 
 	default:
@@ -107,37 +119,16 @@ LRESULT CViewerWindow::WindowProc( HWND handle, UINT msg, WPARAM wParam, LPARAM 
 	}
 }
 
+void CViewerWindow::onCreate()
+{
+	::SetTimer( handle, 1, TICK_LENGTH, nullptr );
+}
+
 void CViewerWindow::onClose()
 {
 	if( ::MessageBox( handle, L"Really quit?", ViewerApplicationName, MB_OKCANCEL ) == IDOK ) {
 		::DestroyWindow( handle );
 	}
-}
-
-POINT CViewerWindow::getMouseCoords( LPARAM lParam )
-{
-	POINT mouseCoords;
-
-	mouseCoords.x = LOWORD( lParam );
-	mouseCoords.y = HIWORD( lParam );
-
-	return mouseCoords;
-}
-
-bool CViewerWindow::pointInBox( TBox box, POINT point )
-{
-	if( point.x <= box.right &&
-		point.x >= box.left &&
-		point.y <= box.bottom &&
-		point.y >= box.top )
-		return true;
-	else
-		return false;
-}
-
-void CViewerWindow::onCreate()
-{
-	::SetTimer( handle, 1, TICK_LENGTH, nullptr );
 }
 
 //
@@ -158,8 +149,8 @@ void CViewerWindow::onTimer()
 	}
 
 	RECT rect;
-	GetClientRect( handle, &rect );
-	InvalidateRect( handle, &rect, false );
+	::GetClientRect( handle, &rect );
+	::InvalidateRect( handle, &rect, false );
 }
 
 //
@@ -181,7 +172,7 @@ void CViewerWindow::onPaint()
 	HBITMAP Membitmap = ::CreateCompatibleBitmap( hdc, winWidth, winHeight );
 	::SelectObject( Memhdc, Membitmap );
 
-	HBRUSH canvasBrush = ::CreateHatchBrush( HS_CROSS, RGB(0, 128, 255) );
+	HBRUSH canvasBrush = ::CreateHatchBrush( HS_CROSS, BLUE_FOR_CANVAS_CROSS );
 
 	::FillRect( Memhdc, &paintStruct.rcPaint, canvasBrush );
 
@@ -190,7 +181,7 @@ void CViewerWindow::onPaint()
 	BOOL result = ::BitBlt( hdc, 0, 0, winWidth, winHeight, Memhdc, 0, 0, SRCCOPY );
 	if( !result ) {
 		::MessageBox( handle, L"BitBlt : onPaint() : CViewerWindow", L"Error", MB_ICONERROR );
-		PostQuitMessage( NULL );
+		::PostQuitMessage( NULL );
 	}
 
 	::DeleteObject( Membitmap );
@@ -224,42 +215,6 @@ void CViewerWindow::onSize()
 	::DeleteDC( tmp );
 }
 
-void CViewerWindow::OnCommandMenu( WPARAM wParam, LPARAM lParam )
-{
-	UNREFERENCED_PARAMETER( lParam );
-
-	switch LOWORD( wParam )
-	{
-	case ID_CONTROL_PLAY:
-		viewerIsRunning = !viewerIsRunning;
-		
-		HMENU pMenu = ::GetMenu( handle );
-
-		if( pMenu != NULL ) {
-			if ( viewerIsRunning )
-				::CheckMenuItem(pMenu, ID_CONTROL_PLAY, MF_UNCHECKED | MF_BYCOMMAND);
-			else
-				::CheckMenuItem( pMenu, ID_CONTROL_PLAY, MF_CHECKED | MF_BYCOMMAND );
-		}
-		else 			{
-			::MessageBox( handle, L"Menu not found", L"Error", MB_ICONERROR );
-			PostQuitMessage( NULL );
-		}
-
-		::SetMenu( handle, pMenu );
-		break;
-	}
-}
-
-void CViewerWindow::OnCommand( WPARAM wParam, LPARAM lParam )
-{
-	switch( HIWORD( wParam ) ) {
-	case 0:
-		OnCommandMenu( wParam, lParam );
-		break;
-	}
-}
-
 void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 {
 	// TODO: handle mouse moving
@@ -274,7 +229,7 @@ void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 	for( auto pair : stage.GetObjects() ) {
 		TBox curBox = pair.second->GetContainingBox();
 
-		if( pointInBox( curBox, mouseCoords ) ) {
+		if( isPointInBox( curBox, mouseCoords ) ) {
 			topId = pair.second->GetId();
 		}
 	}
@@ -327,7 +282,7 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 	for( auto pair : stage.GetObjects() ) {
 		TBox curBox = pair.second->GetContainingBox();
 
-		if( pointInBox( curBox, mouseCoords ) ) {
+		if( isPointInBox( curBox, mouseCoords ) ) {
 			activeId = pair.second->GetId();
 		}
 	}
@@ -352,16 +307,62 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 	}
 
 	RECT rect;
-	GetClientRect( handle, &rect );
-	InvalidateRect( handle, &rect, false );
+	::GetClientRect( handle, &rect );
+	::InvalidateRect( handle, &rect, false );
 }
 
-void CViewerWindow::Show() const
+void CViewerWindow::onCommandMenu( WPARAM wParam, LPARAM lParam )
 {
-	::ShowWindow( handle, SW_MAXIMIZE );
+	UNREFERENCED_PARAMETER( lParam );
+
+	switch LOWORD( wParam )
+	{
+	case ID_CONTROL_PLAY:
+		viewerIsRunning = !viewerIsRunning;
+
+		HMENU pMenu = ::GetMenu( handle );
+
+		if( pMenu != NULL ) {
+			if( viewerIsRunning )
+				::CheckMenuItem( pMenu, ID_CONTROL_PLAY, MF_UNCHECKED | MF_BYCOMMAND );
+			else
+				::CheckMenuItem( pMenu, ID_CONTROL_PLAY, MF_CHECKED | MF_BYCOMMAND );
+		} else {
+			::MessageBox( handle, L"Menu not found", L"Error", MB_ICONERROR );
+			::PostQuitMessage( NULL );
+		}
+
+		::SetMenu( handle, pMenu );
+		break;
+	}
 }
 
-HWND CViewerWindow::GetHandle() const
+void CViewerWindow::onCommand( WPARAM wParam, LPARAM lParam )
 {
-	return handle;
+	switch( HIWORD( wParam ) ) {
+	case 0:
+		onCommandMenu( wParam, lParam );
+		break;
+	}
+}
+
+POINT CViewerWindow::getMouseCoords( LPARAM lParam )
+{
+	POINT mouseCoords;
+
+	mouseCoords.x = LOWORD( lParam );
+	mouseCoords.y = HIWORD( lParam );
+
+	return mouseCoords;
+}
+
+bool CViewerWindow::isPointInBox( TBox box, POINT point )
+{
+	if( point.x <= box.right &&
+		point.x >= box.left &&
+		point.y <= box.bottom &&
+		point.y >= box.top )
+		return true;
+	else
+		return false;
 }
