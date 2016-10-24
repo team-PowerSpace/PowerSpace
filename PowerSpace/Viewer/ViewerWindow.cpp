@@ -23,7 +23,7 @@ CViewerWindow::~CViewerWindow()
 //
 bool CViewerWindow::RegisterClass()
 {
-	HBRUSH backgroundBrush = reinterpret_cast<HBRUSH> (::GetStockObject( WHITE_BRUSH ));
+	HBRUSH backgroundBrush = ::CreateHatchBrush( HS_CROSS, 0x66FF66 );
 	HMODULE instance = GetModuleHandleW( nullptr );
 
 	WNDCLASSEX windowClassInformation;
@@ -180,7 +180,10 @@ void CViewerWindow::onPaint()
 	HDC Memhdc = ::CreateCompatibleDC( hdc );
 	HBITMAP Membitmap = ::CreateCompatibleBitmap( hdc, winWidth, winHeight );
 	::SelectObject( Memhdc, Membitmap );
-	::FillRect( Memhdc, &paintStruct.rcPaint, (HBRUSH)COLOR_WINDOW );
+
+	HBRUSH canvasBrush = ::CreateHatchBrush( HS_CROSS, RGB(0, 128, 255) );
+
+	::FillRect( Memhdc, &paintStruct.rcPaint, canvasBrush );
 
 	stage.ClipAndDrawObjects( Memhdc );
 
