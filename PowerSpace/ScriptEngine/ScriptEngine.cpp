@@ -55,7 +55,7 @@ std::vector<int> CScriptEngine::RunScripts( const int objectId, const std::vecto
 		//Empty string left for ability to call different functions located in single script
 		CScriptSolver solver( workingObject, scriptNameWithoutExtention, /*std::string("OnClick")*/std::string( "" ), holder );
 
-		std::shared_ptr<IDrawable> changedObject = solver.RunWithDict();   //Returns shared_ptr to changed object, but values already set in the scene
+		std::shared_ptr<IDrawable> changedObject = solver.Run();   //Returns shared_ptr to changed object, but values already set in the scene
 		assert( changedObject == workingObject );
 	}
 	return std::vector<int>(); //Not used for now, but later will allow to return list of objects changed (if needed) for 

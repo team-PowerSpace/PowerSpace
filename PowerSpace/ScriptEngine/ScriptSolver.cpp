@@ -20,6 +20,8 @@ CScriptSolver::CScriptSolver( std::shared_ptr<IDrawable> obj, std::wstring scrip
 
 	//Creating and initialising PyObject from object
 	//Previous variant cause triggered breakpoint error
+	pObject = std::make_shared<CDrawableBuilder>(obj);
+
 }
 
 std::shared_ptr<IDrawable> CScriptSolver::RunWithDict()
@@ -71,10 +73,10 @@ std::shared_ptr<IDrawable> CScriptSolver::Run()
 		pName = PyUnicode_FromUnicode( scriptName.c_str(), scriptName.size() );
 		pModule = PyImport_Import( pName );
 		holder->addScript( scriptName, pModule );
+		Py_XDECREF( pModule );
 		Py_XDECREF( pName );
-	} else {
-		pModule = holder->getScript( scriptName );
 	}
+	pModule = holder->getScript(scriptName);
 
 	if( pModule != nullptr ) {
 		pFunc = GetPyFunction( pModule );
@@ -84,9 +86,6 @@ std::shared_ptr<IDrawable> CScriptSolver::Run()
 			pValue = PyObject_CallObject( pFunc, pArgs );
 			Py_XDECREF( pValue );
 		}
-
-		Py_XDECREF( pFunc );
-		Py_XDECREF( pModule );
 	}
 	UpdateObject();
 	return object;

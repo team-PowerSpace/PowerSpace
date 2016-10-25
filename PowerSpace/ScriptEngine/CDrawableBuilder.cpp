@@ -3,13 +3,17 @@
 
 CDrawableBuilder::CDrawableBuilder( std::shared_ptr<IDrawable> object )
 {
-	std::shared_ptr<CDrawable> castedObject =
-		std::static_pointer_cast<CDrawable>(object);
 	if( PyType_Ready( &CDrawableType ) < 0 ) {
 		pObject = nullptr;
 	} else {
 		RECT rect = object->GetContainingBox();
-		pObject = std::shared_ptr<PyObject>( reinterpret_cast<PyObject*>(PyObject_NEW( CDrawableStruct, &CDrawableType )) );
+		pObject = std::shared_ptr<PyObject>(
+			reinterpret_cast<PyObject*>(PyObject_NEW(CDrawableStruct, &CDrawableType)), 
+			[=] ( PyObject *pObject )
+		{
+			PyObject_FREE(pObject);
+		});
+
 		PyObject* args = PyTuple_New( 5 );
 		PyTuple_SetItem( args, 0, PyLong_FromUnsignedLong( object->GetColor() ) );
 		PyTuple_SetItem( args, 1, PyLong_FromLong( rect.left ) );
@@ -18,13 +22,21 @@ CDrawableBuilder::CDrawableBuilder( std::shared_ptr<IDrawable> object )
 		PyTuple_SetItem( args, 4, PyLong_FromLong( rect.bottom - rect.top ) );
 
 		PyObject* kwds = PyTuple_New( 5 );
-		PyTuple_SetItem( args, 0, PyUnicode_FromString( "color" ) );
-		PyTuple_SetItem( args, 1, PyUnicode_FromString( "xPos" ) );
-		PyTuple_SetItem( args, 2, PyUnicode_FromString( "yPos" ) );
-		PyTuple_SetItem( args, 3, PyUnicode_FromString( "width" ) );
-		PyTuple_SetItem( args, 4, PyUnicode_FromString( "height" ) );
+		PyTuple_SetItem( kwds, 0, PyUnicode_FromString( "color" ) );
+		PyTuple_SetItem( kwds, 1, PyUnicode_FromString( "xPos" ) );
+		PyTuple_SetItem( kwds, 2, PyUnicode_FromString( "yPos" ) );
+		PyTuple_SetItem( kwds, 3, PyUnicode_FromString( "width" ) );
+		PyTuple_SetItem( kwds, 4, PyUnicode_FromString( "height" ) );
 
 		pObject->ob_type->tp_init( pObject.get(), args, kwds );
+		Py_XDECREF( args );
+		Py_XDECREF( kwds );
+
+		int color, xPos, yPos, width, height;
+
+		if (PyArg_ParseTuple(pObject.get(), "liiii:decoder", &color, &xPos, &yPos, &width, &height) != 0) {
+			::MessageBox(0, L"lol", L"lol", MB_YESNO);
+		}
 	}
 }
 
