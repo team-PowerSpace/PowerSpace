@@ -42,6 +42,7 @@ void ScriptHolder::decAllRefsAndClearObjects()
 		PyObject* toDecRef = a->second;
 		Py_XDECREF(toDecRef);
 		Py_CLEAR(toDecRef);
+		Scripts.erase(a);
 	}
 }
 //TODO: Need to solve link error with scriptEngine.obj
