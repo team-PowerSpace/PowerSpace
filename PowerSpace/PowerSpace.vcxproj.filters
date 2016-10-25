@@ -125,7 +125,7 @@
     <ClInclude Include="ScriptEngine\CPyObjectManager.h">
       <Filter>ScriptEngine\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CScriptHolder.h">
+    <ClInclude Include="ScriptEngine\CScriptHolder.h">
       <Filter>ScriptEngine\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -184,7 +184,7 @@
     <ClCompile Include="ScriptEngine\CDrawableBuilder.cpp">
       <Filter>ScriptEngine\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CScriptHolder.cpp">
+    <ClCompile Include="ScriptEngine\CScriptHolder.cpp">
       <Filter>ScriptEngine\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
