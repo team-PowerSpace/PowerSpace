@@ -11,4 +11,5 @@ public:
 	PyObject* getScript( std::wstring path );				 //Get script by path
 	bool addScript( std::wstring path, PyObject* script ); //Add script that is not into the Holder yet
 	int getSize() const;
+	~ScriptHolder();
 };

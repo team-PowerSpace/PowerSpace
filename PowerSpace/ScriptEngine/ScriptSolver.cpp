@@ -6,62 +6,7 @@
 CScriptSolver::CScriptSolver( std::shared_ptr<IDrawable> obj, std::wstring scriptName_,
 	std::string func_, std::shared_ptr<ScriptHolder> holder_ ) : scriptName( scriptName_ ), func( func_ ), object( obj ), holder( holder_ )
 {
-	//Will be deleted after the testing of PyObject based solution
-	std::pair<std::string, long> xPos( "x", obj->GetContainingBox().left );
-	std::pair<std::string, long> yPos( "y", obj->GetContainingBox().top );
-	std::pair<std::string, long> width( "width", obj->GetContainingBox().right - obj->GetContainingBox().left );
-	std::pair<std::string, long> heigth( "height", obj->GetContainingBox().bottom - obj->GetContainingBox().top );
-	std::pair<std::string, long> color( "color", obj->GetColor() );
-	members.insert( xPos );
-	members.insert( yPos );
-	members.insert( width );
-	members.insert( heigth );
-	members.insert( color );
-
-	//Creating and initialising PyObject from object
-	//Previous variant cause triggered breakpoint error
 	pObject = std::make_shared<CDrawableBuilder>(obj);
-
-}
-
-std::shared_ptr<IDrawable> CScriptSolver::RunWithDict()
-{
-	PyObject *pName, *pModule, *pDict, *pFunc;
-	PyObject *pArgs, *pValue;
-
-	if( !holder->isScriptIn( scriptName ) ) {
-		pName = PyUnicode_FromUnicode( scriptName.c_str(), scriptName.size() );
-		pModule = PyImport_Import( pName );
-
-		holder->addScript( scriptName, pModule );
-		Py_XDECREF( pName );
-	} else {
-		pModule = holder->getScript( scriptName );
-	}
-
-	if( pModule != nullptr ) {
-		pFunc = GetPyFunction( pModule );
-		if( pFunc && PyCallable_Check( pFunc ) ) {
-			pArgs = PyTuple_New( 1 );
-			pDict = PyDict_New();
-			FillDict( pDict );
-			PyTuple_SetItem( pArgs, 0, pDict );
-			pValue = PyObject_CallObject( pFunc, pArgs );
-			UpdateDict( pDict );
-			Py_XDECREF( pValue );
-		}
-
-		Py_XDECREF( pFunc );
-		Py_XDECREF( pModule );
-	}
-	object->SetColor( members.find( "color" )->second );
-	RECT rect;
-	rect.top = members.find( "y" )->second;
-	rect.left = members.find( "x" )->second;
-	rect.bottom = rect.top + members.find( "height" )->second;
-	rect.right = rect.left + members.find( "width" )->second;
-	object->SetContainingBox( rect );
-	return object;
 }
 
 std::shared_ptr<IDrawable> CScriptSolver::Run()
@@ -73,49 +18,31 @@ std::shared_ptr<IDrawable> CScriptSolver::Run()
 		pName = PyUnicode_FromUnicode( scriptName.c_str(), scriptName.size() );
 		pModule = PyImport_Import( pName );
 		holder->addScript( scriptName, pModule );
-		Py_XDECREF( pModule );
+		//Because the pyimport creates 2 ref for unrealiesd reason
+		Py_XDECREF(pModule);
 		Py_XDECREF( pName );
 	}
 	pModule = holder->getScript(scriptName);
 
 	if( pModule != nullptr ) {
 		pFunc = GetPyFunction( pModule );
+		Py_XDECREF(pModule);
 		if( pFunc && PyCallable_Check( pFunc ) ) {
 			pArgs = PyTuple_New( 1 );
-			PyTuple_SetItem( pArgs, 0, pObject->GetpObject().get() );
+			PyTuple_SetItem( pArgs, 0, pObject->GetRawpObjectRef() );
 			pValue = PyObject_CallObject( pFunc, pArgs );
 			Py_XDECREF( pValue );
+			Py_CLEAR( pFunc );
 		}
 	}
 	UpdateObject();
 	return object;
 }
 
-void CScriptSolver::FillDict( PyObject* dict )
-{
-	for( auto member : members ) {
-		PyDict_SetItem( dict, Py_BuildValue( "s", member.first.c_str() ),
-			Py_BuildValue( "l", member.second ) );
-	}
-}
-
-void CScriptSolver::UpdateDict( PyObject* dict )
-{
-	PyObject* keys = PyDict_Keys( dict );
-	members.clear();
-	for( int i = 0; i < PyList_Size( keys ); i++ ) {
-		PyObject* key = PyList_GetItem( keys, i );
-		PyObject* val = PyDict_GetItem( dict, key );
-		std::pair<std::string, long> pair( std::string( PyUnicode_AsUTF8( key ) ),
-			PyLong_AsLong( val ) );
-		members.insert( pair );
-	}
-}
-
 PyObject *CScriptSolver::GetPyFunction( PyObject *pModule ) const
 {
 	//Strings will be added to enum (need to discuss location)
-	PyObject *pFunc;
+	PyObject *pFunc = NULL;
 	if( func == "" ) {
 		pFunc = PyObject_GetAttrString( pModule, "OnClick" );
 	} else {
@@ -129,17 +56,24 @@ PyObject *CScriptSolver::GetPyFunction( PyObject *pModule ) const
 
 void CScriptSolver::UpdateObject()
 {
-	PyObject* pythonObject = pObject->GetpObject().get();
+	PyObject* pythonObject = pObject->GetRawpObjectRef();
 
-	int color, xPos, yPos, width, height;
+	unsigned long color = pObject->PythonDrawable_get_color(
+		reinterpret_cast<CDrawableBuilder::engine_PythonDrawableObject *>(pythonObject), 0 );
+	int xPos = pObject->PythonDrawable_get_xPos(
+		reinterpret_cast<CDrawableBuilder::engine_PythonDrawableObject *>(pythonObject), 0 );
+	int yPos = pObject->PythonDrawable_get_yPos(
+		reinterpret_cast<CDrawableBuilder::engine_PythonDrawableObject *>(pythonObject), 0 );
+	int width = pObject->PythonDrawable_get_width(
+		reinterpret_cast<CDrawableBuilder::engine_PythonDrawableObject *>(pythonObject), 0 );
+	int height = pObject->PythonDrawable_get_height(
+		reinterpret_cast<CDrawableBuilder::engine_PythonDrawableObject *>(pythonObject), 0 );
 
-	if( PyArg_ParseTuple( pythonObject, "liiii:decoder", &color, &xPos, &yPos, &width, &height ) != 0 ) {
-		object->SetColor( color );
-		RECT rect;
-		rect.top = yPos;
-		rect.left = xPos;
-		rect.bottom = rect.top + height;
-		rect.right = rect.left + width;
-		object->SetContainingBox( rect );
-	}
+	object->SetColor(color);
+	RECT rect;
+	rect.top = yPos;
+	rect.left = xPos;
+	rect.bottom = rect.top + height;
+	rect.right = rect.left + width;
+	object->SetContainingBox(rect);
 }
