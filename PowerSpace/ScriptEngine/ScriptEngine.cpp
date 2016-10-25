@@ -26,6 +26,7 @@ std::vector<int> CScriptEngine::RunScripts( const int objectId, const std::vecto
 	else if (objectId == -1) 
 	{
 		Py_Finalize(); //finlazing Python before turning the programm off
+		holder->decAllRefsAndClearObjects();
 		return std::vector<int>();
 	}
 	std::shared_ptr<IDrawable> workingObject = stage.GetObjectById(objectId);

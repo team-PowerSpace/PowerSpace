@@ -35,6 +35,15 @@ bool ScriptHolder::isScriptIn( std::wstring path )
 	return true;			 //If you want to support hotfixes to scripts -- don't forget to update code here
 }
 
+void ScriptHolder::decAllRefsAndClearObjects()
+{
+	for (auto a = Scripts.begin(); a != Scripts.end(); a++)
+	{
+		PyObject* toDecRef = a->second;
+		Py_XDECREF(toDecRef);
+		Py_CLEAR(toDecRef);
+	}
+}
 //TODO: Need to solve link error with scriptEngine.obj
 /*
 ScriptHolder::~ScriptHolder()
