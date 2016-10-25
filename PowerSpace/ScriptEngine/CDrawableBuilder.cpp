@@ -15,12 +15,16 @@ CDrawableBuilder::CDrawableBuilder( std::shared_ptr<IDrawable> object )
 			PyObject_FREE(pObject);
 		});
 
-
-		PythonDrawable_set_color( (engine_PythonDrawableObject *)pObject.get(), object->GetColor(), 0);
-		PythonDrawable_set_width( (engine_PythonDrawableObject *)pObject.get(), rect.right - rect.left, 0);
-		PythonDrawable_set_height( (engine_PythonDrawableObject *)pObject.get(), rect.bottom - rect.top, 0);
-		PythonDrawable_set_xPos( (engine_PythonDrawableObject *)pObject.get(), rect.left, 0);
-		PythonDrawable_set_yPos( (engine_PythonDrawableObject *)pObject.get(), rect.top, 0);
+		PythonDrawable_set_color( 
+			reinterpret_cast<engine_PythonDrawableObject *>( pObject.get() ), object->GetColor(), 0 );
+		PythonDrawable_set_width( 
+			reinterpret_cast<engine_PythonDrawableObject *>( pObject.get() ), rect.right - rect.left, 0 );
+		PythonDrawable_set_height( 
+			reinterpret_cast<engine_PythonDrawableObject *>( pObject.get() ), rect.bottom - rect.top, 0 );
+		PythonDrawable_set_xPos( 
+			reinterpret_cast<engine_PythonDrawableObject *>( pObject.get() ), rect.left, 0 );
+		PythonDrawable_set_yPos( 
+			reinterpret_cast<engine_PythonDrawableObject *>( pObject.get() ), rect.top, 0 );
 	}
 }
 
