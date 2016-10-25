@@ -4,7 +4,6 @@
 #include "ScriptSolver.h"
 #include "PyObjectBuilder.h"
 #include "CDrawableBuilder.h"
-#include "CScriptHolder.h"
 
 #include <codecvt>
 #include <Exception>
@@ -18,22 +17,22 @@ CScriptEngine::CScriptEngine( CStage& _stage )
 
 std::vector<int> CScriptEngine::RunScripts( const int objectId, const std::vector<CScript>& scripts )
 {
-	if( !isPythonRunning ) {
+	if (!isPythonRunning)
+	{
 		Py_Initialize(); //starting up Python if first run
-		holder = std::shared_ptr<ScriptHolder>( new ScriptHolder() );
+		holder = std::make_shared<ScriptHolder>(ScriptHolder());
 		isPythonRunning = true;
-	} else if( objectId == -1 ) {
+	}
+	else if (objectId == -1) 
+	{
 		Py_Finalize(); //finlazing Python before turning the programm off
-		isPythonRunning = false;
 		return std::vector<int>();
 	}
-	std::shared_ptr<IDrawable> workingObject = stage.GetObjectById( objectId );
-
+	std::shared_ptr<IDrawable> workingObject = stage.GetObjectById(objectId);
+	
 	// Here was process of creation of PyObject,
 	// but for now we decided to use Dirs due to simplicity
 
-	using convert_type = std::codecvt_utf8<wchar_t>;
-	std::wstring_convert<convert_type, wchar_t> converter; //to convert from TPath (std::wstring) to std::string
 
 	for( auto currentScript = scripts.begin(); currentScript != scripts.end(); currentScript++ ) {
 		TPath wstrPath( currentScript->GetPath() );
@@ -55,8 +54,8 @@ std::vector<int> CScriptEngine::RunScripts( const int objectId, const std::vecto
 		//Empty string left for ability to call different functions located in single script
 		CScriptSolver solver( workingObject, scriptNameWithoutExtention, /*std::string("OnClick")*/std::string( "" ), holder );
 
-		std::shared_ptr<IDrawable> changedObject = solver.Run();   //Returns shared_ptr to changed object, but values already set in the scene
+        std::shared_ptr<IDrawable> changedObject = solver.Run();   //Returns shared_ptr to changed object, but values already set in the scene
 		assert( changedObject == workingObject );
 	}
-	return std::vector<int>(); //Not used for now, but later will allow to return list of objects changed (if needed) for 
+    return std::vector<int>(); //Not used for now, but later will allow to return list of objects changed (if needed) for 
 }

@@ -3,7 +3,7 @@
 #include <string>
 #include <memory>
 #include <map>
-
+#include "CScriptHolder.h"
 #include "Drawable.h"
 #include "CDrawableBuilder.h"
 #include "CScriptHolder.h"

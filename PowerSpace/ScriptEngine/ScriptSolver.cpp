@@ -19,7 +19,7 @@ std::shared_ptr<IDrawable> CScriptSolver::Run()
 		pModule = PyImport_Import( pName );
 		holder->addScript( scriptName, pModule );
 		//Because the pyimport creates 2 ref for unrealiesd reason
-		Py_XDECREF(pModule);
+		Py_XDECREF( pModule );
 		Py_XDECREF( pName );
 	}
 	pModule = holder->getScript(scriptName);
@@ -33,7 +33,7 @@ std::shared_ptr<IDrawable> CScriptSolver::Run()
 			pValue = PyObject_CallObject( pFunc, pArgs );
 			Py_XDECREF( pValue );
 			Py_CLEAR( pFunc );
-		}
+	}
 	}
 	UpdateObject();
 	return object;

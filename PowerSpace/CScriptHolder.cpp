@@ -34,10 +34,12 @@ bool ScriptHolder::isScriptIn( std::wstring path )
 	}
 	return true;			 //If you want to support hotfixes to scripts -- don't forget to update code here
 }
-
+//Need to solve link error with scriptEngine.obj
+/*
 ScriptHolder::~ScriptHolder()
 {
 	for (auto iterator : Scripts) {
 		Py_DECREF(iterator.second);
 	}
 }
+*/

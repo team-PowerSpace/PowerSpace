@@ -9,7 +9,8 @@ class ScriptHolder
 public:
 	bool isScriptIn( std::wstring path );					 //Check is script in
 	PyObject* getScript( std::wstring path );				 //Get script by path
-	bool addScript( std::wstring path, PyObject* script ); //Add script that is not into the Holder yet
+	bool addScript( std::wstring path, PyObject* script );   //Add script that is not into the Holder yet
 	int getSize() const;
-	~ScriptHolder();
+	//Is needed to solve link error 2005 with script engine.obj
+	//~ScriptHolder();                                         //We need to free refs to modules
 };
