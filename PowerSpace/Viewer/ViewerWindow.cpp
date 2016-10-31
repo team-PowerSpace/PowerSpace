@@ -288,22 +288,28 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 	}
 
 	// same active object as before => no action needed
-	if( activeId == prevActiveId )
-		return;
-
-	if( prevActiveId != 0 ) // not the first click => we have to restore smth
+	// // Strange behaviour. May be I want to change cycled colors,
+	// // this way, I have to change focus every time. 
+	// // Following code will be commented until the discussion.
+	// if( activeId == prevActiveId )
+	//	 return;
+	
+	if( prevActiveId != 0 && activeId != prevActiveId ) // not the first click => we have to restore smth
 		stage.GetObjectById( prevActiveId )->SetColor( colorBuf ); // restore original color
 
 	// clicked on new object => have to process it
 	if( activeId != 0 ) {
-		colorBuf = stage.GetObjectById( activeId )->GetColor();
-
-		stage.GetObjectById( activeId )->SetColor( static_cast<COLORREF> (colorBuf * 0.8));
-
+		
+		if ( prevActiveId != 0 ) {
+			stage.GetObjectById(prevActiveId)->SetColor( colorBuf );
+		}
 		auto scripts = stage.GetObjectById( activeId )->GetScripts( EventType::EventClick );
-		if( !scripts.empty() ) {
+		if (!scripts.empty()) {
 			scriptEngine.RunScripts( activeId, scripts );
 		}
+		colorBuf = stage.GetObjectById(activeId)->GetColor();
+		stage.GetObjectById(activeId)->SetColor(static_cast<COLORREF> (colorBuf * 0.8));
+
 	}
 
 	RECT rect;
