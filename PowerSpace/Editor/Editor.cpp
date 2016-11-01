@@ -270,7 +270,8 @@ void CEditor::onFileSelect()
 
 	if( ::GetOpenFileName( &filename ) ) {
 		CScript script( filename.lpstrFile );
-        stage->GetObjectById( activeId )->AddScript( EventType::EventClick, script );
+		//Event All should be carefully changed with click, when the model of scripts will be defined
+        stage->GetObjectById( activeId )->AddScript( EventType::EventAll, script );
 	}
 }
 

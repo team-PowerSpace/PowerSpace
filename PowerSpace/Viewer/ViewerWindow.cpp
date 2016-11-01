@@ -5,7 +5,7 @@
 
 const wchar_t* CViewerWindow::ClassName = L"CViewerWindow";
 const wchar_t* CViewerWindow::ViewerApplicationName = L"Powerspace Viewer";
-const UINT TICK_LENGTH = 10;
+const UINT TICK_LENGTH = 1000;
 
 CViewerWindow::CViewerWindow( CStage& _stage, CViewport& _viewport, CCanvas& _canvas ) :
 	windowHeight( 600 ), windowWidth( 800 ), viewport( _viewport ), canvas( _canvas ),
@@ -56,7 +56,9 @@ bool CViewerWindow::Create()
 		WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
 		windowHeight, windowWidth, nullptr, nullptr, 
 		hInstance, this );
-
+	if ( handle != 0 ) {
+		enableTimer( TICK_LENGTH );
+	}
 	return (handle != 0);
 }
 
@@ -113,16 +115,18 @@ LRESULT CViewerWindow::WindowProc( HWND handle, UINT msg, WPARAM wParam, LPARAM 
 	case WM_COMMAND:
 		wndPtr->onCommand( wParam, lParam );
 		return 0;
+	case WM_TIMER: 
+	{
+		wndPtr->onTimer( );
+		return 0;
+	}
 
 	default:
 		return ::DefWindowProc( handle, msg, wParam, lParam );
 	}
 }
 
-void CViewerWindow::onCreate()
-{
-	::SetTimer( handle, 1, TICK_LENGTH, nullptr );
-}
+void CViewerWindow::onCreate() {}
 
 void CViewerWindow::onClose()
 {
@@ -142,9 +146,10 @@ void CViewerWindow::onTimer()
 		return;
 
 	for( auto pair : stage.GetObjects() ) {
-		auto scripts = pair.second->GetScripts( EventType::EventTick );
+		//Event All should be carefully changed with Tick, when the model of scripts will be defined
+		auto scripts = pair.second->GetScripts( EventType::EventAll );
 		if( !scripts.empty() ) {
-			scriptEngine.RunScripts( activeId, scripts );
+			scriptEngine.RunScripts( pair.first, scripts );
 		}
 	}
 
@@ -288,22 +293,29 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 	}
 
 	// same active object as before => no action needed
-	if( activeId == prevActiveId )
-		return;
-
-	if( prevActiveId != 0 ) // not the first click => we have to restore smth
+	// // Strange behaviour. May be I want to change cycled colors,
+	// // this way, I have to change focus every time. 
+	// // Following code will be commented until the discussion.
+	// if( activeId == prevActiveId )
+	//	 return;
+	
+	if( prevActiveId != 0 && activeId != prevActiveId ) // not the first click => we have to restore smth
 		stage.GetObjectById( prevActiveId )->SetColor( colorBuf ); // restore original color
 
 	// clicked on new object => have to process it
 	if( activeId != 0 ) {
-		colorBuf = stage.GetObjectById( activeId )->GetColor();
-
-		stage.GetObjectById( activeId )->SetColor( static_cast<COLORREF> (colorBuf * 0.8));
-
-		auto scripts = stage.GetObjectById( activeId )->GetScripts( EventType::EventClick );
-		if( !scripts.empty() ) {
+		
+		if ( prevActiveId != 0 ) {
+			stage.GetObjectById(prevActiveId)->SetColor( colorBuf );
+		}
+		//Event All should be carefully changed with click, when the model of scripts will be defined
+		auto scripts = stage.GetObjectById( activeId )->GetScripts( EventType::EventAll );
+		if (!scripts.empty()) {
 			scriptEngine.RunScripts( activeId, scripts );
 		}
+		colorBuf = stage.GetObjectById(activeId)->GetColor();
+		stage.GetObjectById(activeId)->SetColor(static_cast<COLORREF> (colorBuf * 0.8));
+
 	}
 
 	RECT rect;
@@ -319,6 +331,12 @@ void CViewerWindow::onCommandMenu( WPARAM wParam, LPARAM lParam )
 	{
 	case ID_CONTROL_PLAY:
 		viewerIsRunning = !viewerIsRunning;
+		if ( viewerIsRunning ) {
+			enableTimer( TICK_LENGTH );
+		}
+		else {
+			disableTimer( );
+		}
 
 		HMENU pMenu = ::GetMenu( handle );
 
@@ -365,4 +383,14 @@ bool CViewerWindow::isPointInBox( TBox box, POINT point )
 		return true;
 	else
 		return false;
+}
+
+void CViewerWindow::enableTimer( int timeDelay, int timerId)
+{
+	::SetTimer( handle, timerId, timeDelay, 0 );
+}
+
+void CViewerWindow::disableTimer( int timerId)
+{
+	::KillTimer( handle, timerId );
 }

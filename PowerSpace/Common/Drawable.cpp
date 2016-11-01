@@ -3,9 +3,10 @@
 
 int CDrawable::maxId = 0;
 
+//Event All should be carefully changed with click, when the model of scripts will be defined
 CDrawable::CDrawable( COLORREF _color, TBox _box )
-    : color( _color ), containingBox( _box ), scripts( { {EventType::EventClick, std::vector<CScript>()}, 
-    {EventType::EventTick, std::vector<CScript>()} } )
+    : color( _color ), containingBox( _box ), scripts( { {EventType::EventAll/*Should be EventClick*/, std::vector<CScript>()}, 
+	{EventType::EventAll/*Should be EventTick*/, std::vector<CScript>( )} } )
 {
     id = generateNewId();
 }
