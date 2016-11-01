@@ -56,9 +56,9 @@ bool CViewerWindow::Create()
 		WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
 		windowHeight, windowWidth, nullptr, nullptr, 
 		hInstance, this );
-	if ( handle != 0 ) {
-		enableTimer( TICK_LENGTH );
-	}
+	//if ( handle != 0 ) {
+	//	enableTimer( TICK_LENGTH );
+	//}
 	return (handle != 0);
 }
 
@@ -110,6 +110,10 @@ LRESULT CViewerWindow::WindowProc( HWND handle, UINT msg, WPARAM wParam, LPARAM 
 
 	case WM_LBUTTONDOWN:
 		wndPtr->onMouseClick( msg, wParam, lParam );
+		return 0;
+
+	case WM_LBUTTONDBLCLK:
+		wndPtr->onMouseClick( msg, lParam, wParam);
 		return 0;
 
 	case WM_COMMAND:
