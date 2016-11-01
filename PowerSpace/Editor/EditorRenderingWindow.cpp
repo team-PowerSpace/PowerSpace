@@ -107,6 +107,9 @@ LRESULT CEditorRenderingWindow::WindowProc( HWND handle, UINT message, WPARAM wP
     case WM_LBUTTONDOWN:
         wndPtr->onMouseDown( lParam );
         break;
+	case WM_LBUTTONDBLCLK:
+		wndPtr->onMouseDown( lParam );
+		break;
     case WM_MOUSELEAVE:
     case WM_LBUTTONUP:
         wndPtr->onMouseUpOrLeave( lParam );
