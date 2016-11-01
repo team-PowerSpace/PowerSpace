@@ -65,6 +65,10 @@ private:
 
 	void onCommandMenu( WPARAM wParam, LPARAM lParam );
 
+	void enableTimer( int timeDelay, int timerId = 0 );
+
+	void disableTimer( int timerId = 0 );
+
 	POINT getMouseCoords( LPARAM lParam );
 
 	bool isPointInBox( TBox box, POINT point );

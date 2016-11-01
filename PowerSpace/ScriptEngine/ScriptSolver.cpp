@@ -33,23 +33,34 @@ std::shared_ptr<IDrawable> CScriptSolver::Run()
 			pValue = PyObject_CallObject( pFunc, pArgs );
 			Py_XDECREF( pValue );
 			Py_CLEAR( pFunc );
-	}
+		}
 	}
 	UpdateObject();
 	return object;
+}
+
+PyObject *SafeGetFunc( PyObject *pModule, const char *funcName )
+{
+	if ( PyObject_HasAttrString( pModule, funcName ) )
+	{
+		return PyObject_GetAttrString( pModule, funcName );
+	}
+	else {
+		return NULL;
+	}
 }
 
 PyObject *CScriptSolver::GetPyFunction( PyObject *pModule ) const
 {
 	//Strings will be added to enum (need to discuss location)
 	PyObject *pFunc = NULL;
-	if( func == "" ) {
-		pFunc = PyObject_GetAttrString( pModule, "OnClick" );
+	if ( func == "" ) {
+		pFunc = SafeGetFunc( pModule, "OnClick" );
 	} else {
-		pFunc = PyObject_GetAttrString( pModule, func.c_str() );
+		pFunc = SafeGetFunc( pModule, func.c_str( ) );
 	}
 	if( pFunc == NULL ) {
-		pFunc = PyObject_GetAttrString( pModule, "OnTimer" );
+		pFunc = SafeGetFunc( pModule, "OnTimer" );
 	}
 	return pFunc;
 }
