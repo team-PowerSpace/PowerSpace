@@ -9,7 +9,7 @@ bool ScriptHolder::addScript( std::wstring path, PyObject* script )
 	return (Scripts.insert( toInsert )).second;					//Returns true if was inserted succefully
 }
 
-int ScriptHolder::getSize() const
+size_t ScriptHolder::getSize() const
 {
 	return Scripts.size();
 }
