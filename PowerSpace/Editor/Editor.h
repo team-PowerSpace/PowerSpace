@@ -1,9 +1,13 @@
 #pragma once
+
+#pragma comment(lib, "comctl32.lib")
+
 #include <Windows.h>
 #include <string>
 #include "EditorRenderingWindow.h"
 #include "EditControlWindow.h"
 #include "EditorWindow.h"
+#include "Commctrl.h"
 
 class CEditor {
 public:
@@ -41,6 +45,7 @@ protected:
 
 private:
 	HWND handle;
+	HWND handleToolbar;
 	HMENU menu;
 	CEditorWindow renderingWindow;
 	CEditControlWindow editControl;
@@ -59,4 +64,8 @@ private:
 	static LRESULT __stdcall windowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
 
 	static const int defaultBoxMarginDividor;
+
+	HBITMAP MakeBitMapTransparent(HBITMAP hbmSrc);
+	HBITMAP loadTransparentBitmap(HINSTANCE hInstance, int resource);
+	void createToolbar();
 };

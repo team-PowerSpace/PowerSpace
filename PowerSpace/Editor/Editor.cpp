@@ -37,6 +37,9 @@ bool CEditor::Create()
 {
 	handle = CreateWindowEx( 0, L"CEditor", L"My Window", WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, GetModuleHandle( 0 ), this );
+
+	createToolbar();
+
 	return (handle != 0);
 }
 
@@ -111,6 +114,84 @@ void  CEditor::SetActiveId( const int id )
 	}
 }
 
+HBITMAP CEditor::MakeBitMapTransparent(HBITMAP hbmSrc) {
+	HDC hdcSrc, hdcDst;
+	BITMAP bm;
+	COLORREF clrTP, clrBK;
+	HBITMAP hbmOld, hbmNew = NULL;
+
+	if ((hdcSrc = CreateCompatibleDC(NULL)) != NULL) {
+		if ((hdcDst = CreateCompatibleDC(NULL)) != NULL) {
+			int nRow, nCol;
+			GetObject(hbmSrc, sizeof(bm), &bm);
+			hbmOld = (HBITMAP)SelectObject(hdcSrc, hbmSrc);
+			hbmNew = CreateBitmap(bm.bmWidth, bm.bmHeight, bm.bmPlanes, bm.bmBitsPixel, NULL);
+			SelectObject(hdcDst, hbmNew);
+
+			BitBlt(hdcDst, 0, 0, bm.bmWidth, bm.bmHeight, hdcSrc, 0, 0, SRCCOPY);
+
+			clrTP = GetPixel(hdcDst, 1, 1);// Get color of first pixel at 0,0
+			clrBK = GetSysColor(COLOR_MENU);// Get the current background color of the menu
+
+			for (nRow = 0; nRow < bm.bmHeight; nRow++) {// work our way through all the pixels changing their color
+				for (nCol = 0; nCol < bm.bmWidth; nCol++) {// when we hit our set transparency color.
+					if (GetPixel(hdcDst, nCol, nRow) == clrTP) {
+						SetPixel(hdcDst, nCol, nRow, clrBK);
+					}
+				}
+			}
+			DeleteDC(hdcDst);
+		}
+		DeleteDC(hdcSrc);
+	}
+	return hbmNew;// return our transformed bitmap.
+}
+
+HBITMAP CEditor::loadTransparentBitmap(HINSTANCE hInstance, int resource) {
+	return MakeBitMapTransparent(LoadBitmap(hInstance, MAKEINTRESOURCE(resource)));
+}
+
+void CEditor::createToolbar() {
+
+	// Declare and initialize local constants.
+	const int bitmapSize = 16;
+
+	HINSTANCE hInstance = ::GetModuleHandle(0);
+
+	handleToolbar = CreateToolbarEx(handle, WS_CHILD | WS_VISIBLE | CCS_TOP, 1,
+		0, HINST_COMMCTRL, IDB_STD_SMALL_COLOR, NULL, 0, 0, 0, 0, 0, sizeof(TBBUTTON));
+
+	//Enable multiple image lists
+	SendMessage(handleToolbar, CCM_SETVERSION, (WPARAM)5, 0);
+
+	//Add icons from default imagelist
+	TBBUTTON tbb_buildin[] = {
+		{ STD_FILENEW, ID_ADD_RECTANGLE, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
+		{ STD_FILEOPEN, ID_ADD_RECTANGLE, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
+		{ STD_FILESAVE, ID_ADD_RECTANGLE, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
+	};
+	SendMessage(handleToolbar, (UINT)TB_ADDBUTTONS, _countof(tbb_buildin), (LPARAM)&tbb_buildin);
+
+	//Create custom imagelist
+	HIMAGELIST hImageList = ImageList_Create(bitmapSize, bitmapSize, ILC_COLOR16 | ILC_MASK, 0, 0);
+	ImageList_Add(hImageList, loadTransparentBitmap(hInstance, IDB_RECTANGLE), NULL);
+	ImageList_Add(hImageList, loadTransparentBitmap(hInstance, IDB_ELLIPSE), NULL);
+	ImageList_Add(hImageList, loadTransparentBitmap(hInstance, IDB_TEXTBOX), NULL);
+	ImageList_Add(hImageList, loadTransparentBitmap(hInstance, IDB_PLAY), NULL);
+	SendMessage(handleToolbar, TB_SETIMAGELIST, (WPARAM)1, (LPARAM)hImageList);
+
+	TBBUTTON tbb[] =
+	{
+		{ MAKELONG(0, 1), ID_ADD_RECTANGLE, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
+		{ MAKELONG(1, 1), ID_ADD_ELLIPSE, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
+		{ MAKELONG(2, 1), ID_ADD_TEXTBOX, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
+		{ MAKELONG(3, 1), ID_PLAY_LAUNCHPLAYER, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
+	};
+	SendMessage(handleToolbar, (UINT)TB_ADDBUTTONS, _countof(tbb), (LPARAM)&tbb);
+
+	SendMessage(handleToolbar, TB_AUTOSIZE, 0, 0);
+	ShowWindow(handleToolbar, TRUE);
+}
 
 void CEditor::OnSize()
 {
@@ -119,16 +200,23 @@ void CEditor::OnSize()
 	::GetClientRect( handle, &rect );
 	middleX = (rect.left + rect.right) / 4;
 	nWidth = (rect.right - rect.left) * 3 / 4;
-	nHeight = (rect.bottom - rect.top);
-	SetWindowPos( renderingWindow.GetHandle(), HWND_TOP, middleX, rect.top, nWidth, nHeight, 0 );
-	SetWindowPos( editControl.GetHandle(), HWND_TOP, rect.left, rect.top, nWidth / 3,
+
+	RECT toolbarRect;
+	::GetClientRect(handleToolbar, &toolbarRect);
+	int currentTop = rect.top + (toolbarRect.bottom - toolbarRect.top);
+	nHeight = (rect.bottom - currentTop);
+
+	SetWindowPos( renderingWindow.GetHandle(), HWND_TOP, middleX, currentTop, nWidth, nHeight, 0 );
+	SetWindowPos( editControl.GetHandle(), HWND_TOP, rect.left, currentTop, nWidth / 3,
 		nHeight * 3 / 4, 0 );
-	SetWindowPos( saveTextButton, HWND_TOP, rect.left, rect.top + nHeight * 3 / 4,
+	SetWindowPos( saveTextButton, HWND_TOP, rect.left, currentTop + nHeight * 3 / 4,
 		nWidth / 3, nHeight / 12, 0 );
-	SetWindowPos( setColorButton, HWND_TOP, rect.left, rect.top + nHeight * 3 / 4 + nHeight / 12,
+	SetWindowPos( setColorButton, HWND_TOP, rect.left, currentTop + nHeight * 3 / 4 + nHeight / 12,
 		nWidth / 3, nHeight / 12, 0 );
-	SetWindowPos( addScriptButton, HWND_TOP, rect.left, rect.top + nHeight * 3 / 4 + nHeight / 6,
+	SetWindowPos( addScriptButton, HWND_TOP, rect.left, currentTop + nHeight * 3 / 4 + nHeight / 6,
 		nWidth / 3, nHeight / 12, 0 );
+
+	SendMessage(handleToolbar, TB_AUTOSIZE, 0, 0);
 }
 
 void CEditor::GetText()

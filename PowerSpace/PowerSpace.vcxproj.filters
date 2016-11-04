@@ -200,5 +200,26 @@
     <Image Include="PowerSpace.ico">
       <Filter>Root\Resource Files</Filter>
     </Image>
+    <Image Include="bitmap1.bmp">
+      <Filter>Root\Resource Files</Filter>
+    </Image>
+    <Image Include="bitmaps\bitmap1.bmp">
+      <Filter>Root\Resource Files</Filter>
+    </Image>
+    <Image Include="bitmaps\rectangle.bmp">
+      <Filter>Root\Resource Files</Filter>
+    </Image>
+    <Image Include="bitmaps\bitmap2.bmp">
+      <Filter>Root\Resource Files</Filter>
+    </Image>
+    <Image Include="bitmaps\ellipse.bmp">
+      <Filter>Root\Resource Files</Filter>
+    </Image>
+    <Image Include="bitmaps\textbox.bmp">
+      <Filter>Root\Resource Files</Filter>
+    </Image>
+    <Image Include="bitmaps\play.bmp">
+      <Filter>Root\Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
