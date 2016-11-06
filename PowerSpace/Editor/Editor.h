@@ -43,6 +43,8 @@ protected:
 	void OnSize();
 	void GetText();
 
+	void OnSave( ) const;
+
 private:
 	HWND handle;
 	HWND handleToolbar;

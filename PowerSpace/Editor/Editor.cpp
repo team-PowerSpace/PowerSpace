@@ -1,11 +1,13 @@
 #include <stdafx.h>
 #include <iostream>
+#include <fstream>
 #include "Editor.h"
 #include "resource.h"
 #include "EditControlWindow.h"
 #include "Viewer.h"
 #include "Stage.h"
 #include "StageObjects.h"
+#include "JsonConverter.h"
 
 #define IDC_MAIN_BUTTON 101 
 
@@ -248,6 +250,11 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 			renderingWindow.ReDraw();
 			break;
 		}
+		case ID_FILE_SAVE:
+		{
+			OnSave( );
+			break;
+		}
 		case ID_PLAY_LAUNCHPLAYER:
 		{
 			CViewer viewer( *stage, CViewport() );
@@ -329,6 +336,37 @@ void CEditor::onColorSelect()
 	if( ::ChooseColor( &chooseColor ) ) {
 		stage->GetObjectById( activeId )->SetColor( chooseColor.rgbResult );
 		renderingWindow.ReDraw();
+	}
+}
+
+void CEditor::OnSave( ) const
+{
+	OPENFILENAMEW filename;
+	filename.lStructSize = sizeof( filename );
+	filename.hwndOwner = handle;
+	filename.hInstance = GetModuleHandleW( nullptr );
+	filename.lpstrFilter = L"PS project (*.ps)\0*.ps\0All Files (*.*)\0*.*\0\0";
+	filename.lpstrCustomFilter = 0;
+	filename.nFilterIndex = 1;
+	filename.nMaxFile = 1024;
+	std::unique_ptr<wchar_t[]> name( new wchar_t[filename.nMaxFile] );
+	filename.lpstrFile = name.get( );
+	filename.lpstrFile[0] = 0;
+	filename.lpstrInitialDir = 0;
+	filename.lpstrTitle = L"Save project";
+	filename.nMaxFileTitle = 0;
+	filename.lpstrDefExt = L".ps";
+	filename.lCustData = 0;
+	filename.lpfnHook = 0;
+	filename.lpTemplateName = 0;
+	filename.nFileOffset = 0;
+	filename.nFileExtension = 0;
+	filename.Flags = OFN_OVERWRITEPROMPT;
+
+	if ( ::GetSaveFileName( &filename ) ) {
+		std::wofstream saveStream( filename.lpstrFile, std::ofstream::out );
+		saveStream << stage->toWString();
+		saveStream.close( );
 	}
 }
 

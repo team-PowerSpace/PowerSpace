@@ -34,6 +34,10 @@ public:
 
 	// getter of viewport
 	const CViewport& GetViewPort() const;
+
+	// get the JSON representation of stage
+	std::wstring toWString( ) const;
+
 private:
     // vector of all the objects that were created on canvas
     std::unordered_map<int, IDrawablePtr> objects;
