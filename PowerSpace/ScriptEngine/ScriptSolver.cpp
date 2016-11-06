@@ -4,7 +4,7 @@
 #include <exception>
 
 CScriptSolver::CScriptSolver( std::shared_ptr<IDrawable> obj, std::wstring scriptName_,
-	std::string func_, std::shared_ptr<ScriptHolder> holder_ ) : scriptName( scriptName_ ), func( func_ ), object( obj ), holder( holder_ )
+	EventType eventType_, std::shared_ptr<ScriptHolder> holder_ ) : scriptName( scriptName_ ), eventType( eventType_ ), object( obj ), holder( holder_ )
 {
 	pObject = std::make_shared<CDrawableBuilder>(obj);
 }
@@ -54,13 +54,20 @@ PyObject *CScriptSolver::GetPyFunction( PyObject *pModule ) const
 {
 	//Strings will be added to enum (need to discuss location)
 	PyObject *pFunc = NULL;
-	if ( func == "" ) {
-		pFunc = SafeGetFunc( pModule, "OnClick" );
-	} else {
-		pFunc = SafeGetFunc( pModule, func.c_str( ) );
-	}
-	if( pFunc == NULL ) {
-		pFunc = SafeGetFunc( pModule, "OnTimer" );
+	switch ( eventType )
+	{
+		case EventType::EventClick:
+		{
+			pFunc = SafeGetFunc( pModule, "OnClick" );
+			break;
+		}
+		case EventType::EventTick:
+		{
+			pFunc = SafeGetFunc( pModule, "OnTimer" );
+			break;
+		}
+		default:
+			assert( false );
 	}
 	return pFunc;
 }
