@@ -178,6 +178,7 @@ void CEditor::createToolbar() {
 	ImageList_Add(hImageList, loadTransparentBitmap(hInstance, IDB_ELLIPSE), NULL);
 	ImageList_Add(hImageList, loadTransparentBitmap(hInstance, IDB_TEXTBOX), NULL);
 	ImageList_Add(hImageList, loadTransparentBitmap(hInstance, IDB_PLAY), NULL);
+	ImageList_Add(hImageList, loadTransparentBitmap(hInstance, IDB_DELETE), NULL);
 	SendMessage(handleToolbar, TB_SETIMAGELIST, (WPARAM)1, (LPARAM)hImageList);
 
 	TBBUTTON tbb[] =
@@ -186,6 +187,7 @@ void CEditor::createToolbar() {
 		{ MAKELONG(1, 1), ID_ADD_ELLIPSE, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
 		{ MAKELONG(2, 1), ID_ADD_TEXTBOX, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
 		{ MAKELONG(3, 1), ID_PLAY_LAUNCHPLAYER, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
+		{ MAKELONG(4, 1), ID_DELETE_OBJECT, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
 	};
 	SendMessage(handleToolbar, (UINT)TB_ADDBUTTONS, _countof(tbb), (LPARAM)&tbb);
 
@@ -272,6 +274,10 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
                     ::DispatchMessage( &message );
                 }
             }
+			break;
+		}
+		case ID_DELETE_OBJECT: 
+		{
 			break;
 		}
         case IDC_MAIN_BUTTON:

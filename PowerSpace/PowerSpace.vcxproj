@@ -226,6 +226,7 @@
     <ResourceCompile Include="PowerSpace.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="bitmaps\delete.bmp" />
     <Image Include="bitmaps\ellipse.bmp" />
     <Image Include="bitmaps\play.bmp" />
     <Image Include="bitmaps\rectangle.bmp" />
