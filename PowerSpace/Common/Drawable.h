@@ -41,6 +41,8 @@ public:
         CDrawable, count
     };
     virtual DrawableType GetType() const = 0;
+
+	virtual std::wstring toWString( ) const = 0;
 };
 
 // this abstract class should be the base class for every object that can be drawn on the stage

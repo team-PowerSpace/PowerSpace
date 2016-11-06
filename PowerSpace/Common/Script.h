@@ -18,6 +18,7 @@ public:
 
     // returns path to the file with python script
     const TPath& GetPath() const;
+	std::wstring toWString( ) const;
 private:
     TPath path;
 };

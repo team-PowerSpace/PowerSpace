@@ -128,6 +128,9 @@
     <ClInclude Include="ScriptEngine\CScriptHolder.h">
       <Filter>ScriptEngine\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="JsonConverter.h">
+      <Filter>Common\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PowerSpace.cpp">
@@ -186,6 +189,9 @@
     </ClCompile>
     <ClCompile Include="ScriptEngine\CScriptHolder.cpp">
       <Filter>ScriptEngine\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonConverter.cpp">
+      <Filter>Common\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -10,3 +10,7 @@ const TPath& CScript::GetPath() const
     return path;
 }
 
+std::wstring CScript::toWString( ) const
+{
+	return L"Script description";
+}
