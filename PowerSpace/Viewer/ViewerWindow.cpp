@@ -9,7 +9,7 @@ const UINT TICK_LENGTH = 1000;
 
 CViewerWindow::CViewerWindow( CStage& _stage, CViewport& _viewport, CCanvas& _canvas ) :
 	windowHeight( 600 ), windowWidth( 800 ), viewport( _viewport ), canvas( _canvas ),
-	handle( nullptr ), stage( _stage ), scriptEngine( stage ), activeId(0),
+	handle( nullptr ), stage( _stage ), scriptEngine( stage ), activeId( 0 ), colorBuf( -1 ),
 	viewerIsRunning( true )
 {}
 
@@ -56,9 +56,9 @@ bool CViewerWindow::Create()
 		WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
 		windowHeight, windowWidth, nullptr, nullptr, 
 		hInstance, this );
-	//if ( handle != 0 ) {
-	//	enableTimer( TICK_LENGTH );
-	//}
+	if ( handle != 0 ) {
+		enableTimer( TICK_LENGTH );
+	}
 	return (handle != 0);
 }
 
@@ -113,7 +113,7 @@ LRESULT CViewerWindow::WindowProc( HWND handle, UINT msg, WPARAM wParam, LPARAM 
 		return 0;
 
 	case WM_LBUTTONDBLCLK:
-		wndPtr->onMouseClick( msg, lParam, wParam);
+		wndPtr->onMouseClick( msg, wParam, lParam);
 		return 0;
 
 	case WM_COMMAND:
@@ -152,9 +152,12 @@ void CViewerWindow::onTimer()
 	for( auto pair : stage.GetObjects() ) {
 		//Event All should be carefully changed with Tick, when the model of scripts will be defined
 		auto scripts = pair.second->GetScripts( EventType::EventAll );
+		
+		updateColorWithBuffer( activeId, ColorBufferActionType::RestoreColor );
 		if( !scripts.empty() ) {
-			scriptEngine.RunScripts( pair.first, scripts );
+			scriptEngine.RunScripts( pair.first, scripts, EventType::EventTick );
 		}
+		updateColorWithBuffer( activeId, ColorBufferActionType::SetColor );
 	}
 
 	RECT rect;
@@ -286,8 +289,7 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 	int prevActiveId = activeId;
 	activeId = 0;
 
-	static COLORREF colorBuf;
-
+	
 	for( auto pair : stage.GetObjects() ) {
 		TBox curBox = pair.second->GetContainingBox();
 
@@ -303,24 +305,18 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 	// if( activeId == prevActiveId )
 	//	 return;
 	
-	if( prevActiveId != 0 && activeId != prevActiveId ) // not the first click => we have to restore smth
-		stage.GetObjectById( prevActiveId )->SetColor( colorBuf ); // restore original color
+	
 
 	// clicked on new object => have to process it
+	updateColorWithBuffer( prevActiveId, ColorBufferActionType::RestoreColor );
 	if( activeId != 0 ) {
-		
-		if ( prevActiveId != 0 ) {
-			stage.GetObjectById(prevActiveId)->SetColor( colorBuf );
-		}
 		//Event All should be carefully changed with click, when the model of scripts will be defined
 		auto scripts = stage.GetObjectById( activeId )->GetScripts( EventType::EventAll );
 		if (!scripts.empty()) {
-			scriptEngine.RunScripts( activeId, scripts );
+			scriptEngine.RunScripts( activeId, scripts, EventType::EventClick );
 		}
-		colorBuf = stage.GetObjectById(activeId)->GetColor();
-		stage.GetObjectById(activeId)->SetColor(static_cast<COLORREF> (colorBuf * 0.8));
-
 	}
+	updateColorWithBuffer( prevActiveId, ColorBufferActionType::SetColor );
 
 	RECT rect;
 	::GetClientRect( handle, &rect );
@@ -397,4 +393,26 @@ void CViewerWindow::enableTimer( int timeDelay, int timerId)
 void CViewerWindow::disableTimer( int timerId)
 {
 	::KillTimer( handle, timerId );
+}
+
+void CViewerWindow::updateColorWithBuffer( int prevActiveId, ColorBufferActionType actionType )
+{
+	switch ( actionType )
+	{
+		case ColorBufferActionType::RestoreColor:
+		{
+			if ( prevActiveId != 0 ) {
+				stage.GetObjectById( prevActiveId )->SetColor( colorBuf );
+			}
+			break;
+		}
+		case ColorBufferActionType::SetColor:
+		{
+			if ( activeId != 0 ) {
+				colorBuf = stage.GetObjectById( activeId )->GetColor( );
+				stage.GetObjectById( activeId )->SetColor( static_cast<COLORREF> (colorBuf * 0.9) );
+			}
+			break;
+		}
+	}
 }

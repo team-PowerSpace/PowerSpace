@@ -11,13 +11,13 @@
 class CScriptSolver
 {
 public:
-	CScriptSolver( std::shared_ptr<IDrawable> object_, std::wstring path_, std::string func_, std::shared_ptr<ScriptHolder> holder );
+	CScriptSolver( std::shared_ptr<IDrawable> object_, std::wstring path_, EventType eventType_, std::shared_ptr<ScriptHolder> holder );
 	std::shared_ptr<IDrawable> Run();
 
 	std::shared_ptr<ScriptHolder> holder;
 private:
 	std::wstring scriptName;
-	std::string  func;
+	EventType  eventType;
 	std::shared_ptr<IDrawable> object;
 	std::shared_ptr<CDrawableBuilder> pObject;
 

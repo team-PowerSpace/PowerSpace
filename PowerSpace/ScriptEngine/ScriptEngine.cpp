@@ -15,7 +15,7 @@ CScriptEngine::CScriptEngine( CStage& _stage )
 {}
 
 
-std::vector<int> CScriptEngine::RunScripts( const int objectId, const std::vector<CScript>& scripts )
+std::vector<int> CScriptEngine::RunScripts( const int objectId, const std::vector<CScript>& scripts, EventType eventType )
 {
 	if (!isPythonRunning)
 	{
@@ -53,7 +53,7 @@ std::vector<int> CScriptEngine::RunScripts( const int objectId, const std::vecto
 
 
 		//Empty string left for ability to call different functions located in single script
-		CScriptSolver solver( workingObject, scriptNameWithoutExtention, /*std::string("OnClick")*/std::string( "" ), holder );
+		CScriptSolver solver( workingObject, scriptNameWithoutExtention, eventType, holder );
 
         std::shared_ptr<IDrawable> changedObject = solver.Run();   //Returns shared_ptr to changed object, but values already set in the scene
 		assert( changedObject == workingObject );
