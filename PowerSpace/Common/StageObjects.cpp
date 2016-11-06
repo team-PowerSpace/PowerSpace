@@ -1,5 +1,6 @@
 #include <stdafx.h>
 #include "StageObjects.h"
+#include "JsonConverter.h"
 
 CRectangleObject::CRectangleObject( COLORREF _color, TBox _box )
     : CDrawable( _color, _box )
@@ -12,7 +13,7 @@ void CRectangleObject::Draw( HDC hdc, const CViewport& viewport, const CCanvas& 
 
 std::wstring CRectangleObject::toWString( ) const
 {
-	return L"Rect description";
+	return CJsonConverter::toJson( *this );
 }
 
 
@@ -27,7 +28,7 @@ void CEllipseObject::Draw( HDC hdc, const CViewport& viewport, const CCanvas& ca
 
 std::wstring CEllipseObject::toWString( ) const
 {
-	return L"Ellipse description";
+	return CJsonConverter::toJson( *this );
 }
 
 
@@ -52,5 +53,5 @@ void CTextBoxObject::SetContents( const std::wstring &_contents )
 
 std::wstring CTextBoxObject::toWString( ) const
 {
-	return L"Text description";
+	return CJsonConverter::toJson( *this );
 }

@@ -1,5 +1,6 @@
 #include <stdafx.h>
 #include "Stage.h"
+#include "JsonConverter.h"
 
 const std::unordered_map<int, IDrawablePtr>& CStage::GetObjects() const
 {
@@ -70,4 +71,9 @@ CViewport & CStage::GetViewPort()
 const CViewport & CStage::GetViewPort() const
 {
 	return viewport;
+}
+
+std::wstring CStage::toWString( ) const
+{
+	return CJsonConverter::toJson( *this );
 }

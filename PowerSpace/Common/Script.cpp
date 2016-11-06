@@ -1,5 +1,6 @@
 #include <stdafx.h>
 #include "Script.h"
+#include "JsonConverter.h"
 
 CScript::CScript( TPath _path )
     : path( _path )
@@ -12,5 +13,5 @@ const TPath& CScript::GetPath() const
 
 std::wstring CScript::toWString( ) const
 {
-	return L"Script description";
+	return CJsonConverter::toJson( *this );
 }

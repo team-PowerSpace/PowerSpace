@@ -5,153 +5,203 @@
 JSON CJsonConverter::toJson( const CStage &stage, int depth )
 {
 	JSON description = L"";
-	addElementToDescription( description, L"{\n" , depth);
-	++depth;
-	addPropertyToDescription( description, L"Objects", toJson( stage.GetObjectsAsVector( ) ), depth );
-	addPropertyToDescription( description, L"ViewPort", toJson( stage.GetViewPort( ) ), depth );
-	--depth;
+	depth = openTag( description, L"{", depth );
+	addCompoundPropertyToDescription( description, L"Objects", toJson( stage.GetObjectsAsVector( ) ), depth );
+	addCompoundPropertyToDescription( description, L"ViewPort", toJson( stage.GetViewPort( ) ), depth, LAST_PROP );
+	depth = closeTag( description, L"}", depth );
 	return description;
 }
 
 JSON CJsonConverter::toJson( const std::vector<IDrawablePtrConst> &objects, int depth )
 {
 	JSON description = L"";
-	addElementToDescription( description, L"[", depth );
 	int numberOfObjects = objects.size( );
+	if ( numberOfObjects == 0 ) {
+		return description;
+	}
+	depth = openTag( description, L"[", depth );
 	for ( int index = 0; index < numberOfObjects - 1; ++index ) {
-		addElementToDescription( description, objects[index]->toWString( ) + L",\n", depth + 1 );
+		addElementToDescription( description, objects[index]->toWString( ) + L",", depth, L"\n" );
 	}
-	addElementToDescription( description, objects[numberOfObjects - 1]->toWString( ), depth + 1 );
-	addElementToDescription( description, L"]", depth );
-	return description;
-}
-
-JSON &CJsonConverter::addElementToDescription( JSON &description, const JSON &element, int depth )
-{
-	std::wstringstream sstream( element );
-	std::wstring row;
-	while ( std::getline( sstream, row ) ) {
-		description += std::wstring( depth, '\t' ) + row;
-	}
+	addElementToDescription( description, objects[numberOfObjects - 1]->toWString( ), depth );
+	depth = closeTag( description, L"]", depth );
 	return description;
 }
 
 JSON CJsonConverter::toJson( const CViewport &viewPort, int depth )
 {
 	JSON description = L"";
-	addElementToDescription( description, L"{\n", depth);
-	++depth;
-	addPropertyToDescription( description, L"Scale", std::to_wstring( viewPort.GetScale( ) ), depth );
-	addPropertyToDescription( description, L"Zero location", toJson( viewPort.GetZeroLocation( ) ), depth );
-	--depth;
-	addElementToDescription( description, L"}", depth );
+	depth = openTag( description, L"{", depth );
+	addSimplePropertyToDescription( description, L"Scale", std::to_wstring( viewPort.GetScale( ) ), depth );
+	addCompoundPropertyToDescription( description, L"Zero location", toJson( viewPort.GetZeroLocation( ) ), depth, LAST_PROP );
+	depth = closeTag( description, L"}", depth );
 	return description;
 }
 
 JSON CJsonConverter::toJson( const CRectangleObject &rectangle, int depth )
 {
 	JSON description = L"";
-	addElementToDescription( description, L"{\n", depth );
-	++depth;
-	addPropertyToDescription( description, L"Id", std::to_wstring( rectangle.GetId( ) ), depth );
-	addPropertyToDescription( description, L"Color", std::to_wstring( rectangle.GetColor( ) ), depth );
-	addPropertyToDescription( description, L"Box", toJson( rectangle.GetContainingBox( ) ), depth );
-	addPropertyToDescription( description, L"Scripts", 
+	addRowToDescription( description, L"\"Rectangle\" : ", depth );
+	depth = openTag( description, L"{", depth );
+	addSimplePropertyToDescription( description, L"Id", std::to_wstring( rectangle.GetId( ) ), depth);
+	addSimplePropertyToDescription( description, L"Color", std::to_wstring( rectangle.GetColor( ) ), depth );
+	addCompoundPropertyToDescription( description, L"Box", toJson( rectangle.GetContainingBox( ) ), depth );
+	addCompoundPropertyToDescription( description, L"Scripts",
 		toJson( rectangle.GetScripts( EventType::EventAll ) ), depth, LAST_PROP );
-	--depth;
-	addElementToDescription( description, L"}", depth );
+	depth = closeTag( description, L"}", depth );
 	return description;
 }
 
 JSON CJsonConverter::toJson( const CTextBoxObject &text, int depth )
 {
 	JSON description = L"";
-	addElementToDescription( description, L"{\n", depth );
-	++depth;
-	addPropertyToDescription( description, L"Id", std::to_wstring( text.GetId( ) ), depth );
-	addPropertyToDescription( description, L"Color", std::to_wstring( text.GetColor( ) ), depth );
-	addPropertyToDescription( description, L"Box", toJson( text.GetContainingBox( ) ), depth );
-	addPropertyToDescription( description, L"Scripts",
+	addRowToDescription( description, L"\"TextBox\" : ", depth );
+	depth = openTag( description, L"{", depth );
+	addSimplePropertyToDescription( description, L"Id", std::to_wstring( text.GetId( ) ), depth );
+	addSimplePropertyToDescription( description, L"Color", std::to_wstring( text.GetColor( ) ), depth );
+	addCompoundPropertyToDescription( description, L"Box", toJson( text.GetContainingBox( ) ), depth );
+	addCompoundPropertyToDescription( description, L"Scripts",
 		toJson( text.GetScripts( EventType::EventAll ) ), depth );
-	addPropertyToDescription( description, L"Content", text.GetContents( ), depth, LAST_PROP );
-	--depth;
-	addElementToDescription( description, L"}", depth );
+	addSimplePropertyToDescription( description, L"Content", text.GetContents( ), depth, LAST_PROP );
+	depth = closeTag( description, L"}", depth );
 	return description;
 }
 
 JSON CJsonConverter::toJson( const CEllipseObject &ellipse, int depth )
 {
 	JSON description = L"";
-	addElementToDescription( description, L"{\n", depth );
-	++depth;
-	addPropertyToDescription( description, L"Id", std::to_wstring( ellipse.GetId( ) ), depth );
-	addPropertyToDescription( description, L"Color", std::to_wstring( ellipse.GetColor( ) ), depth );
-	addPropertyToDescription( description, L"Box", toJson( ellipse.GetContainingBox( ) ), depth );
-	addPropertyToDescription( description, L"Scripts",
+	addRowToDescription( description, L"\"Ellipse\" : ", depth );
+	depth = openTag( description, L"{", depth );
+	addSimplePropertyToDescription( description, L"Id", std::to_wstring( ellipse.GetId( ) ), depth );
+	addSimplePropertyToDescription( description, L"Color", std::to_wstring( ellipse.GetColor( ) ), depth );
+	addCompoundPropertyToDescription( description, L"Box", toJson( ellipse.GetContainingBox( ) ), depth );
+	addCompoundPropertyToDescription( description, L"Scripts",
 		toJson( ellipse.GetScripts( EventType::EventAll ) ), depth, LAST_PROP );
-	--depth;
-	addElementToDescription( description, L"}", depth );
+	depth = closeTag( description, L"}", depth );
 	return description;
 }
 
 JSON CJsonConverter::toJson( const TBox &box, int depth )
 {
 	JSON description = L"";
-	addElementToDescription( description, L"{\n", depth );
-	++depth;
-	addPropertyToDescription( description, L"Top", std::to_wstring(box.top), depth );
-	addPropertyToDescription( description, L"Bottom", std::to_wstring(box.bottom), depth );
-	addPropertyToDescription( description, L"Left", std::to_wstring(box.left), depth );
-	addPropertyToDescription( description, L"Right", std::to_wstring(box.right), depth, LAST_PROP );
-	--depth;
-	addElementToDescription( description, L"}", depth );
+	depth = openTag( description, L"{", depth );
+	addSimplePropertyToDescription( description, L"Top", std::to_wstring(box.top), depth );
+	addSimplePropertyToDescription( description, L"Bottom", std::to_wstring(box.bottom), depth );
+	addSimplePropertyToDescription( description, L"Left", std::to_wstring(box.left), depth );
+	addSimplePropertyToDescription( description, L"Right", std::to_wstring(box.right), depth, LAST_PROP );
+	depth = closeTag( description, L"}", depth );
 	return description;
 }
 
 JSON CJsonConverter::toJson( const TPoint &point, int depth )
 {
 	JSON description = L"";
-	addElementToDescription( description, L"{\n", depth );
-	++depth;
-	addPropertyToDescription( description, L"X", std::to_wstring(point.x), depth );
-	addPropertyToDescription( description, L"Y", std::to_wstring(point.y), depth );
-	--depth;
-	addElementToDescription( description, L"}", depth );
+	depth = openTag( description, L"{", depth );
+	addSimplePropertyToDescription( description, L"X", std::to_wstring(point.x), depth );
+	addSimplePropertyToDescription( description, L"Y", std::to_wstring(point.y), depth, LAST_PROP);
+	depth = closeTag( description, L"}", depth );
 	return description;
 }
 
 JSON CJsonConverter::toJson( const std::vector<CScript> &objects, int depth )
 {
 	JSON description = L"";
-	addElementToDescription( description, L"[", depth );
 	int numberOfObjects = objects.size( );
-	for ( int index = 0; index < numberOfObjects - 1; ++index ) {
-		addElementToDescription( description, objects[index].toWString( ) + L",\n", depth + 1 );
+	if ( numberOfObjects == 0 )
+	{
+		return description;
 	}
-	addElementToDescription( description, objects[numberOfObjects - 1].toWString( ), depth + 1 );
-	addElementToDescription( description, L"]", depth );
+	depth = openTag( description, L"[", depth );
+	for ( int index = 0; index < numberOfObjects - 1; ++index ) {
+		addElementToDescription( description, objects[index].toWString( ) + L",", depth, L"\n" );
+	}
+	addElementToDescription( description, objects[numberOfObjects - 1].toWString( ), depth );
+	depth = closeTag( description, L"]", depth );
 	return description;
 }
 
 JSON CJsonConverter::toJson( const CScript &script, int depth )
 {
 	JSON description = L"";
-	addElementToDescription( description, L"{\n", depth );
-	addPropertyToDescription( description, L"Path", script.GetPath( ), depth + 1, LAST_PROP );
-	addElementToDescription( description, L"}", depth );
+	addSimplePropertyToDescription( description, L"Path", script.GetPath( ), depth, LAST_PROP );
 	return description;
 }
 
-JSON &CJsonConverter::addPropertyToDescription(
-	JSON &description, const std::wstring &name, const JSON &prop, int depth, int last )
+JSON &CJsonConverter::addElementToDescription( JSON &description, const JSON &element, int depth, std::wstring sep )
 {
-	addElementToDescription( description, L"\"" + name + L"\" : ", depth );
-	addElementToDescription( description, L"\"" + prop + L"\"", depth );
-	if ( last == 0 ) {
-		addElementToDescription( description, L",\n", depth );
+	std::wstringstream sstream( element );
+	std::wstring row;
+	while ( std::getline( sstream, row ) ) {
+		description += std::wstring( depth, '\t' )  + row + L"\n";
 	}
-	else {
-		addElementToDescription( description, L"\n", depth );
+	description.pop_back( );
+	description += sep;
+	return description;
+}
+
+JSON &CJsonConverter::addRowToDescription( JSON &description, const JSON &row, int depth )
+{
+	return description += std::wstring( depth, '\t' ) + row;
+}
+
+
+JSON &CJsonConverter::addSimplePropertyToDescription(
+	JSON &description, const std::wstring &name, const JSON &prop, int depth, bool last )
+{
+	addRowToDescription( description, L"\"" + name + L"\" : ", depth );
+	addRowToDescription( description, L"\"" + prop + L"\"", 0 );
+	if ( !last ) {
+		addRowToDescription( description, L",\n", 0 );
 	}
 	return description;
+}
+
+JSON &CJsonConverter::addCompoundPropertyToDescription(
+	JSON &description, const std::wstring &name, const JSON &prop, int depth, bool last )
+{
+	addRowToDescription( description, L"\"" + name + L"\" : ", depth );
+	addElementToDescription( description, prop, depth, L"" );
+	if ( !last ) {
+		addRowToDescription( description, L",\n", 0 );
+	}
+	return description;
+}
+
+template<> std::shared_ptr<CRectangleObject> CJsonConverter::fromJson( const JSON &description )
+{
+	std::wcout << description;
+	TBox temp = { 0, 0, 50, 50 };
+	return std::make_shared<CRectangleObject>( RGB( 100, 90, 80 ), temp );
+}
+
+template<> std::shared_ptr<CEllipseObject> CJsonConverter::fromJson( const JSON &description )
+{
+	std::wcout << description;
+	TBox temp = { 0, 0, 50, 50 };
+	return std::make_shared<CEllipseObject>( RGB( 100, 90, 80 ), temp );
+}
+
+template<> std::shared_ptr<CTextBoxObject> CJsonConverter::fromJson( const JSON &description )
+{
+	std::wcout << description;
+	TBox temp = { 0, 0, 50, 50 };
+	return std::make_shared<CTextBoxObject>( RGB( 100, 90, 80 ), temp, L"Text" );
+}
+
+template<> std::shared_ptr<CViewport> CJsonConverter::fromJson( const JSON &description )
+{
+	std::wcout << description;
+	return std::make_shared<CViewport>( );
+}
+
+int CJsonConverter::openTag( JSON &description, const std::wstring &tag, int depth )
+{
+	description += L"\n" + std::wstring(depth++, L'\t') + tag + L"\n";
+	return depth;
+}
+
+int CJsonConverter::closeTag( JSON &description, const std::wstring &tag, int depth )
+{
+	description += L"\n" + std::wstring(--depth, L'\t') + tag;
+	return depth;
 }
