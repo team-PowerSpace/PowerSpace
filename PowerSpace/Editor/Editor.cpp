@@ -248,6 +248,14 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 			renderingWindow.ReDraw();
 			break;
 		}
+		case ID_ADD_TEXTBOX:
+		{
+			// TODO const for color
+			stage->GetObjects().insert(std::pair<int, std::shared_ptr<IDrawable>>(searchEmptyId(),
+				std::make_shared<CTextBoxObject>( RGB( 100 , 90, 80 ), generateDefaultBox(), L"Text" ) ) );
+			renderingWindow.ReDraw();
+			break;
+		}
 		case ID_PLAY_LAUNCHPLAYER:
 		{
 			CViewer viewer( *stage, CViewport() );
