@@ -11,14 +11,14 @@ public:
 
 	void Show( int cmdShow );
 
-	HWND GetHandle();
+	HWND GetHandle() const;
 protected:
 	void OnNCCreate( HWND hwnd );
-	void OnCreate();
+	void OnCreate( HWND hwnd );
 	void OnDestroy();
 	void OnClose();
 private:
-	HWND handle;
-	HWND editControl;
+	HWND handle;	
+	void addToolbar();
 	static LRESULT __stdcall windowProc( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam );
 };

@@ -1,5 +1,9 @@
 #include "stdafx.h"
 #include "ScriptEditor.h"
+#include "Resource.h"
+#include <Commctrl.h>
+
+LPWSTR startCode = L"def OnClick(): \r\n\t#put your code here \r\ndef OnTick():\r\n\t#put your code here";
 
 LRESULT __stdcall CScriptEditor::windowProc( HWND handle, UINT msg, WPARAM wParam, LPARAM lParam )
 {	
@@ -16,7 +20,7 @@ LRESULT __stdcall CScriptEditor::windowProc( HWND handle, UINT msg, WPARAM wPara
 		window = reinterpret_cast<CScriptEditor*>(GetWindowLongPtr( handle, 0 ));
 		switch( msg ) {
 			case WM_CREATE:
-				window->OnCreate();
+				window->OnCreate( handle );
 				return 1;
 			case WM_CLOSE:
 				window->OnClose();
@@ -40,7 +44,7 @@ bool CScriptEditor::RegisterClass()
 }
 
 CScriptEditor::CScriptEditor() {
-	handle = nullptr;
+	
 }
 
 CScriptEditor::~CScriptEditor()
@@ -57,23 +61,45 @@ void CScriptEditor::OnNCCreate( HWND _handle )
 
 bool CScriptEditor::Create()
 {
-	HINSTANCE hInstance = ::GetModuleHandle( nullptr );
-
+	HINSTANCE hInstance = GetModuleHandle( nullptr );
+	
 	handle = CreateWindowEx( 0, L"ScriptEditor", L"ScriptEditor",
 		WS_OVERLAPPEDWINDOW | WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT,
 		CW_USEDEFAULT, CW_USEDEFAULT, nullptr, nullptr,
 		hInstance, this );	
+	addToolbar();
 	return (handle != 0);
 }
 
-HWND CScriptEditor::GetHandle()
+void CScriptEditor::addToolbar()
+{
+	HWND toolbar = CreateToolbarEx( handle, 0, 0,
+		0, HINST_COMMCTRL, NULL, NULL, 0, 0, 0, 0, 0, sizeof( TBBUTTON ) );
+	TBBUTTON tbb_buildin[] = {
+		{ STD_FILENEW, ID_FILE_NEW, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
+		{ STD_FILEOPEN, ID_FILE_OPEN, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
+		{ STD_FILESAVE, ID_FILE_SAVE, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
+	};
+	SendMessage( toolbar, (UINT)TB_ADDBUTTONS, _countof( tbb_buildin ), (LPARAM)&tbb_buildin );
+	ShowWindow( toolbar, TRUE );
+}
+
+HWND CScriptEditor::GetHandle() const
 {
 	return handle;
 }
 
-void CScriptEditor::OnCreate()
+void CScriptEditor::OnCreate( HWND hwnd )
 {
-	
+	RECT windowRect;	
+	GetClientRect( hwnd, &windowRect );	
+	HWND editBox = CreateWindowEx(0, L"EDIT", NULL,
+		WS_CHILD | WS_VISIBLE | ES_LEFT | ES_MULTILINE | WS_BORDER,
+		windowRect.left, windowRect.top + 30,
+		windowRect.right - windowRect.left,
+		windowRect.bottom - windowRect.top,
+		hwnd, NULL, GetModuleHandle( 0 ), NULL );	
+	SetWindowText( editBox, startCode );
 }
 
 void CScriptEditor::OnClose()

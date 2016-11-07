@@ -281,7 +281,7 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 			
 			CScriptEditor scriptEditor;
 			
-			if( scriptEditor.Create() ) {				
+			if( scriptEditor.Create() ) {					
 				HWND scriptEditorWindow = scriptEditor.GetHandle();
 				MSG message;
 				BOOL getMessageResult = 0;
