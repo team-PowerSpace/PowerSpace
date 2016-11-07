@@ -60,6 +60,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Json">
+      <UniqueIdentifier>{b4bfd954-b4d1-42c7-ad8b-aaf720cf6fec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Json\Headers">
+      <UniqueIdentifier>{e61e1c59-668e-494b-8e9c-4e92a29c4dd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Json\Source Files">
+      <UniqueIdentifier>{db68bdbb-60a6-4397-af2e-a9d891508d6b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -129,7 +138,13 @@
       <Filter>ScriptEngine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="JsonConverter.h">
-      <Filter>Common\Header Files</Filter>
+      <Filter>Json\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonObject.h">
+      <Filter>Json\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="JsonWorker.h">
+      <Filter>Json\Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -191,7 +206,13 @@
       <Filter>ScriptEngine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="JsonConverter.cpp">
-      <Filter>Common\Source Files</Filter>
+      <Filter>Json\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonObject.cpp">
+      <Filter>Json\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JsonWorker.cpp">
+      <Filter>Json\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

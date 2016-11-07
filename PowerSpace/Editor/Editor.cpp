@@ -365,7 +365,7 @@ void CEditor::OnSave( ) const
 
 	if ( ::GetSaveFileName( &filename ) ) {
 		std::wofstream saveStream( filename.lpstrFile, std::ofstream::out );
-		saveStream << stage->toWString();
+		saveStream << stage->ToWString();
 		saveStream.close( );
 	}
 }
