@@ -19,8 +19,10 @@ void CCanvas::DrawEllipse( HDC hdc, TBox box, COLORREF color ) const
 
 void CCanvas::DrawTextBox( HDC hdc, TBox box, COLORREF color, const std::wstring& text, UINT format ) const
 {
+	int bkModeOld = ::SetBkMode(hdc, TRANSPARENT);
     COLORREF colorOld = ::SetTextColor( hdc, color );
     ::DrawText( hdc, text.c_str(), -1, &box, format );
     ::SetTextColor( hdc, colorOld );
+	::SetBkMode(hdc, bkModeOld);
 }
 

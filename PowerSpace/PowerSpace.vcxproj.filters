@@ -239,5 +239,8 @@
     <Image Include="bitmaps\play.bmp">
       <Filter>Root\Resource Files</Filter>
     </Image>
+    <Image Include="bitmaps\delete.bmp">
+      <Filter>Root\Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
