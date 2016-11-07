@@ -8,6 +8,7 @@
 #include "Stage.h"
 #include "StageObjects.h"
 #include "JsonConverter.h"
+#include "ScriptEditor.h"
 
 #define IDC_MAIN_BUTTON 101 
 
@@ -180,6 +181,7 @@ void CEditor::createToolbar() {
 	ImageList_Add(hImageList, loadTransparentBitmap(hInstance, IDB_ELLIPSE), NULL);
 	ImageList_Add(hImageList, loadTransparentBitmap(hInstance, IDB_TEXTBOX), NULL);
 	ImageList_Add(hImageList, loadTransparentBitmap(hInstance, IDB_PLAY), NULL);
+	ImageList_Add( hImageList, loadTransparentBitmap( hInstance, IDB_EDIT ), NULL );
 	SendMessage(handleToolbar, TB_SETIMAGELIST, (WPARAM)1, (LPARAM)hImageList);
 
 	TBBUTTON tbb[] =
@@ -188,6 +190,7 @@ void CEditor::createToolbar() {
 		{ MAKELONG(1, 1), ID_ADD_ELLIPSE, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
 		{ MAKELONG(2, 1), ID_ADD_TEXTBOX, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
 		{ MAKELONG(3, 1), ID_PLAY_LAUNCHPLAYER, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
+		{ MAKELONG( 4, 1 ), ID_EDIT, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
 	};
 	SendMessage(handleToolbar, (UINT)TB_ADDBUTTONS, _countof(tbb), (LPARAM)&tbb);
 
@@ -271,6 +274,25 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
                     ::DispatchMessage( &message );
                 }
             }
+			break;
+		}
+		case ID_EDIT:
+		{
+			
+			CScriptEditor scriptEditor;
+			
+			if( scriptEditor.Create() ) {				
+				HWND scriptEditorWindow = scriptEditor.GetHandle();
+				MSG message;
+				BOOL getMessageResult = 0;
+				while( (getMessageResult = GetMessage( &message, scriptEditorWindow, 0, 0 )) != 0 ) {
+					if( getMessageResult == -1 ) {
+						break;
+					}
+					TranslateMessage( &message );
+					DispatchMessage( &message );
+				}
+			}
 			break;
 		}
         case IDC_MAIN_BUTTON:
