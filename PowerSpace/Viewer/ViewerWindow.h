@@ -28,6 +28,7 @@ private:
 	HBITMAP bitmap;
 	HDC bitmapContext;
 	HBRUSH backgroundBrush;
+	HACCEL haccel;
 
 	const CViewport& viewport;
 	const CCanvas& canvas;
@@ -64,8 +65,6 @@ private:
 	void onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lParam );
 
 	void onCommand( WPARAM wParam, LPARAM lParam );
-
-	void onCommandMenu( WPARAM wParam, LPARAM lParam );
 
 	void enableTimer( int timeDelay, int timerId = 0 );
 

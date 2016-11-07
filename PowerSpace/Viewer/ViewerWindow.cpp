@@ -59,12 +59,25 @@ bool CViewerWindow::Create()
 	if ( handle != 0 ) {
 		enableTimer( TICK_LENGTH );
 	}
+
 	return (handle != 0);
 }
 
 void CViewerWindow::Show() const
 {
 	::ShowWindow( handle, SW_MAXIMIZE );
+
+	::UpdateWindow( handle );
+
+	MSG msg = {};
+	BOOL getMessageResult = 0;
+
+	while( (getMessageResult = ::GetMessage( &msg, NULL, 0, 0 )) != 0 ) {
+		if( !::TranslateAccelerator( handle, haccel, &msg ) ) {
+			::TranslateMessage( &msg );
+			::DispatchMessage( &msg );
+		}
+	}
 }
 
 HWND CViewerWindow::GetHandle() const
@@ -119,18 +132,24 @@ LRESULT CViewerWindow::WindowProc( HWND handle, UINT msg, WPARAM wParam, LPARAM 
 	case WM_COMMAND:
 		wndPtr->onCommand( wParam, lParam );
 		return 0;
-	case WM_TIMER: 
-	{
-		wndPtr->onTimer( );
+
+	case WM_TIMER:
+		wndPtr->onTimer();
 		return 0;
-	}
 
 	default:
 		return ::DefWindowProc( handle, msg, wParam, lParam );
 	}
 }
 
-void CViewerWindow::onCreate() {}
+void CViewerWindow::onCreate() {
+	haccel = ::LoadAccelerators( GetModuleHandle( NULL ), MAKEINTRESOURCE( IDC_POWERSPACE ) );
+
+	if( haccel == NULL ) {
+		::MessageBox( NULL, L"ERROR LoadAccelerators", L"ERROR", MB_ICONERROR );
+		::PostQuitMessage( NULL );
+	}
+}
 
 void CViewerWindow::onClose()
 {
@@ -221,6 +240,7 @@ void CViewerWindow::onSize()
 
 	if( ::SetGraphicsMode( bitmapContext, GM_ADVANCED ) == 0 ) {
 		::MessageBox( handle, L"Error", L"Error", MB_ICONERROR | MB_OK );
+		::PostQuitMessage( NULL );
 	}
 
 	::ReleaseDC( handle, tmp );
@@ -323,7 +343,7 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 	::InvalidateRect( handle, &rect, false );
 }
 
-void CViewerWindow::onCommandMenu( WPARAM wParam, LPARAM lParam )
+void CViewerWindow::onCommand( WPARAM wParam, LPARAM lParam )
 {
 	UNREFERENCED_PARAMETER( lParam );
 
@@ -331,11 +351,10 @@ void CViewerWindow::onCommandMenu( WPARAM wParam, LPARAM lParam )
 	{
 	case ID_CONTROL_PLAY:
 		viewerIsRunning = !viewerIsRunning;
-		if ( viewerIsRunning ) {
+		if( viewerIsRunning ) {
 			enableTimer( TICK_LENGTH );
-		}
-		else {
-			disableTimer( );
+		} else {
+			disableTimer();
 		}
 
 		HMENU pMenu = ::GetMenu( handle );
@@ -351,15 +370,6 @@ void CViewerWindow::onCommandMenu( WPARAM wParam, LPARAM lParam )
 		}
 
 		::SetMenu( handle, pMenu );
-		break;
-	}
-}
-
-void CViewerWindow::onCommand( WPARAM wParam, LPARAM lParam )
-{
-	switch( HIWORD( wParam ) ) {
-	case 0:
-		onCommandMenu( wParam, lParam );
 		break;
 	}
 }
