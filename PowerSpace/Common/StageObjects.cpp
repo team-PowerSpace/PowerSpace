@@ -11,11 +11,15 @@ void CRectangleObject::Draw( HDC hdc, const CViewport& viewport, const CCanvas& 
     canvas.DrawRectangle( hdc, viewport.ConvertToScreenCoordinates(containingBox), color );
 }
 
-std::wstring CRectangleObject::toWString( ) const
+std::wstring CRectangleObject::ToWString( ) const
 {
-	return CJsonConverter::toJson( *this );
+	return CJsonConverter::ToJsonObject( *this )->ToJson();
 }
 
+IJsonPtr CRectangleObject::ToJson() const
+{
+	return CJsonConverter::ToJsonObject( *this );
+}
 
 CEllipseObject::CEllipseObject( COLORREF _color, TBox _box )
     : CDrawable( _color, _box )
@@ -26,9 +30,14 @@ void CEllipseObject::Draw( HDC hdc, const CViewport& viewport, const CCanvas& ca
     canvas.DrawEllipse( hdc, viewport.ConvertToScreenCoordinates( containingBox ), color );
 }
 
-std::wstring CEllipseObject::toWString( ) const
+std::wstring CEllipseObject::ToWString( ) const
 {
-	return CJsonConverter::toJson( *this );
+	return CJsonConverter::ToJsonObject( *this )->ToJson();
+}
+
+IJsonPtr CEllipseObject::ToJson() const
+{
+	return CJsonConverter::ToJsonObject( *this );
 }
 
 
@@ -51,7 +60,12 @@ void CTextBoxObject::SetContents( const std::wstring &_contents )
 	contents = _contents;
 }
 
-std::wstring CTextBoxObject::toWString( ) const
+std::wstring CTextBoxObject::ToWString( ) const
 {
-	return CJsonConverter::toJson( *this );
+	return CJsonConverter::ToJsonObject( *this )->ToJson();
+}
+
+IJsonPtr CTextBoxObject::ToJson() const
+{
+	return CJsonConverter::ToJsonObject( *this );
 }

@@ -73,7 +73,12 @@ const CViewport & CStage::GetViewPort() const
 	return viewport;
 }
 
-std::wstring CStage::toWString( ) const
+std::wstring CStage::ToWString( ) const
 {
-	return CJsonConverter::toJson( *this );
+	return CJsonConverter::ToJsonObject( *this )->ToJson();
+}
+
+IJsonPtr CStage::ToJson() const
+{
+	return CJsonConverter::ToJsonObject( *this );
 }

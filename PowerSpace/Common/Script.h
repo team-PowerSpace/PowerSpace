@@ -1,12 +1,12 @@
 #pragma once
-
+#include "JsonObject.h"
 using TPath = std::wstring;
 
 // this enum class lists all supported types of events
 enum class EventType
 {
-    EventClick,
-    EventTick,
+	EventClick,
+	EventTick,
 	EventAll
 };
 
@@ -14,11 +14,12 @@ enum class EventType
 class CScript
 {
 public:
-    explicit CScript( TPath _path );
+	explicit CScript( TPath _path );
 
-    // returns path to the file with python script
-    const TPath& GetPath() const;
-	std::wstring toWString( ) const;
+	// returns path to the file with python script
+	const TPath& GetPath() const;
+	std::wstring ToWString() const;
+	IJsonPtr ToJson() const;
 private:
-    TPath path;
+	TPath path;
 };

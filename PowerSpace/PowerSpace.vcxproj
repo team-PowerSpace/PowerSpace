@@ -161,6 +161,8 @@
     <ClInclude Include="Editor\EditorWindow.h" />
     <ClInclude Include="Editor\EditorRenderingWindow.h" />
     <ClInclude Include="JsonConverter.h" />
+    <ClInclude Include="JsonObject.h" />
+    <ClInclude Include="JsonWorker.h" />
     <ClInclude Include="PowerSpace.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Common\Script.h" />
@@ -195,6 +197,8 @@
     <ClCompile Include="Editor\EditorWindow.cpp" />
     <ClCompile Include="Editor\EditorRenderingWindow.cpp" />
     <ClCompile Include="JsonConverter.cpp" />
+    <ClCompile Include="JsonObject.cpp" />
+    <ClCompile Include="JsonWorker.cpp" />
     <ClCompile Include="PowerSpace.cpp" />
     <ClCompile Include="Common\Script.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
