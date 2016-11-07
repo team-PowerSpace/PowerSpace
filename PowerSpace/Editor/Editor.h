@@ -2,12 +2,23 @@
 
 #pragma comment(lib, "comctl32.lib")
 
-#include <Windows.h>
+#include "Commctrl.h"
+#include <fstream>
+#include <iostream>
 #include <string>
+#include <Windows.h>
+
+#include "resource.h"
+
 #include "EditorRenderingWindow.h"
 #include "EditControlWindow.h"
 #include "EditorWindow.h"
-#include "Commctrl.h"
+#include "EditControlWindow.h"
+#include "JsonConverter.h"
+#include "ObjectIdGenerator.h"
+#include "Stage.h"
+#include "StageObjects.h"
+#include "Viewer.h"
 
 class CEditor {
 public:

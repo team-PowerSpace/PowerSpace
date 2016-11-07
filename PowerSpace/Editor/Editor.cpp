@@ -1,13 +1,5 @@
 #include <stdafx.h>
-#include <iostream>
-#include <fstream>
 #include "Editor.h"
-#include "resource.h"
-#include "EditControlWindow.h"
-#include "Viewer.h"
-#include "Stage.h"
-#include "StageObjects.h"
-#include "JsonConverter.h"
 
 #define IDC_MAIN_BUTTON 101 
 
@@ -237,6 +229,8 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 		case ID_ADD_RECTANGLE:
 		{
 			// TODO const for color
+            std::string objectId = CObjectIdGenerator::GenerateNewId<CRectangleObject>();
+
 			stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( searchEmptyId(),
 				std::make_shared<CRectangleObject>( RGB( 100, 90, 80 ), generateDefaultBox() ) ) );
 			renderingWindow.ReDraw();
@@ -245,6 +239,8 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 		case ID_ADD_ELLIPSE:
 		{
 			// TODO const for color
+            std::string objectId = CObjectIdGenerator::GenerateNewId<CEllipseObject>();
+
 			stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( searchEmptyId(),
 				std::make_shared<CEllipseObject>( RGB( 100, 90, 80 ), generateDefaultBox() ) ) );
 			renderingWindow.ReDraw();
