@@ -278,6 +278,9 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 		}
 		case ID_DELETE_OBJECT: 
 		{
+			stage->GetObjects().erase(activeId);
+			SetActiveId(-1);
+			renderingWindow.ReDraw();
 			break;
 		}
         case IDC_MAIN_BUTTON:
