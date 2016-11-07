@@ -3,7 +3,6 @@
 #include "Resource.h"
 #include <Commctrl.h>
 
-#define fileNameSize 256
 #define startCode L"def OnClick(): \r\n\t#put your code here \r\ndef OnTick():\r\n\t#put your code here"
 
 LRESULT __stdcall CScriptEditor::windowProc( HWND handle, UINT msg, WPARAM wParam, LPARAM lParam )
@@ -97,6 +96,7 @@ void CScriptEditor::OnCreate( HWND hwnd )
 {
 	RECT windowRect;	
 	GetClientRect( hwnd, &windowRect );	
+	// can't asign to class member, this problem should be resolved
 	HWND editBox = CreateWindowEx(0, L"EDIT", NULL,
 		WS_CHILD | WS_VISIBLE | ES_LEFT | ES_MULTILINE | WS_BORDER,
 		windowRect.left, windowRect.top + 30,
@@ -157,9 +157,8 @@ void CScriptEditor::OnFileSave()
 
 	int len = 5;
 	LPWSTR buffer = L"12345";
-
-	//MessageBox( NULL, L"FILE", L"SAVE", NULL );
-	wchar_t fileName[fileNameSize];
+	
+	wchar_t fileName[MAX_PATH];
 	OPENFILENAME ofn;
 	memset( &ofn, 0, sizeof( OPENFILENAME ) );
 	ofn.lStructSize = sizeof( OPENFILENAME );
@@ -187,9 +186,38 @@ void CScriptEditor::OnFileSave()
 void CScriptEditor::OnFileNew()
 {
 	MessageBox( NULL, L"FILE", L"NEW", NULL );
+	//SetWindowText( editBox, L" " ); fix after resolving problems
 }
 
 void CScriptEditor::OnFileOpen()
 {
-	MessageBox( NULL, L"FILE", L"OPEN", NULL );
+	OPENFILENAME ofn;
+	TCHAR fileName[MAX_PATH];
+	memset( &ofn, 0, sizeof( OPENFILENAME ) );
+	ofn.lStructSize = sizeof( OPENFILENAME );
+	ofn.hwndOwner = NULL;
+	ofn.lpstrFile = fileName;
+	ofn.nMaxFile = sizeof( fileName );
+	ofn.lpstrFilter = L"Python script(*.py)\0*.py\0\0";
+	ofn.nFilterIndex = 1;
+	ofn.lpstrTitle = L"Open";
+	ofn.lpstrInitialDir = L"c:\\";
+	ofn.lpstrDefExt = ofn.lpstrFilter;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
+
+	int result = GetOpenFileName( &ofn );
+	if( result ) {
+		HANDLE file = CreateFile( ofn.lpstrFile, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0 );
+		wchar_t* buffer;
+		auto fileSize = GetFileSize( file, NULL );
+		DWORD newsize = 0;		
+		buffer = (wchar_t*)malloc( fileSize );
+		ReadFile( file, buffer, fileSize, &newsize, NULL ); 
+
+		MessageBox( NULL, buffer, L" ", NULL );
+		//SetWindowText( editBox, buffer ); fix after resolving problems
+
+		CloseHandle( file );
+	}
+
 }
