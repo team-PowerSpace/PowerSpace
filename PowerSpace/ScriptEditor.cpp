@@ -3,7 +3,8 @@
 #include "Resource.h"
 #include <Commctrl.h>
 
-LPWSTR startCode = L"def OnClick(): \r\n\t#put your code here \r\ndef OnTick():\r\n\t#put your code here";
+#define fileNameSize 256
+#define startCode L"def OnClick(): \r\n\t#put your code here \r\ndef OnTick():\r\n\t#put your code here"
 
 LRESULT __stdcall CScriptEditor::windowProc( HWND handle, UINT msg, WPARAM wParam, LPARAM lParam )
 {	
@@ -147,7 +148,40 @@ void CScriptEditor::OnCommand( WPARAM wParam)
 
 void CScriptEditor::OnFileSave()
 {
-	MessageBox( NULL, L"FILE", L"SAVE", NULL );
+	// fix after resolving the problem with creating edit control
+
+	/*int len = GetWindowTextLength( editBox );
+	TCHAR* buffer;
+	buffer = (TCHAR*)calloc( len + 1, sizeof( TCHAR ) );
+	GetWindowText( editBox, buffer, len + 1 );*/
+
+	int len = 5;
+	LPWSTR buffer = L"12345";
+
+	//MessageBox( NULL, L"FILE", L"SAVE", NULL );
+	wchar_t fileName[fileNameSize];
+	OPENFILENAME ofn;
+	memset( &ofn, 0, sizeof( OPENFILENAME ) );
+	ofn.lStructSize = sizeof( OPENFILENAME );
+	ofn.hwndOwner = NULL;
+	ofn.lpstrFile = fileName;
+	ofn.nMaxFile = sizeof( fileName );
+	ofn.lpstrFilter = L"Python script(*.py)\0*.py\0\0";
+	ofn.nFilterIndex = 1;
+	ofn.lpstrTitle = L"Save as";
+	ofn.lpstrInitialDir = L"c:\\";
+	ofn.lpstrDefExt = ofn.lpstrFilter;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
+
+	int result = GetSaveFileName( &ofn );
+	if( result ) {
+		DWORD writtenBytes;
+		HANDLE file = CreateFile( ofn.lpstrFile, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0 );
+		WORD uCode = 0xFEFF;
+		WriteFile( file, &uCode, 2, &writtenBytes, NULL );
+		WriteFile( file, buffer, 2 * len, &writtenBytes, NULL );
+		CloseHandle( file );
+	}
 }
 
 void CScriptEditor::OnFileNew()

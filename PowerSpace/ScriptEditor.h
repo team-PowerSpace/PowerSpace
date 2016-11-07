@@ -24,6 +24,7 @@ protected:
 	void OnFileNew();
 private:
 	HWND handle;	
+	//HWND editBox; fix after resolving the problem with creating edit control
 	void addToolbar();
 	static LRESULT __stdcall windowProc( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam );
 };
