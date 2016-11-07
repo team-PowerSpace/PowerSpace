@@ -6,6 +6,8 @@
 const wchar_t* CViewerWindow::ClassName = L"CViewerWindow";
 const wchar_t* CViewerWindow::ViewerApplicationName = L"Powerspace Viewer";
 const UINT TICK_LENGTH = 1000;
+const double SPEED_MULTIPLIER = 1.1;
+UINT SPEED = TICK_LENGTH;
 
 CViewerWindow::CViewerWindow( CStage& _stage, CViewport& _viewport, CCanvas& _canvas ) :
 	windowHeight( 600 ), windowWidth( 800 ), viewport( _viewport ), canvas( _canvas ),
@@ -57,7 +59,7 @@ bool CViewerWindow::Create()
 		windowHeight, windowWidth, nullptr, nullptr, 
 		hInstance, this );
 	if ( handle != 0 ) {
-		enableTimer( TICK_LENGTH );
+		enableTimer( SPEED );
 	}
 
 	return (handle != 0);
@@ -347,17 +349,17 @@ void CViewerWindow::onCommand( WPARAM wParam, LPARAM lParam )
 {
 	UNREFERENCED_PARAMETER( lParam );
 
+	HMENU pMenu = ::GetMenu( handle );
+
 	switch LOWORD( wParam )
 	{
 	case ID_CONTROL_PLAY:
 		viewerIsRunning = !viewerIsRunning;
 		if( viewerIsRunning ) {
-			enableTimer( TICK_LENGTH );
+			enableTimer( SPEED );
 		} else {
 			disableTimer();
 		}
-
-		HMENU pMenu = ::GetMenu( handle );
 
 		if( pMenu != NULL ) {
 			if( viewerIsRunning )
@@ -368,10 +370,22 @@ void CViewerWindow::onCommand( WPARAM wParam, LPARAM lParam )
 			::MessageBox( handle, L"Menu not found", L"Error", MB_ICONERROR );
 			::PostQuitMessage( NULL );
 		}
+		break;
 
-		::SetMenu( handle, pMenu );
+	case ID_CONTROL_SPEEDUP:
+		disableTimer();
+		SPEED = static_cast<UINT>( SPEED * SPEED_MULTIPLIER );
+		enableTimer( SPEED );
+		break;
+
+	case ID_CONTROL_SPEEDDOWN:
+		disableTimer();
+		SPEED = static_cast<UINT>(SPEED / SPEED_MULTIPLIER);
+		enableTimer( SPEED );
 		break;
 	}
+
+	::SetMenu( handle, pMenu );
 }
 
 POINT CViewerWindow::getMouseCoords( LPARAM lParam )
