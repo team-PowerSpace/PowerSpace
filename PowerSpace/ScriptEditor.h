@@ -13,10 +13,15 @@ public:
 
 	HWND GetHandle() const;
 protected:
-	void OnNCCreate( HWND hwnd );
+	void OnNCCreate( HWND hwnd );	
 	void OnCreate( HWND hwnd );
 	void OnDestroy();
 	void OnClose();
+	void OnCommand( WPARAM wParam );
+
+	void OnFileSave();
+	void OnFileOpen();
+	void OnFileNew();
 private:
 	HWND handle;	
 	void addToolbar();

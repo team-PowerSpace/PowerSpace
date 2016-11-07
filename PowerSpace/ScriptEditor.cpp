@@ -25,6 +25,9 @@ LRESULT __stdcall CScriptEditor::windowProc( HWND handle, UINT msg, WPARAM wPara
 			case WM_CLOSE:
 				window->OnClose();
 				return 0;
+			case WM_COMMAND:
+				window->OnCommand( wParam);
+				return 0;
 			default:
 				return DefWindowProc( handle, msg, wParam, lParam );
 		}
@@ -117,4 +120,42 @@ void CScriptEditor::OnDestroy()
 void CScriptEditor::Show( int cmdShow )
 {
 	ShowWindow( handle, cmdShow );
+}
+
+void CScriptEditor::OnCommand( WPARAM wParam)
+{
+	switch( LOWORD( wParam ) ) {
+		case ID_FILE_SAVE:
+		{
+			OnFileSave();
+			break;
+		}
+		case ID_FILE_NEW:
+		{
+			OnFileNew();
+			break;
+		}
+		case ID_FILE_OPEN:
+		{
+			OnFileOpen();
+			break;
+		}
+		default:
+			break;
+	}
+}
+
+void CScriptEditor::OnFileSave()
+{
+	MessageBox( NULL, L"FILE", L"SAVE", NULL );
+}
+
+void CScriptEditor::OnFileNew()
+{
+	MessageBox( NULL, L"FILE", L"NEW", NULL );
+}
+
+void CScriptEditor::OnFileOpen()
+{
+	MessageBox( NULL, L"FILE", L"OPEN", NULL );
 }
