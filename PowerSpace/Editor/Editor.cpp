@@ -174,7 +174,7 @@ void CEditor::createToolbar() {
 	{
 		{ MAKELONG(0, 1), ID_ADD_RECTANGLE, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
 		{ MAKELONG(1, 1), ID_ADD_ELLIPSE, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
-		{ MAKELONG(2, 1), ID_ADD_TEXTBOX, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
+		{ MAKELONG(2, 1), ID_ADD_TEXT, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
 		{ MAKELONG(3, 1), ID_PLAY_LAUNCHPLAYER, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
 		{ MAKELONG(4, 1), ID_DELETE_OBJECT, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
 	};
@@ -232,7 +232,7 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
             addObject( std::make_shared<CEllipseObject>( defaultObjectColor, generateDefaultBox() ) );
 			break;
 		}
-		case ID_ADD_TEXTBOX:
+		case ID_ADD_TEXT:
 		{
             addObject( std::make_shared<CTextBoxObject>( defaultObjectColor, generateDefaultBox(), L"Text" ) );
 			break;
