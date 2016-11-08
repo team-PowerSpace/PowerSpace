@@ -215,7 +215,7 @@ void CScriptEditor::OnFileOpen()
 
 std::wstring CScriptEditor::GetText() const
 {
-	int length = SendMessage( editBox, WM_GETTEXTLENGTH, 0, 0 );
+	int length = static_cast<int>(SendMessage( editBox, WM_GETTEXTLENGTH, 0, 0 ));
 	length++;
 	std::wstring text;
 	text.resize( length );
