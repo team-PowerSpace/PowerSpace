@@ -104,7 +104,7 @@ CEditor* CEditor::GetWindowByHandle( HWND handle )
 	return reinterpret_cast<CEditor*>(GetWindowLongPtr( handle, GWLP_USERDATA ));
 }
 
-void  CEditor::SetActiveId( const int id )
+void CEditor::SetActiveId( const int id )
 {
 	activeId = id;
 	if( id < 0 ) {
@@ -236,27 +236,37 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 {
 	switch LOWORD( wParam )
 	{
+		// ID_ADD_RECTANGLE, ID_ADD_ELLIPSE and ID_ADD_TEXTBOX: code apparent duplication...
 		case ID_ADD_RECTANGLE:
 		{
 			// TODO const for color
-			stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( searchEmptyId(),
+			auto ret = stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( searchEmptyId(),
 				std::make_shared<CRectangleObject>( RGB( 100, 90, 80 ), generateDefaultBox() ) ) );
+			if( ret.second ) {
+				SetActiveId(ret.first->first);
+			}
 			renderingWindow.ReDraw();
 			break;
 		}
 		case ID_ADD_ELLIPSE:
 		{
 			// TODO const for color
-			stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( searchEmptyId(),
+			auto ret = stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( searchEmptyId(),
 				std::make_shared<CEllipseObject>( RGB( 100, 90, 80 ), generateDefaultBox() ) ) );
+			if( ret.second ) {
+				SetActiveId( ret.first->first );
+			}
 			renderingWindow.ReDraw();
 			break;
 		}
 		case ID_ADD_TEXTBOX:
 		{
 			// TODO const for color
-			stage->GetObjects().insert(std::pair<int, std::shared_ptr<IDrawable>>(searchEmptyId(),
+			auto ret = stage->GetObjects().insert(std::pair<int, std::shared_ptr<IDrawable>>(searchEmptyId(),
 				std::make_shared<CTextBoxObject>( RGB( 100 , 90, 80 ), generateDefaultBox(), L"Text" ) ) );
+			if( ret.second ) {
+				SetActiveId( ret.first->first );
+			}
 			renderingWindow.ReDraw();
 			break;
 		}
