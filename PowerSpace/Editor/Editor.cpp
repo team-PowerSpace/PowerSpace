@@ -234,41 +234,33 @@ void CEditor::GetText()
 	delete[] text;
 }
 
+template< class ObjectClass>
+void CEditor::addObject( std::shared_ptr<ObjectClass> object )
+{
+	auto ret = stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( searchEmptyId(), object ) );
+	if( ret.second ) {
+		SetActiveId( ret.first->first );
+	}
+	renderingWindow.ReDraw();
+}
+
 void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 {
 	switch LOWORD( wParam )
 	{
-		// ID_ADD_RECTANGLE, ID_ADD_ELLIPSE and ID_ADD_TEXTBOX: code apparent duplication...
 		case ID_ADD_RECTANGLE:
 		{
-			auto ret = stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( searchEmptyId(),
-				std::make_shared<CRectangleObject>( defaultColorOfNewObject, generateDefaultBox() ) ) );
-			if( ret.second ) {
-				SetActiveId(ret.first->first);
-			}
-			renderingWindow.ReDraw();
+			addObject( std::make_shared<CRectangleObject>( defaultColorOfNewObject, generateDefaultBox() ) );
 			break;
 		}
 		case ID_ADD_ELLIPSE:
 		{
-			// TODO const for color
-			auto ret = stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( searchEmptyId(),
-				std::make_shared<CEllipseObject>( defaultColorOfNewObject, generateDefaultBox() ) ) );
-			if( ret.second ) {
-				SetActiveId( ret.first->first );
-			}
-			renderingWindow.ReDraw();
+			addObject( std::make_shared<CEllipseObject>( defaultColorOfNewObject, generateDefaultBox() ) );
 			break;
 		}
 		case ID_ADD_TEXTBOX:
 		{
-			// TODO const for color
-			auto ret = stage->GetObjects().insert(std::pair<int, std::shared_ptr<IDrawable>>( searchEmptyId(),
-				std::make_shared<CTextBoxObject>( defaultColorOfNewObject, generateDefaultBox(), L"Text" ) ) );
-			if( ret.second ) {
-				SetActiveId( ret.first->first );
-			}
-			renderingWindow.ReDraw();
+			addObject( std::make_shared<CTextBoxObject>( defaultColorOfNewObject, generateDefaultBox(), L"Text" ) );
 			break;
 		}
 		case ID_FILE_SAVE:

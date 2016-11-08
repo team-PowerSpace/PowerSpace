@@ -51,8 +51,13 @@ private:
 	HMENU menu;
 	CEditorWindow renderingWindow;
 	CEditControlWindow editControl;
+	
 	TBox generateDefaultBox() const;
 	int searchEmptyId() const;
+
+	template< class ObjectClass>
+	void addObject(std::shared_ptr<ObjectClass> object);
+
 	HWND saveTextButton;
 	HWND setColorButton;
 	HWND addScriptButton;
