@@ -237,7 +237,7 @@ void CEditor::GetText()
 template< class ObjectClass>
 void CEditor::addObject( std::shared_ptr<ObjectClass> object )
 {
-	auto ret = stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( searchEmptyId(), object ) );
+	auto ret = stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( object->GetID(), object ) );
 	if( ret.second ) {
 		SetActiveId( ret.first->first );
 	}
