@@ -263,7 +263,7 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 			CViewer viewer( *stage, CViewport() );
             if( viewer.Create() ) {
                 const CViewerWindow& viewerWindow = viewer.GetViewerWindow();
-                HWND viewerHandle = viewerWindow.GetHandle();;
+                HWND viewerHandle = viewerWindow.GetHandle();
                 MSG message;
                 BOOL getMessageResult = 0;
                 while( (getMessageResult = ::GetMessage( &message, viewerHandle, 0, 0 )) != 0 ) {

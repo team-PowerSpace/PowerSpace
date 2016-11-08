@@ -10,7 +10,7 @@ public:
 	bool Create();
 
 	void Show( int cmdShow );
-
+	std::wstring GetText() const;
 	HWND GetHandle() const;
 protected:
 	void OnNCCreate( HWND hwnd );	
@@ -24,7 +24,7 @@ protected:
 	void OnFileNew();
 private:
 	HWND handle;	
-	//HWND editBox; fix after resolving the problem with creating edit control
+	HWND editBox; //fix after resolving the problem with creating edit control
 	void addToolbar();
 	static LRESULT __stdcall windowProc( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam );
 };

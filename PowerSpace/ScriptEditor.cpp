@@ -2,24 +2,26 @@
 #include "ScriptEditor.h"
 #include "Resource.h"
 #include <Commctrl.h>
+#include <fstream>
 
 #define startCode L"def OnClick(): \r\n\t#put your code here \r\ndef OnTick():\r\n\t#put your code here"
 
 LRESULT __stdcall CScriptEditor::windowProc( HWND handle, UINT msg, WPARAM wParam, LPARAM lParam )
 {	
-	CScriptEditor* window;
+	CScriptEditor* window = 0;
 	if( msg == WM_NCCREATE ) {
 		window = reinterpret_cast< CScriptEditor*>(	reinterpret_cast<CREATESTRUCT*>(lParam)->lpCreateParams);
+		assert( window );
 		if( window ) {
-			SetWindowLongPtr( handle, 0, reinterpret_cast<LONG_PTR>(window) );
+			SetWindowLongPtr( handle, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(window) );
 			window->OnNCCreate( handle );
-			return 1;
 		}
-		return 0;
+		return DefWindowProc( handle, msg, wParam, lParam );
 	} else {
-		window = reinterpret_cast<CScriptEditor*>(GetWindowLongPtr( handle, 0 ));
+		window = reinterpret_cast<CScriptEditor*>(GetWindowLongPtr( handle, GWLP_USERDATA ));
 		switch( msg ) {
 			case WM_CREATE:
+				assert( window != 0 );
 				window->OnCreate( handle );
 				return 1;
 			case WM_CLOSE:
@@ -97,7 +99,7 @@ void CScriptEditor::OnCreate( HWND hwnd )
 	RECT windowRect;	
 	GetClientRect( hwnd, &windowRect );	
 	// can't asign to class member, this problem should be resolved
-	HWND editBox = CreateWindowEx(0, L"EDIT", NULL,
+	editBox = CreateWindowEx(0, L"EDIT", NULL,
 		WS_CHILD | WS_VISIBLE | ES_LEFT | ES_MULTILINE | WS_BORDER,
 		windowRect.left, windowRect.top + 30,
 		windowRect.right - windowRect.left,
@@ -148,17 +150,13 @@ void CScriptEditor::OnCommand( WPARAM wParam)
 
 void CScriptEditor::OnFileSave()
 {
-	// fix after resolving the problem with creating edit control
+	// fix after resolving the problem with creating edit control	
 
-	/*int len = GetWindowTextLength( editBox );
-	TCHAR* buffer;
-	buffer = (TCHAR*)calloc( len + 1, sizeof( TCHAR ) );
-	GetWindowText( editBox, buffer, len + 1 );*/
-
-	int len = 5;
-	LPWSTR buffer = L"12345";
+	/*int len = 5;
+	LPWSTR buffer = L"12345";*/
 	
 	wchar_t fileName[MAX_PATH];
+	*fileName = 0;
 	OPENFILENAME ofn;
 	memset( &ofn, 0, sizeof( OPENFILENAME ) );
 	ofn.lStructSize = sizeof( OPENFILENAME );
@@ -173,26 +171,24 @@ void CScriptEditor::OnFileSave()
 	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_HIDEREADONLY;
 
 	int result = GetSaveFileName( &ofn );
+
 	if( result ) {
-		DWORD writtenBytes;
-		HANDLE file = CreateFile( ofn.lpstrFile, GENERIC_WRITE, 0, 0, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0 );
-		WORD uCode = 0xFEFF;
-		WriteFile( file, &uCode, 2, &writtenBytes, NULL );
-		WriteFile( file, buffer, 2 * len, &writtenBytes, NULL );
-		CloseHandle( file );
+		std::wofstream file( ofn.lpstrFile );				
+		file << GetText();
+		file.close();		
 	}
 }
 
 void CScriptEditor::OnFileNew()
 {
-	MessageBox( NULL, L"FILE", L"NEW", NULL );
-	//SetWindowText( editBox, L" " ); fix after resolving problems
+	SetWindowText( editBox, L" " );
 }
 
 void CScriptEditor::OnFileOpen()
 {
 	OPENFILENAME ofn;
 	TCHAR fileName[MAX_PATH];
+	*fileName = 0;
 	memset( &ofn, 0, sizeof( OPENFILENAME ) );
 	ofn.lStructSize = sizeof( OPENFILENAME );
 	ofn.hwndOwner = NULL;
@@ -207,17 +203,28 @@ void CScriptEditor::OnFileOpen()
 
 	int result = GetOpenFileName( &ofn );
 	if( result ) {
-		HANDLE file = CreateFile( ofn.lpstrFile, GENERIC_READ, 0, 0, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0 );
-		wchar_t* buffer;
-		auto fileSize = GetFileSize( file, NULL );
-		DWORD newsize = 0;		
-		buffer = (wchar_t*)malloc( fileSize );
-		ReadFile( file, buffer, fileSize, &newsize, NULL ); 
-
-		MessageBox( NULL, buffer, L" ", NULL );
-		//SetWindowText( editBox, buffer ); fix after resolving problems
-
-		CloseHandle( file );
+		std::wifstream file;		
+		file.open( ofn.lpstrFile );			
+		
+		std::wstring buffer;
+		wchar_t a[50];
+		do {
+			file.getline(a, 50);
+			buffer.append( a );
+			buffer.append( L"\r\n" );
+		} while( !file.eof() );
+		SetWindowText( editBox, buffer.c_str() );
+		file.close();
 	}
 
+}
+
+std::wstring CScriptEditor::GetText() const
+{
+	int length = SendMessage( editBox, WM_GETTEXTLENGTH, 0, 0 );
+	length++;
+	std::wstring text;
+	text.resize( length );
+	GetWindowText( editBox, (LPWSTR)text.c_str(), length );
+	return text;
 }
