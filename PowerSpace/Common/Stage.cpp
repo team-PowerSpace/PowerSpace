@@ -1,33 +1,37 @@
 #include <stdafx.h>
 #include "Stage.h"
-#include "JsonConverter.h"
 
-const std::unordered_map<int, IDrawablePtr>& CStage::GetObjects() const
+const std::unordered_map<IdType, IDrawablePtr>& CStage::GetObjects() const
 {
 	return objects;
 }
 
-std::unordered_map<int, IDrawablePtr>& CStage::GetObjects()
+std::unordered_map<IdType, IDrawablePtr>& CStage::GetObjects()
 {
 	return objects;
+}
+
+void CStage::AddObject( IdType objectId, IDrawablePtr object )
+{
+    objects.insert( std::make_pair( objectId, object ) );
 }
 
 std::vector<IDrawablePtrConst> CStage::GetObjectsAsVector() const
 {
 	std::vector<IDrawablePtrConst> result;
 	result.reserve( objects.size() );
-	for( const std::pair< int, IDrawablePtr> pair : objects ) {
+	for( const std::pair< IdType, IDrawablePtr> pair : objects ) {
 		result.push_back( pair.second );
 	}
 	return result;
 }
 
-IDrawablePtrConst CStage::GetObjectById( int objectId ) const
+IDrawablePtrConst CStage::GetObjectById( IdType objectId ) const
 {
 	return objects.at( objectId );
 }
 
-IDrawablePtr CStage::GetObjectById( int objectId )
+IDrawablePtr CStage::GetObjectById( IdType objectId )
 {
 	return objects.at( objectId );
 }

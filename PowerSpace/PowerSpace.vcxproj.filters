@@ -146,6 +146,9 @@
     <ClInclude Include="JsonWorker.h">
       <Filter>Json\Headers</Filter>
     </ClInclude>
+    <ClInclude Include="ObjectIdGenerator.h">
+      <Filter>Editor\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PowerSpace.cpp">
@@ -213,6 +216,9 @@
     </ClCompile>
     <ClCompile Include="JsonWorker.cpp">
       <Filter>Json\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectIdGenerator.cpp">
+      <Filter>Editor\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

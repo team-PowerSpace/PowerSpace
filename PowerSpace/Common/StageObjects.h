@@ -1,7 +1,8 @@
 #pragma once
 #include "Canvas.h"
-#include "Drawable.h"
 #include "Viewport.h"
+
+class CDrawable;
 
 // object of the stage, represents a rectangle
 class CRectangleObject : public CDrawable

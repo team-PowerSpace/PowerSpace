@@ -3,6 +3,7 @@
 #include <memory>
 #include <unordered_map>
 #include "JsonObject.h"
+#include <ObjectIdGenerator.h>
 
 class CCanvas;
 class CViewport;
@@ -21,7 +22,7 @@ public:
 	virtual ~IDrawable() {}
 
 	// returns a unique identifier linked to the object
-	virtual int GetId() const = 0;
+	virtual const IdType& GetId() const = 0;
 
 	// getter and setter for containingBox field
 	virtual TBox GetContainingBox() const = 0;
@@ -52,10 +53,10 @@ public:
 class CDrawable : public IDrawable
 {
 public:
-	CDrawable( COLORREF _color, TBox _box );
+    CDrawable( COLORREF _color, TBox _box, bool needGenerateId );
 	virtual ~CDrawable() {}
 
-	int GetId() const;
+	const IdType& GetId() const;
 
 	TBox GetContainingBox() const;
 	void SetContainingBox( TBox newPosition );
@@ -74,7 +75,7 @@ public:
 	virtual DrawableType GetType() const;
 protected:
 	// a unique identifier linked to the object
-	int id;
+	IdType id;
 
 	// color of the object
 	COLORREF color;
@@ -85,10 +86,4 @@ protected:
 	// maps event type to a list of scripts that are linked to the object;
 	// this map supports the idea that an object can have multiple scripts attached to an event type
 	std::unordered_map<EventType, std::vector<CScript>> scripts;
-private:
-	// generates a new unique identifier for the object
-	int generateNewId();
-
-	// counter of objects that have already been created; is used to generate new ids
-	static int maxId;
 };

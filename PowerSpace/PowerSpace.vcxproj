@@ -163,6 +163,7 @@
     <ClInclude Include="JsonConverter.h" />
     <ClInclude Include="JsonObject.h" />
     <ClInclude Include="JsonWorker.h" />
+    <ClInclude Include="ObjectIdGenerator.h" />
     <ClInclude Include="PowerSpace.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Common\Script.h" />
@@ -199,6 +200,7 @@
     <ClCompile Include="JsonConverter.cpp" />
     <ClCompile Include="JsonObject.cpp" />
     <ClCompile Include="JsonWorker.cpp" />
+    <ClCompile Include="ObjectIdGenerator.cpp" />
     <ClCompile Include="PowerSpace.cpp" />
     <ClCompile Include="Common\Script.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>

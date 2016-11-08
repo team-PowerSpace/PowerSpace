@@ -26,9 +26,9 @@ protected:
 	// Унаследовано через CEditorRenderingWindow
 	virtual void DrawContent( HDC paintDC, const int width, const int height ) override;
 	virtual void MoveCanvas( const POINT& point ) override;
-	virtual void MoveRectangle( const int id, const RECT & newSize ) override;
+	virtual void MoveRectangle( const IdType& id, const RECT & newSize ) override;
 	virtual void Scaling( const int direction ) override;
-	virtual void SelectRectangle( const int id ) override;
+	virtual void SelectRectangle( const IdType& id ) override;
 
 
 private:

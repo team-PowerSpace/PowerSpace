@@ -1,26 +1,11 @@
 #include <stdafx.h>
-#include <iostream>
-#include <fstream>
 #include "Editor.h"
-#include "resource.h"
-#include "EditControlWindow.h"
-#include "Viewer.h"
-#include "Stage.h"
-#include "StageObjects.h"
-#include "JsonConverter.h"
 
 #define IDC_MAIN_BUTTON 101 
 
 CEditor::CEditor()
-{
-	menu = 0;
-	renderingWindow = CEditorWindow();
-	editControl = CEditControlWindow();
-}
-
-CEditor::~CEditor()
-{
-}
+    : menu(0), defaultObjectColor( RGB( 100, 90, 80 ) )
+{}
 
 bool CEditor::RegisterClass()
 {
@@ -104,10 +89,10 @@ CEditor* CEditor::GetWindowByHandle( HWND handle )
 	return reinterpret_cast<CEditor*>(GetWindowLongPtr( handle, GWLP_USERDATA ));
 }
 
-void  CEditor::SetActiveId( const int id )
+void CEditor::SetActiveId( const IdType& id )
 {
 	activeId = id;
-	if( id < 0 ) {
+	if( id == CObjectIdGenerator::GetEmptyId() ) {
 		EnableWindow( setColorButton, false );
 		EnableWindow( addScriptButton, false );
 	} else {
@@ -238,17 +223,15 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 	{
 		case ID_ADD_RECTANGLE:
 		{
-			// TODO const for color
-			stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( searchEmptyId(),
-				std::make_shared<CRectangleObject>( RGB( 100, 90, 80 ), generateDefaultBox() ) ) );
+            IDrawablePtr object = std::make_shared<CRectangleObject>( defaultObjectColor, generateDefaultBox() );
+            stage->AddObject( object->GetId(), object );
 			renderingWindow.ReDraw();
 			break;
 		}
 		case ID_ADD_ELLIPSE:
 		{
-			// TODO const for color
-			stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( searchEmptyId(),
-				std::make_shared<CEllipseObject>( RGB( 100, 90, 80 ), generateDefaultBox() ) ) );
+            IDrawablePtr object = std::make_shared<CEllipseObject>( defaultObjectColor, generateDefaultBox() );
+            stage->AddObject( object->GetId(), object );
 			renderingWindow.ReDraw();
 			break;
 		}
@@ -327,17 +310,6 @@ TBox CEditor::generateDefaultBox() const
 	box.right = 3 * width / defaultBoxMarginDividor;
 	box.bottom = 3 * height / defaultBoxMarginDividor;
 	return stage->GetViewPort().ConvertToModelCoordinates( box );
-}
-
-int CEditor::searchEmptyId() const
-{
-	int maxid = 0;
-	for( auto i : stage->GetObjects() ) {
-		if( i.first > maxid ) {
-			maxid = i.first;
-		}
-	}
-	return maxid + 1;
 }
 
 void CEditor::onColorSelect()
