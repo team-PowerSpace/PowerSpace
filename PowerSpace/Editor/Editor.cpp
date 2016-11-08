@@ -239,16 +239,16 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 		case ID_ADD_RECTANGLE:
 		{
 			// TODO const for color
-			stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( searchEmptyId(),
-				std::make_shared<CRectangleObject>( RGB( 100, 90, 80 ), generateDefaultBox() ) ) );
+			std::shared_ptr<CRectangleObject> rectangle = std::make_shared<CRectangleObject>(RGB(100, 90, 80), generateDefaultBox());
+			stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( rectangle->GetId(), rectangle ) );
 			renderingWindow.ReDraw();
 			break;
 		}
 		case ID_ADD_ELLIPSE:
 		{
 			// TODO const for color
-			stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( searchEmptyId(),
-				std::make_shared<CEllipseObject>( RGB( 100, 90, 80 ), generateDefaultBox() ) ) );
+			std::shared_ptr<CEllipseObject> ellipse = std::make_shared<CEllipseObject>(RGB(100, 90, 80), generateDefaultBox());
+			stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( ellipse->GetId(), ellipse ) );
 			renderingWindow.ReDraw();
 			break;
 		}
