@@ -23,7 +23,7 @@ std::vector<int> CScriptEngine::RunScripts(std::string objectId, EventType type,
 
 	for( auto currentScript = scripts.begin(); currentScript != scripts.end(); currentScript++ ) {
 		std::string eventName = "";
-		switch (type)
+		switch (type) //last_for_size handled in default
 		{
 		case EventType::EventClick :
 			eventName = "OnClick";

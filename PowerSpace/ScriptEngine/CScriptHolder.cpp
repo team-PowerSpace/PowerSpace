@@ -2,6 +2,7 @@
 
 #include "CScriptHolder.h"
 
+
 bool ScriptHolder::addScript(std::pair<std::string, EventType> key, PyObject* script )
 {
 	//For now scripts hotfixes in running Viewer are not supported
@@ -22,6 +23,18 @@ bool ScriptHolder::addScript(std::pair<std::string, EventType> key, PyObject* sc
 	}
 	
 	return false;
+}
+
+void ScriptHolder::removeScripts(std::string objectId)
+{
+	std::vector<EventType> types;
+	types.push_back(EventType::EventClick);
+	types.push_back(EventType::EventTick);
+	assert(types.size() == (size_t) EventType::ALWAYS_LAST_FOR_SIZE);
+	for (auto type : types)
+	{
+		Scripts.erase(std::pair<std::string, EventType>(objectId, type));
+	}
 }
 
 bool ScriptHolder::addScript(std::pair<std::string, EventType> key, CScript script)

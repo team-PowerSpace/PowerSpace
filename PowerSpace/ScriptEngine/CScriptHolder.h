@@ -7,6 +7,7 @@
 #include <iostream>
 #include <fstream>
 
+
 class ScriptHolder
 {
 	//key -> pair of <objId, typeOfScript>
@@ -18,7 +19,9 @@ public:
 	//bool isScriptIn( std::pair<int, std::string>);					 //Check is script in
 	std::vector<PyObject*> getScript(std::pair<std::string, EventType> key);				 //Get script by path
 	bool addScript(std::pair<std::string, EventType> key, PyObject* script );   //Add script that is not into the Holder yet
-	bool addScript(std::pair<std::string, EventType> key, CScript script);	//Add script by it's CScript
+	bool addScript(std::pair<std::string, EventType> key, CScript script);		//Add script by it's CScript
+	void removeScripts(std::string objectId);	//Remove scripts when object removed
+
 	int getSize() const;
 	void decAllRefs();
 	
