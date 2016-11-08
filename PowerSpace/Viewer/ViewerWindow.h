@@ -6,6 +6,11 @@
 #define BLUE_FOR_CANVAS_CROSS RGB(0, 128, 255)
 enum ColorBufferActionType { RestoreColor, SetColor };
 
+enum TMovingState_Viewer
+{
+	MSV_None, MSV_MovingCanvas
+};
+
 // win32 window of the viewer module
 // has references to viewport and canvas (to modify them easily)
 class CViewerWindow
@@ -30,7 +35,7 @@ private:
 	HBRUSH backgroundBrush;
 	HACCEL haccel;
 
-	const CViewport& viewport;
+	CViewport& viewport;
 	const CCanvas& canvas;
 	CStage& stage;
 	CScriptEngine scriptEngine;
@@ -42,6 +47,9 @@ private:
 	const int windowWidth;
 	int bitmapWidth; // canvas params
 	int bitmapHeight;
+
+	TMovingState_Viewer currentMovingState; // for drag'n'drop on canvas
+	POINT prevPoint, canvasPoint;
 
 	int activeId; // id of currently active object
 	int colorBuf; // Bufferized color of object for clever selection

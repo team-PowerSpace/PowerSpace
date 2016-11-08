@@ -12,8 +12,10 @@ UINT SPEED = TICK_LENGTH;
 CViewerWindow::CViewerWindow( CStage& _stage, CViewport& _viewport, CCanvas& _canvas ) :
 	windowHeight( 600 ), windowWidth( 800 ), viewport( _viewport ), canvas( _canvas ),
 	handle( nullptr ), stage( _stage ), scriptEngine( stage ), activeId( 0 ), colorBuf( -1 ),
-	viewerIsRunning( true )
-{}
+	viewerIsRunning( true ), currentMovingState( MSV_None )
+{
+	canvasPoint = _viewport.GetZeroLocation();
+}
 
 CViewerWindow::~CViewerWindow()
 {}
@@ -127,8 +129,14 @@ LRESULT CViewerWindow::WindowProc( HWND handle, UINT msg, WPARAM wParam, LPARAM 
 		wndPtr->onMouseClick( msg, wParam, lParam );
 		return 0;
 
-	case WM_LBUTTONDBLCLK:
-		wndPtr->onMouseClick( msg, wParam, lParam);
+	//case WM_LBUTTONDBLCLK:
+	//	wndPtr->onMouseClick( msg, wParam, lParam);
+	//	return 0;
+
+	case WM_MOUSELEAVE:
+	case WM_LBUTTONUP:
+		wndPtr->onMouseMove( wParam, lParam );
+		wndPtr->currentMovingState = TMovingState_Viewer::MSV_None;
 		return 0;
 
 	case WM_COMMAND:
@@ -183,7 +191,7 @@ void CViewerWindow::onTimer()
 
 	RECT rect;
 	::GetClientRect( handle, &rect );
-	::InvalidateRect( handle, &rect, false );
+	::InvalidateRect( handle, &rect, true );
 }
 
 //
@@ -211,7 +219,9 @@ void CViewerWindow::onPaint()
 
 	stage.ClipAndDrawObjects( Memhdc );
 
-	BOOL result = ::BitBlt( hdc, 0, 0, winWidth, winHeight, Memhdc, 0, 0, SRCCOPY );
+	POINT zero = viewport.GetZeroLocation();
+
+	BOOL result = ::BitBlt( hdc, 0, 0, winWidth, winHeight, Memhdc, -zero.x, -zero.y, SRCCOPY );
 	if( !result ) {
 		::MessageBox( handle, L"BitBlt : onPaint() : CViewerWindow", L"Error", MB_ICONERROR );
 		::PostQuitMessage( NULL );
@@ -254,22 +264,45 @@ void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 	// TODO: handle mouse moving
 	// E.g. mouse is on the object => change the color
 
-	UNREFERENCED_PARAMETER( wParam );
+	if( !wParam & MK_LBUTTON ) 		{
+		currentMovingState = TMovingState_Viewer::MSV_None;
+	}
 
-	POINT mouseCoords = getMouseCoords( lParam );
+	POINT point = getMouseCoords( lParam );
 
 	int topId = -1;
 
 	for( auto pair : stage.GetObjects() ) {
 		TBox curBox = pair.second->GetContainingBox();
 
-		if( isPointInBox( curBox, mouseCoords ) ) {
+		if( isPointInBox( curBox, point ) ) {
 			topId = pair.second->GetId();
 		}
 	}
 
-	if( topId == -1 )
+	POINT dPoint = { 0, 0 };
+
+	dPoint.x = (point.x - prevPoint.x);
+	dPoint.y = (point.y - prevPoint.y);
+	prevPoint = point;
+
+	switch( currentMovingState ) {
+	case TMovingState_Viewer::MSV_None:
+		prevPoint = point;
+		::SetCursor( ::LoadCursor( 0, IDC_ARROW ) );
 		return;
+
+	case TMovingState_Viewer::MSV_MovingCanvas:
+		canvasPoint.x += dPoint.x;
+		canvasPoint.y += dPoint.y;
+		viewport.SetZeroLocation( canvasPoint );
+		::SetCursor( ::LoadCursor( 0, IDC_SIZEALL ) );
+		break;
+	}
+
+	RECT rect;
+	::GetClientRect( handle, &rect );
+	::InvalidateRect( handle, &rect, true );
 
 	/*
 	in this case we can somehow mark the object, but it looks terrible
@@ -282,8 +315,6 @@ void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 	RECT rect;
 	GetClientRect( handle, &rect );
 	InvalidateRect( handle, &rect, false );
-
-	onPaint();
 
 	topObj->SetColor( color );
 
@@ -299,25 +330,37 @@ void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 //
 void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lParam )
 {
-	if( !viewerIsRunning )
-		return;
+	if( !viewerIsRunning ) 		{
+		if( wParam & MK_LBUTTON ) 			{
+			currentMovingState = TMovingState_Viewer::MSV_MovingCanvas;
+		}
 
-	UNREFERENCED_PARAMETER( wParam );
+		return;
+	}
+
 	UNREFERENCED_PARAMETER( msg );
 
 	POINT mouseCoords = getMouseCoords( lParam );
 
-	// storage space for usual color of currently active object
+	prevPoint = mouseCoords;
+
 	int prevActiveId = activeId;
 	activeId = 0;
 
-	
 	for( auto pair : stage.GetObjects() ) {
 		TBox curBox = pair.second->GetContainingBox();
 
 		if( isPointInBox( curBox, mouseCoords ) ) {
 			activeId = pair.second->GetId();
 		}
+	}
+
+	if( activeId == 0 &&
+		wParam & MK_LBUTTON ) {
+		currentMovingState = TMovingState_Viewer::MSV_MovingCanvas;
+	}
+	else 		{
+		currentMovingState = TMovingState_Viewer::MSV_None;
 	}
 
 	// same active object as before => no action needed
@@ -342,7 +385,7 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 
 	RECT rect;
 	::GetClientRect( handle, &rect );
-	::InvalidateRect( handle, &rect, false );
+	::InvalidateRect( handle, &rect, true );
 }
 
 void CViewerWindow::onCommand( WPARAM wParam, LPARAM lParam )
