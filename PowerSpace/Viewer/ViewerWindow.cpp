@@ -142,9 +142,10 @@ void CViewerWindow::onTimer()
 		return;
 
 	for( auto pair : stage.GetObjects() ) {
-		auto scripts = pair.second->GetScripts( EventType::EventTick );
+		//auto scripts = pair.second->GetScripts( EventType::EventTick );
+		auto scripts = stage.getScripts(activeId, EventType::EventTick);
 		if( !scripts.empty() ) {
-			scriptEngine.RunScripts( activeId, scripts );
+			scriptEngine.RunScripts( activeId, EventType::EventTick, scripts );
 		}
 	}
 
@@ -300,9 +301,10 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 
 		stage.GetObjectById( activeId )->SetColor( static_cast<COLORREF> (colorBuf * 0.8));
 
-		auto scripts = stage.GetObjectById( activeId )->GetScripts( EventType::EventClick );
-		if( !scripts.empty() ) {
-			scriptEngine.RunScripts( activeId, scripts );
+		//auto scripts = stage.GetObjectById( activeId )->GetScripts( EventType::EventClick );
+		auto scripts = stage.getScripts(activeId, EventType::EventClick);
+		if (!scripts.empty()) {
+			scriptEngine.RunScripts(activeId, EventType::EventClick, scripts);
 		}
 	}
 

@@ -269,8 +269,9 @@ void CEditor::onFileSelect()
 	filename.Flags = OFN_FILEMUSTEXIST;
 
 	if( ::GetOpenFileName( &filename ) ) {
-		CScript script( filename.lpstrFile );
-        stage->GetObjectById( activeId )->AddScript( EventType::EventClick, script );
+		CScript script( filename.lpstrFile ); //Add choice of event type
+		stage->addScript(EventType::EventClick, activeId, script);
+        //stage->GetObjectById( activeId )->AddScript( EventType::EventClick, script );
 	}
 }
 

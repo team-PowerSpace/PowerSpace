@@ -71,3 +71,19 @@ const CViewport & CStage::GetViewPort() const
 {
 	return viewport;
 }
+
+void CStage::addScript(EventType type, std::string objectId, CScript script)
+{
+	scripts.addScript(std::pair<std::string, EventType>(objectId, type), script);
+}
+
+std::vector<PyObject*> CStage::getScripts(std::string objId, EventType eventType)
+{
+	return scripts.getScript(std::pair<std::string, EventType>(objId, eventType));
+}
+
+void CStage::decScriptRefs()
+{
+	scripts.decAllRefs();
+}
+

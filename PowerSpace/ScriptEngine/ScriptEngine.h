@@ -11,9 +11,8 @@ public:
     // evaluates python scripts from "scripts", modifying the stage;
     // objectId - id of the object, which caused the event
     // returns the vector of objects that were modified during the evaluation of the scripts
-    std::vector<int> RunScripts( int objectId, const std::vector<CScript>& scripts );
+    std::vector<int> RunScripts(std::string objectId, EventType type, std::vector<PyObject*> scripts);
 private:
 	bool isPythonRunning; // boolean parameter to set when we start the python running
-	std::shared_ptr<ScriptHolder> holder;
     CStage& stage;
 };

@@ -5,54 +5,37 @@
 #include "PyObjectBuilder.h"
 #include "CDrawableBuilder.h"
 
-#include <codecvt>
-#include <Exception>
-#include <iostream>
-#include <fstream>
+
 
 CScriptEngine::CScriptEngine( CStage& _stage )
 	: stage( _stage ), isPythonRunning( false )
 {}
 
 
-std::vector<int> CScriptEngine::RunScripts( const int objectId, const std::vector<CScript>& scripts )
+
+std::vector<int> CScriptEngine::RunScripts(std::string objectId, EventType type,  std::vector<PyObject*> scripts)
 {
-	if (!isPythonRunning)
+	if (objectId == "-1") 
 	{
-		Py_Initialize(); //starting up Python if first run
-		holder = std::make_shared<ScriptHolder>(ScriptHolder());
-		isPythonRunning = true;
-	}
-	else if (objectId == -1) 
-	{
-		Py_Finalize(); //finlazing Python before turning the programm off
 		return std::vector<int>();
 	}
 	std::shared_ptr<IDrawable> workingObject = stage.GetObjectById(objectId);
-	
-	// Here was process of creation of PyObject,
-	// but for now we decided to use Dirs due to simplicity
-
 
 	for( auto currentScript = scripts.begin(); currentScript != scripts.end(); currentScript++ ) {
-		TPath wstrPath( currentScript->GetPath() );
-		std::ifstream stream( wstrPath.data(), std::ifstream::in ); //The best way to check path validity is trying to open it
-		if( !stream.good() ) {
-			stream.close();
-			std::cout << "The file doesn't exist" << std::endl;
-			assert( false );
+		std::string eventName = "";
+		switch (type)
+		{
+		case EventType::EventClick :
+			eventName = "OnClick";
+			break;
+		case EventType::EventTick :
+			eventName = "OnTimer";
+			break;
+		default:
+			assert(false); //In case we will add more functions
 		}
-		stream.close();
-
-		//Deleteing the path and saving only script's filename (with extention)
-		std::wstring scriptName = wstrPath.substr( wstrPath.find_last_of( L"\\/" ) + 1 );
-
-		//Deleting the extention of script
-		std::wstring scriptNameWithoutExtention = scriptName.substr( 0, scriptName.find( L"." ) );
-
-
 		//Empty string left for ability to call different functions located in single script
-		CScriptSolver solver( workingObject, scriptNameWithoutExtention, /*std::string("OnClick")*/std::string( "" ), holder );
+		CScriptSolver solver(workingObject, *currentScript, eventName);
 
         std::shared_ptr<IDrawable> changedObject = solver.Run();   //Returns shared_ptr to changed object, but values already set in the scene
 		assert( changedObject == workingObject );

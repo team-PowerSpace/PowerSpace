@@ -3,8 +3,8 @@
 #include <iostream>
 #include <exception>
 
-CScriptSolver::CScriptSolver( std::shared_ptr<IDrawable> obj, std::wstring scriptName_,
-	std::string func_, std::shared_ptr<ScriptHolder> holder_ ) : scriptName( scriptName_ ), func( func_ ), object( obj ), holder( holder_ )
+CScriptSolver::CScriptSolver( std::shared_ptr<IDrawable> obj, PyObject* pyObject_,
+	std::string func_) : pyObject( pyObject_ ), func( func_ ), object( obj )
 {
 	pObject = std::make_shared<CDrawableBuilder>(obj);
 }
@@ -14,18 +14,12 @@ std::shared_ptr<IDrawable> CScriptSolver::Run()
 	PyObject *pName, *pModule, *pFunc;
 	PyObject *pArgs, *pValue;
 
-	if( !holder->isScriptIn( scriptName ) ) {
-		pName = PyUnicode_FromUnicode( scriptName.c_str(), scriptName.size() );
-		pModule = PyImport_Import( pName );
-		holder->addScript( scriptName, pModule );
-		//Because the pyimport creates 2 ref for unrealiesd reason
-		Py_XDECREF( pModule );
-		Py_XDECREF( pName );
-	}
-	pModule = holder->getScript(scriptName);
+	pModule = PyImport_Import(pyObject);
+	//Because the pyimport creates 2 ref for unrealiesd reason
+	Py_XDECREF(pModule);
 
 	if( pModule != nullptr ) {
-		pFunc = GetPyFunction( pModule );
+		pFunc = GetPyFunction( pModule, func);
 		Py_XDECREF(pModule);
 		if( pFunc && PyCallable_Check( pFunc ) ) {
 			pArgs = PyTuple_New( 1 );
@@ -33,24 +27,17 @@ std::shared_ptr<IDrawable> CScriptSolver::Run()
 			pValue = PyObject_CallObject( pFunc, pArgs );
 			Py_XDECREF( pValue );
 			Py_CLEAR( pFunc );
-	}
+		}
 	}
 	UpdateObject();
 	return object;
 }
 
-PyObject *CScriptSolver::GetPyFunction( PyObject *pModule ) const
+PyObject *CScriptSolver::GetPyFunction( PyObject *pModule, std::string func ) const
 {
 	//Strings will be added to enum (need to discuss location)
 	PyObject *pFunc = NULL;
-	if( func == "" ) {
-		pFunc = PyObject_GetAttrString( pModule, "OnClick" );
-	} else {
-		pFunc = PyObject_GetAttrString( pModule, func.c_str() );
-	}
-	if( pFunc == NULL ) {
-		pFunc = PyObject_GetAttrString( pModule, "OnTimer" );
-	}
+	pFunc = PyObject_GetAttrString( pModule, func.data() );
 	return pFunc;
 }
 

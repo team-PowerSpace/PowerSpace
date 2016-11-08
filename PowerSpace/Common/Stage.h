@@ -2,6 +2,7 @@
 #include "Drawable.h"
 #include "Viewport.h"
 #include "Canvas.h"
+#include "CScriptHolder.h"
 
 // this class stores everything that was created on canvas;
 // it is a logical representation of canvas
@@ -34,9 +35,20 @@ public:
 
 	// getter of viewport
 	const CViewport& GetViewPort() const;
+
+	//add new script
+	void addScript(EventType type, std::string objectId, CScript script);
+
+	//get scripts by type of function and object
+	std::vector<PyObject*> getScripts(std::string objId, EventType eventType);
+
+	//script correct removal
+	void decScriptRefs();
+
 private:
     // vector of all the objects that were created on canvas
     std::unordered_map<int, IDrawablePtr> objects;
+	ScriptHolder scripts;
     CViewport viewport;
     CCanvas canvas;
 };
