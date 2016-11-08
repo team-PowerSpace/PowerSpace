@@ -65,6 +65,7 @@ private:
     TBox generateDefaultBox() const;
     void onColorSelect();
     void onFileSelect();
+	void onFontSelect();
 
     HBITMAP MakeBitMapTransparent(HBITMAP hbmSrc);
     HBITMAP loadTransparentBitmap(HINSTANCE hInstance, int resource);

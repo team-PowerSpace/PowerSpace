@@ -98,13 +98,21 @@ CEditor* CEditor::GetWindowByHandle( HWND handle )
 
 void CEditor::SetActiveId( const IdType& id )
 {
-	activeId = id;
-	if( id == CObjectIdGenerator::GetEmptyId() ) {
-		EnableWindow( setColorButton, false );
-		EnableWindow( addScriptButton, false );
-	} else {
+	wchar_t firstLetter = id[0];
+	if ( firstLetter ==  L't') {
+		EnableWindow( setFontButton, true );
 		EnableWindow( setColorButton, true );
 		EnableWindow( addScriptButton, true );
+	}
+	else {
+		if (id == CObjectIdGenerator::GetEmptyId()) {
+			EnableWindow( setColorButton, false );
+			EnableWindow( addScriptButton, false );
+		}
+		else {
+			EnableWindow( setColorButton, true );
+			EnableWindow( addScriptButton, true );
+		}
 	}
 }
 
@@ -284,7 +292,10 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
                 onColorSelect();
             } else if( (HWND)lParam == addScriptButton ) {
                 onFileSelect();
-            }
+			}
+			else if ((HWND)lParam == setFontButton) {
+				onFontSelect();
+			}
             break;
         }
 	}
@@ -396,6 +407,25 @@ void CEditor::onFileSelect()
 		CScript script( filename.lpstrFile );
 		//Event All should be carefully changed with click, when the model of scripts will be defined
         stage->GetObjectById( activeId )->AddScript( EventType::EventAll, script );
+	}
+}
+
+void CEditor::onFontSelect()
+{
+	CHOOSEFONT chooseFont;
+	static LOGFONT logFont;
+	HFONT hFont;
+	static DWORD rgbCurrent;
+	ZeroMemory(&chooseFont, sizeof(chooseFont));
+	chooseFont.lStructSize = sizeof(chooseFont);
+	chooseFont.hwndOwner = handle;
+	chooseFont.lpLogFont = &logFont;
+	chooseFont.rgbColors = rgbCurrent;
+	chooseFont.Flags = CF_SCREENFONTS | CF_EFFECTS;
+	if (::ChooseFont(&chooseFont)) {
+		hFont = CreateFontIndirect(chooseFont.lpLogFont);
+		//stage->GetObjectById(activeId)->SetFont(chooseFont.rgbResult);
+		renderingWindow.ReDraw();
 	}
 }
 
