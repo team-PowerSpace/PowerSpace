@@ -97,8 +97,7 @@ HWND CScriptEditor::GetHandle() const
 void CScriptEditor::OnCreate( HWND hwnd )
 {
 	RECT windowRect;	
-	GetClientRect( hwnd, &windowRect );	
-	// can't asign to class member, this problem should be resolved
+	GetClientRect( hwnd, &windowRect );		
 	editBox = CreateWindowEx(0, L"EDIT", NULL,
 		WS_CHILD | WS_VISIBLE | ES_LEFT | ES_MULTILINE | WS_BORDER,
 		windowRect.left, windowRect.top + 30,
@@ -149,12 +148,7 @@ void CScriptEditor::OnCommand( WPARAM wParam)
 }
 
 void CScriptEditor::OnFileSave()
-{
-	// fix after resolving the problem with creating edit control	
-
-	/*int len = 5;
-	LPWSTR buffer = L"12345";*/
-	
+{	
 	wchar_t fileName[MAX_PATH];
 	*fileName = 0;
 	OPENFILENAME ofn;
