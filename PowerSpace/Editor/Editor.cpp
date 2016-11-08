@@ -12,16 +12,11 @@
 
 #define IDC_MAIN_BUTTON 101 
 
-CEditor::CEditor()
-{
-	menu = 0;
-	renderingWindow = CEditorWindow();
-	editControl = CEditControlWindow();
-}
+const int CEditor::defaultBoxMarginDividor = 4;
 
-CEditor::~CEditor()
-{
-}
+CEditor::CEditor()
+    : menu(0), defaultObjectColor( RGB( 100, 90, 80 ) )
+{}
 
 bool CEditor::RegisterClass()
 {
@@ -50,6 +45,7 @@ void CEditor::Show( int cmdShow )
 {
 	ShowWindow( handle, cmdShow );
 	renderingWindow.Show( cmdShow );
+	ShowWindow( setFontButton, cmdShow);
 	ShowWindow( saveTextButton, cmdShow );
 	ShowWindow( setColorButton, cmdShow );
 	ShowWindow( addScriptButton, cmdShow );
@@ -83,6 +79,9 @@ void CEditor::OnCreate()
 	CEditorWindow::RegisterClass();
 	menu = LoadMenu( GetModuleHandle( 0 ), MAKEINTRESOURCE( IDR_MENU1 ) );
 	renderingWindow.Create( handle );
+	setFontButton = CreateWindow(L"BUTTON", L"Set Font", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
+		10, 10, 100, 100, handle, (HMENU)IDC_MAIN_BUTTON,
+		*(HINSTANCE*)GetWindowLongPtr(handle, GWLP_HINSTANCE), NULL);
 	saveTextButton = CreateWindow( L"BUTTON", L"Save Text", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
 		10, 10, 100, 100, handle, (HMENU)IDC_MAIN_BUTTON,
 		*(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
@@ -94,6 +93,7 @@ void CEditor::OnCreate()
         *(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
 
 	EnableWindow( editControl.GetHandle(), false );
+	EnableWindow( setFontButton, false );
 	EnableWindow( saveTextButton, false );
 	EnableWindow( setColorButton, false );
 	EnableWindow( addScriptButton, false );
@@ -105,10 +105,10 @@ CEditor* CEditor::GetWindowByHandle( HWND handle )
 	return reinterpret_cast<CEditor*>(GetWindowLongPtr( handle, GWLP_USERDATA ));
 }
 
-void  CEditor::SetActiveId( const int id )
+void CEditor::SetActiveId( const IdType& id )
 {
 	activeId = id;
-	if( id < 0 ) {
+	if( id == CObjectIdGenerator::GetEmptyId() ) {
 		EnableWindow( setColorButton, false );
 		EnableWindow( addScriptButton, false );
 	} else {
@@ -181,16 +181,18 @@ void CEditor::createToolbar() {
 	ImageList_Add(hImageList, loadTransparentBitmap(hInstance, IDB_ELLIPSE), NULL);
 	ImageList_Add(hImageList, loadTransparentBitmap(hInstance, IDB_TEXTBOX), NULL);
 	ImageList_Add(hImageList, loadTransparentBitmap(hInstance, IDB_PLAY), NULL);
-	ImageList_Add( hImageList, loadTransparentBitmap( hInstance, IDB_EDIT ), NULL );
+	ImageList_Add(hImageList, loadTransparentBitmap(hInstance, IDB_DELETE), NULL);
+	ImageList_Add(hImageList, loadTransparentBitmap( hInstance, IDB_EDIT ), NULL);
 	SendMessage(handleToolbar, TB_SETIMAGELIST, (WPARAM)1, (LPARAM)hImageList);
 
 	TBBUTTON tbb[] =
 	{
 		{ MAKELONG(0, 1), ID_ADD_RECTANGLE, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
 		{ MAKELONG(1, 1), ID_ADD_ELLIPSE, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
-		{ MAKELONG(2, 1), ID_ADD_TEXTBOX, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
+		{ MAKELONG(2, 1), ID_ADD_TEXT, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
 		{ MAKELONG(3, 1), ID_PLAY_LAUNCHPLAYER, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
-		{ MAKELONG( 4, 1 ), ID_EDIT, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
+		{ MAKELONG(4, 1), ID_DELETE_OBJECT, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
+		{ MAKELONG(5, 1), ID_EDIT, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
 	};
 	SendMessage(handleToolbar, (UINT)TB_ADDBUTTONS, _countof(tbb), (LPARAM)&tbb);
 
@@ -202,9 +204,12 @@ void CEditor::OnSize()
 {
 	RECT rect;
 	int middleX, nWidth, nHeight;
+	int RELATIVE_WIDTH = 3;
+	int RELATIVE_HEIGHT = 4;
+	int RELATIVE_TOOLBAR = 16;
 	::GetClientRect( handle, &rect );
-	middleX = (rect.left + rect.right) / 4;
-	nWidth = (rect.right - rect.left) * 3 / 4;
+	middleX = (rect.left + rect.right) / RELATIVE_HEIGHT;
+	nWidth = (rect.right - rect.left) * RELATIVE_WIDTH / RELATIVE_HEIGHT;
 
 	RECT toolbarRect;
 	::GetClientRect(handleToolbar, &toolbarRect);
@@ -212,14 +217,14 @@ void CEditor::OnSize()
 	nHeight = (rect.bottom - currentTop);
 
 	SetWindowPos( renderingWindow.GetHandle(), HWND_TOP, middleX, currentTop, nWidth, nHeight, 0 );
-	SetWindowPos( editControl.GetHandle(), HWND_TOP, rect.left, currentTop, nWidth / 3,
-		nHeight * 3 / 4, 0 );
-	SetWindowPos( saveTextButton, HWND_TOP, rect.left, currentTop + nHeight * 3 / 4,
-		nWidth / 3, nHeight / 12, 0 );
-	SetWindowPos( setColorButton, HWND_TOP, rect.left, currentTop + nHeight * 3 / 4 + nHeight / 12,
-		nWidth / 3, nHeight / 12, 0 );
-	SetWindowPos( addScriptButton, HWND_TOP, rect.left, currentTop + nHeight * 3 / 4 + nHeight / 6,
-		nWidth / 3, nHeight / 12, 0 );
+	int widthOfButton = nWidth / RELATIVE_WIDTH;
+	int yOfButton = nHeight * RELATIVE_WIDTH / RELATIVE_HEIGHT;
+	int cyOfButton = nHeight / RELATIVE_TOOLBAR;
+	SetWindowPos( editControl.GetHandle(), HWND_TOP, rect.left, currentTop, widthOfButton, yOfButton, 0 );
+	SetWindowPos( setFontButton, HWND_TOP, rect.left, currentTop + yOfButton, widthOfButton, cyOfButton, 0 );
+	SetWindowPos( saveTextButton, HWND_TOP, rect.left, currentTop + yOfButton + cyOfButton, widthOfButton, cyOfButton, 0 );
+	SetWindowPos( setColorButton, HWND_TOP, rect.left, currentTop + yOfButton + cyOfButton * 2, widthOfButton, cyOfButton, 0 );
+	SetWindowPos( addScriptButton, HWND_TOP, rect.left, currentTop + yOfButton + cyOfButton * 3, widthOfButton, cyOfButton, 0 );
 
 	SendMessage(handleToolbar, TB_AUTOSIZE, 0, 0);
 }
@@ -239,18 +244,17 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 	{
 		case ID_ADD_RECTANGLE:
 		{
-			// TODO const for color
-			stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( searchEmptyId(),
-				std::make_shared<CRectangleObject>( RGB( 100, 90, 80 ), generateDefaultBox() ) ) );
-			renderingWindow.ReDraw();
+            addObject( std::make_shared<CRectangleObject>( defaultObjectColor, generateDefaultBox() ) );
 			break;
 		}
 		case ID_ADD_ELLIPSE:
 		{
-			// TODO const for color
-			stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( searchEmptyId(),
-				std::make_shared<CEllipseObject>( RGB( 100, 90, 80 ), generateDefaultBox() ) ) );
-			renderingWindow.ReDraw();
+            addObject( std::make_shared<CEllipseObject>( defaultObjectColor, generateDefaultBox() ) );
+			break;
+		}
+		case ID_ADD_TEXT:
+		{
+            addObject( std::make_shared<CTextBoxObject>( defaultObjectColor, generateDefaultBox(), L"Text" ) );
 			break;
 		}
 		case ID_FILE_SAVE:
@@ -278,10 +282,10 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 		}
 		case ID_EDIT:
 		{
-			
+
 			CScriptEditor scriptEditor;
-			
-			if( scriptEditor.Create() ) {					
+
+			if( scriptEditor.Create() ) {
 				HWND scriptEditorWindow = scriptEditor.GetHandle();
 				MSG message;
 				BOOL getMessageResult = 0;
@@ -293,6 +297,13 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 					DispatchMessage( &message );
 				}
 			}
+			break;
+		}
+		case ID_DELETE_OBJECT:
+		{
+			stage->GetObjects().erase(activeId);
+			SetActiveId( CObjectIdGenerator::GetEmptyId() );
+			renderingWindow.ReDraw();
 			break;
 		}
         case IDC_MAIN_BUTTON:
@@ -320,29 +331,24 @@ void CEditor::OnCommand( WPARAM wParam, LPARAM lParam )
 	}
 }
 
+template<class ObjectClass>
+void CEditor::addObject( std::shared_ptr<ObjectClass> object )
+{
+    bool isAdded = stage->AddObject( object->GetId(), object );
+    if( isAdded ) {
+        SetActiveId( object->GetId() );
+    }
+    renderingWindow.ReDraw();
+}
+
 TBox CEditor::generateDefaultBox() const
 {
 	TBox box;
 	RECT rect;
 	GetWindowRect( renderingWindow.GetHandle(), &rect );
-	long width = rect.right - rect.left;
-	long height = rect.bottom - rect.top;
-	box.left = width / defaultBoxMarginDividor;
-	box.top = height / defaultBoxMarginDividor;
-	box.right = 3 * width / defaultBoxMarginDividor;
-	box.bottom = 3 * height / defaultBoxMarginDividor;
+	box.right = 3 * ( box.left = ( rect.right - rect.left ) / defaultBoxMarginDividor);
+	box.bottom = 3 * ( box.top = ( rect.bottom - rect.top ) / defaultBoxMarginDividor);
 	return stage->GetViewPort().ConvertToModelCoordinates( box );
-}
-
-int CEditor::searchEmptyId() const
-{
-	int maxid = 0;
-	for( auto i : stage->GetObjects() ) {
-		if( i.first > maxid ) {
-			maxid = i.first;
-		}
-	}
-	return maxid + 1;
 }
 
 void CEditor::onColorSelect()
@@ -466,4 +472,3 @@ LRESULT CEditor::windowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lP
 	}
 }
 
-const int CEditor::defaultBoxMarginDividor = 4;

@@ -1,7 +1,7 @@
 #pragma once
-#include "Stage.h"
-#include "Resource.h"
-#include "ScriptEngine.h"
+#include <Stage.h>
+#include "resource.h"
+#include <ScriptEngine.h>
 
 #define BLUE_FOR_CANVAS_CROSS RGB(0, 128, 255)
 enum ColorBufferActionType { RestoreColor, SetColor };
@@ -42,7 +42,7 @@ private:
 	int bitmapWidth; // canvas params
 	int bitmapHeight;
 
-	int activeId; // id of currently active object
+	IdType activeId; // id of currently active object
 	int colorBuf; // Bufferized color of object for clever selection
 
 	bool viewerIsRunning; // Pause/Play indicator
@@ -75,5 +75,5 @@ private:
 
 	bool isPointInBox( TBox box, POINT point );
 
-	void updateColorWithBuffer( int prevActiveId, ColorBufferActionType actionType );
+	void updateColorWithBuffer( IdType prevActiveId, ColorBufferActionType actionType );
 };

@@ -1,6 +1,4 @@
 #include <stdafx.h>
-#include "resource.h"
-#include "Resource.h"
 #include "ViewerWindow.h"
 
 const wchar_t* CViewerWindow::ClassName = L"CViewerWindow";
@@ -9,7 +7,7 @@ const UINT TICK_LENGTH = 1000;
 
 CViewerWindow::CViewerWindow( CStage& _stage, CViewport& _viewport, CCanvas& _canvas ) :
 	windowHeight( 600 ), windowWidth( 800 ), viewport( _viewport ), canvas( _canvas ),
-	handle( nullptr ), stage( _stage ), scriptEngine( stage ), activeId( 0 ), colorBuf( -1 ),
+	handle( nullptr ), stage( _stage ), scriptEngine( stage ), activeId( CObjectIdGenerator::GetEmptyId() ), colorBuf( -1 ),
 	viewerIsRunning( true )
 {}
 
@@ -236,7 +234,7 @@ void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 
 	POINT mouseCoords = getMouseCoords( lParam );
 
-	int topId = -1;
+	IdType topId = CObjectIdGenerator::GetEmptyId();
 
 	for( auto pair : stage.GetObjects() ) {
 		TBox curBox = pair.second->GetContainingBox();
@@ -246,7 +244,7 @@ void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 		}
 	}
 
-	if( topId == -1 )
+	if( topId == CObjectIdGenerator::GetEmptyId() )
 		return;
 
 	/*
@@ -286,8 +284,8 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 	POINT mouseCoords = getMouseCoords( lParam );
 
 	// storage space for usual color of currently active object
-	int prevActiveId = activeId;
-	activeId = 0;
+	IdType prevActiveId = activeId;
+	activeId = CObjectIdGenerator::GetEmptyId();
 
 	
 	for( auto pair : stage.GetObjects() ) {
@@ -309,7 +307,7 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 
 	// clicked on new object => have to process it
 	updateColorWithBuffer( prevActiveId, ColorBufferActionType::RestoreColor );
-	if( activeId != 0 ) {
+	if( activeId != CObjectIdGenerator::GetEmptyId() ) {
 		//Event All should be carefully changed with click, when the model of scripts will be defined
 		auto scripts = stage.GetObjectById( activeId )->GetScripts( EventType::EventAll );
 		if (!scripts.empty()) {
@@ -395,20 +393,20 @@ void CViewerWindow::disableTimer( int timerId)
 	::KillTimer( handle, timerId );
 }
 
-void CViewerWindow::updateColorWithBuffer( int prevActiveId, ColorBufferActionType actionType )
+void CViewerWindow::updateColorWithBuffer( IdType prevActiveId, ColorBufferActionType actionType )
 {
 	switch ( actionType )
 	{
 		case ColorBufferActionType::RestoreColor:
 		{
-			if ( prevActiveId != 0 ) {
+			if ( prevActiveId != CObjectIdGenerator::GetEmptyId() ) {
 				stage.GetObjectById( prevActiveId )->SetColor( colorBuf );
 			}
 			break;
 		}
 		case ColorBufferActionType::SetColor:
 		{
-			if ( activeId != 0 ) {
+			if ( activeId != CObjectIdGenerator::GetEmptyId() ) {
 				colorBuf = stage.GetObjectById( activeId )->GetColor( );
 				stage.GetObjectById( activeId )->SetColor( static_cast<COLORREF> (colorBuf * 0.9) );
 			}

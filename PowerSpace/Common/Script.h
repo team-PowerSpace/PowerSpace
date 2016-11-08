@@ -1,5 +1,6 @@
 #pragma once
-#include "JsonObject.h"
+#include <JsonObject.h>
+
 using TPath = std::wstring;
 
 // this enum class lists all supported types of events

@@ -1,8 +1,9 @@
 #include <stdafx.h>
-#include "JsonConverter.h"
 #include <sstream>
-#include "JsonObject.h"
-#include "JsonWorker.h"
+#include <JsonConverter.h>
+#include <JsonObject.h>
+#include <JsonWorker.h>
+#include <Stage.h>
 
 IJsonPtr CJsonConverter::ToJsonObject( const CStage &stage )
 {
@@ -32,7 +33,7 @@ IJsonPtr CJsonConverter::ToJsonObject( const CViewport &viewPort )
 IJsonPtr CJsonConverter::ToJsonObject( const CRectangleObject &rectangle )
 {
 	auto jRectangle = std::make_shared<CJsonMap>( L"Rectangle" );
-	jRectangle->objects[L"Id"] = std::make_shared<CJsonWString>( std::to_wstring( rectangle.GetId() ), L"Id" );
+	jRectangle->objects[L"Id"] = std::make_shared<CJsonWString>( std::wstring( rectangle.GetId() ), L"Id" );
 	jRectangle->objects[L"Color"] = std::make_shared<CJsonWString>( std::to_wstring( rectangle.GetColor() ), L"Color" );
 	jRectangle->objects[L"Box"] = ToJsonObject( rectangle.GetContainingBox() );
 	jRectangle->objects[L"Scripts"] = ToJsonObject( rectangle.GetScripts( EventType::EventAll ) );
@@ -42,7 +43,7 @@ IJsonPtr CJsonConverter::ToJsonObject( const CRectangleObject &rectangle )
 IJsonPtr CJsonConverter::ToJsonObject( const CTextBoxObject &text )
 {
 	auto jText = std::make_shared<CJsonMap>( L"TextBox" );
-	jText->objects[L"Id"] = std::make_shared<CJsonWString>( std::to_wstring( text.GetId() ), L"Id" );
+	jText->objects[L"Id"] = std::make_shared<CJsonWString>( std::wstring( text.GetId() ), L"Id" );
 	jText->objects[L"Color"] = std::make_shared<CJsonWString>( std::to_wstring( text.GetColor() ), L"Color" );
 	jText->objects[L"Box"] = ToJsonObject( text.GetContainingBox() );
 	jText->objects[L"Scripts"] = ToJsonObject( text.GetScripts( EventType::EventAll ) );
@@ -53,7 +54,7 @@ IJsonPtr CJsonConverter::ToJsonObject( const CTextBoxObject &text )
 IJsonPtr CJsonConverter::ToJsonObject( const CEllipseObject &ellipse )
 {
 	auto jEllipse = std::make_shared<CJsonMap>( L"Ellipse" );
-	jEllipse->objects[L"Id"] = std::make_shared<CJsonWString>( std::to_wstring( ellipse.GetId() ), L"Id" );
+	jEllipse->objects[L"Id"] = std::make_shared<CJsonWString>( std::wstring( ellipse.GetId() ), L"Id" );
 	jEllipse->objects[L"Color"] = std::make_shared<CJsonWString>( std::to_wstring( ellipse.GetColor() ), L"Color" );
 	jEllipse->objects[L"Box"] = ToJsonObject( ellipse.GetContainingBox() );
 	jEllipse->objects[L"Scripts"] = ToJsonObject( ellipse.GetScripts( EventType::EventAll ) );

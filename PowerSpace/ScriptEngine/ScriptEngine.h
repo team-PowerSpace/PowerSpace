@@ -1,6 +1,6 @@
 #pragma once
-#include "Stage.h"
-#include "CScriptHolder.h"
+#include <Stage.h>
+#include <CScriptHolder.h>
 
 // this class processes python scripts and changes the stage
 class CScriptEngine
@@ -11,7 +11,7 @@ public:
     // evaluates python scripts from "scripts", modifying the stage;
     // objectId - id of the object, which caused the event
     // returns the vector of objects that were modified during the evaluation of the scripts
-    std::vector<int> RunScripts( int objectId, const std::vector<CScript>& scripts, EventType type );
+    std::vector<int> RunScripts( const IdType objectId, const std::vector<CScript>& scripts, EventType type );
 private:
 	bool isPythonRunning; // boolean parameter to set when we start the python running
 	std::shared_ptr<ScriptHolder> holder;

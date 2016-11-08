@@ -1,6 +1,6 @@
 #include <stdafx.h>
 #include "EditorWindow.h"
-#include "Editor.h"
+#include <Editor.h>
 
 
 CEditorWindow::CEditorWindow()
@@ -46,11 +46,11 @@ bool CEditorWindow::RegisterClass()
 
 void CEditorWindow::DrawContent( HDC paintDC, const int width, const int height )
 {
-	std::unordered_map<int, IDrawablePtr>& objects = stage->GetObjects();
+	std::unordered_map<IdType, IDrawablePtr>& objects = stage->GetObjects();
 	stage->ClipAndDrawObjects( paintDC, stage->GetObjectsAsVector() );
 	CViewport& viewport = stage->GetViewPort();
-	for( std::unordered_map<int, IDrawablePtr>::iterator i = objects.begin(); i != objects.end(); ++i ) {
-		DrawSizeableRectangle( paintDC, viewport.ConvertToScreenCoordinates( i->second->GetContainingBox() ), i->first );
+	for( auto it = objects.begin(); it != objects.end(); ++it ) {
+		DrawSizeableRectangle( paintDC, viewport.ConvertToScreenCoordinates( it->second->GetContainingBox() ), it->first );
 	}
 
 	UNREFERENCED_PARAMETER( width );
@@ -63,7 +63,7 @@ void CEditorWindow::MoveCanvas( const POINT& point )
 	viewport.SetZeroLocation( point );
 }
 
-void CEditorWindow::MoveRectangle( const int id, const RECT & newSize )
+void CEditorWindow::MoveDrawableObject( const IdType& id, const RECT & newSize )
 {
 	stage->GetObjectById( id )->SetContainingBox( stage->GetViewPort().ConvertToModelCoordinates( newSize ) );
 }
@@ -74,7 +74,7 @@ void CEditorWindow::Scaling( const int direction )
 	viewport.SetScale( viewport.GetScale() * pow( scalingFactor, direction ) );
 }
 
-void CEditorWindow::SelectRectangle( const int id )
+void CEditorWindow::SelectDrawableObject( const IdType& id )
 {
 	CEditor::GetWindowByHandle( GetParent( GetHandle() ) )->SetActiveId( id );
 }
