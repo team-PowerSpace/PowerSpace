@@ -36,6 +36,7 @@ void CEditor::Show( int cmdShow )
 {
 	ShowWindow( handle, cmdShow );
 	renderingWindow.Show( cmdShow );
+	ShowWindow( setFontButton, cmdShow);
 	ShowWindow( saveTextButton, cmdShow );
 	ShowWindow( setColorButton, cmdShow );
 	ShowWindow( addScriptButton, cmdShow );
@@ -69,6 +70,9 @@ void CEditor::OnCreate()
 	CEditorWindow::RegisterClass();
 	menu = LoadMenu( GetModuleHandle( 0 ), MAKEINTRESOURCE( IDR_MENU1 ) );
 	renderingWindow.Create( handle );
+	setFontButton = CreateWindow(L"BUTTON", L"Set Font", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
+		10, 10, 100, 100, handle, (HMENU)IDC_MAIN_BUTTON,
+		*(HINSTANCE*)GetWindowLongPtr(handle, GWLP_HINSTANCE), NULL);
 	saveTextButton = CreateWindow( L"BUTTON", L"Save Text", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
 		10, 10, 100, 100, handle, (HMENU)IDC_MAIN_BUTTON,
 		*(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
@@ -80,6 +84,7 @@ void CEditor::OnCreate()
         *(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
 
 	EnableWindow( editControl.GetHandle(), false );
+	EnableWindow( setFontButton, false );
 	EnableWindow( saveTextButton, false );
 	EnableWindow( setColorButton, false );
 	EnableWindow( addScriptButton, false );
@@ -188,9 +193,12 @@ void CEditor::OnSize()
 {
 	RECT rect;
 	int middleX, nWidth, nHeight;
+	int RELATIVE_WIDTH = 3;
+	int RELATIVE_HEIGHT = 4;
+	int RELATIVE_TOOLBAR = 16;
 	::GetClientRect( handle, &rect );
-	middleX = (rect.left + rect.right) / 4;
-	nWidth = (rect.right - rect.left) * 3 / 4;
+	middleX = (rect.left + rect.right) / RELATIVE_HEIGHT;
+	nWidth = (rect.right - rect.left) * RELATIVE_WIDTH / RELATIVE_HEIGHT;
 
 	RECT toolbarRect;
 	::GetClientRect(handleToolbar, &toolbarRect);
@@ -198,13 +206,14 @@ void CEditor::OnSize()
 	nHeight = (rect.bottom - currentTop);
 
 	SetWindowPos( renderingWindow.GetHandle(), HWND_TOP, middleX, currentTop, nWidth, nHeight, 0 );
-	int widthOfButton = nWidth / 3;
-	int yOfButton = nHeight * 3 / 4;
-	int cyOfButton = nHeight / 12;
+	int widthOfButton = nWidth / RELATIVE_WIDTH;
+	int yOfButton = nHeight * RELATIVE_WIDTH / RELATIVE_HEIGHT;
+	int cyOfButton = nHeight / RELATIVE_TOOLBAR;
 	SetWindowPos( editControl.GetHandle(), HWND_TOP, rect.left, currentTop, widthOfButton, yOfButton, 0 );
-	SetWindowPos( saveTextButton, HWND_TOP, rect.left, currentTop + yOfButton, widthOfButton, cyOfButton, 0 );
-	SetWindowPos( setColorButton, HWND_TOP, rect.left, currentTop + yOfButton + cyOfButton, widthOfButton, cyOfButton, 0 );
-	SetWindowPos( addScriptButton, HWND_TOP, rect.left, currentTop + yOfButton + cyOfButton * 2, widthOfButton, cyOfButton, 0 );
+	SetWindowPos( setFontButton, HWND_TOP, rect.left, currentTop + yOfButton, widthOfButton, cyOfButton, 0 );
+	SetWindowPos( saveTextButton, HWND_TOP, rect.left, currentTop + yOfButton + cyOfButton, widthOfButton, cyOfButton, 0 );
+	SetWindowPos( setColorButton, HWND_TOP, rect.left, currentTop + yOfButton + cyOfButton * 2, widthOfButton, cyOfButton, 0 );
+	SetWindowPos( addScriptButton, HWND_TOP, rect.left, currentTop + yOfButton + cyOfButton * 3, widthOfButton, cyOfButton, 0 );
 
 	SendMessage(handleToolbar, TB_AUTOSIZE, 0, 0);
 }

@@ -77,6 +77,7 @@ private:
     HMENU menu;
     CEditorWindow renderingWindow;
     CEditControlWindow editControl;
+	HWND setFontButton;
     HWND saveTextButton;
     HWND setColorButton;
     HWND addScriptButton;
