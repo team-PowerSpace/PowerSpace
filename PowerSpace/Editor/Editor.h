@@ -66,6 +66,7 @@ private:
 	static LRESULT __stdcall windowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
 
 	static const int defaultBoxMarginDividor;
+	static const COLORREF defaultColorOfNewObject;
 
 	HBITMAP MakeBitMapTransparent(HBITMAP hbmSrc);
 	HBITMAP loadTransparentBitmap(HINSTANCE hInstance, int resource);
