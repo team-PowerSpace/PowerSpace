@@ -47,11 +47,11 @@ protected:
 	void DrawSizeableRectangle( HDC paintDC, const RECT & rectangle, const IdType& id );
 
 	virtual void MoveCanvas( const POINT& point ) = 0;
-	virtual void MoveRectangle( const IdType& IdType, const RECT& newSize) = 0;
+	virtual void MoveDrawableObject( const IdType& IdType, const RECT& newSize) = 0;
 
 	virtual void Scaling( const int direction ) = 0;
 
-	virtual void SelectRectangle( const IdType& IdType ) = 0;
+	virtual void SelectDrawableObject( const IdType& IdType ) = 0;
 
 	static LRESULT __stdcall WindowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
 

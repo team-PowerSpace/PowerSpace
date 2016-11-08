@@ -63,7 +63,7 @@ void CEditorWindow::MoveCanvas( const POINT& point )
 	viewport.SetZeroLocation( point );
 }
 
-void CEditorWindow::MoveRectangle( const IdType& id, const RECT & newSize )
+void CEditorWindow::MoveDrawableObject( const IdType& id, const RECT & newSize )
 {
 	stage->GetObjectById( id )->SetContainingBox( stage->GetViewPort().ConvertToModelCoordinates( newSize ) );
 }
@@ -74,7 +74,7 @@ void CEditorWindow::Scaling( const int direction )
 	viewport.SetScale( viewport.GetScale() * pow( scalingFactor, direction ) );
 }
 
-void CEditorWindow::SelectRectangle( const IdType& id )
+void CEditorWindow::SelectDrawableObject( const IdType& id )
 {
 	CEditor::GetWindowByHandle( GetParent( GetHandle() ) )->SetActiveId( id );
 }

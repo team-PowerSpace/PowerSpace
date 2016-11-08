@@ -1,4 +1,4 @@
-#pragma once
+п»ї#pragma once
 #include <EditorRenderingWindow.h>
 #include <Stage.h>
 #include "resource.h"
@@ -23,12 +23,12 @@ public:
 	bool Create(HWND hWndParent);
 
 protected:
-	// Унаследовано через CEditorRenderingWindow
+	// РЈРЅР°СЃР»РµРґРѕРІР°РЅРѕ С‡РµСЂРµР· CEditorRenderingWindow
 	virtual void DrawContent( HDC paintDC, const int width, const int height ) override;
 	virtual void MoveCanvas( const POINT& point ) override;
-	virtual void MoveRectangle( const IdType& id, const RECT & newSize ) override;
+	virtual void MoveDrawableObject( const IdType& id, const RECT & newSize ) override;
 	virtual void Scaling( const int direction ) override;
-	virtual void SelectRectangle( const IdType& id ) override;
+	virtual void SelectDrawableObject( const IdType& id ) override;
 
 
 private:

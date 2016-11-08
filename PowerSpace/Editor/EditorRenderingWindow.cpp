@@ -254,14 +254,14 @@ void CEditorRenderingWindow::onMouseMove( const LPARAM lParam )
         SetCursor( LoadCursor( 0, IDC_SIZEALL ) );
         break;
     case TMovingState::MS_Sizing:
-        MoveRectangle( selectedId, resizeRect( point ) );
+        MoveDrawableObject( selectedId, resizeRect( point ) );
         break;
     case TMovingState::MS_Moving:
         lastSize.left += dx;
         lastSize.right += dx;
         lastSize.top += dy;
         lastSize.bottom += dy;
-        MoveRectangle( selectedId, lastSize );
+        MoveDrawableObject( selectedId, lastSize );
         SetCursor( LoadCursor( 0, IDC_SIZEALL ) );
         break;
     }
@@ -282,7 +282,7 @@ void CEditorRenderingWindow::onMouseDown( const LPARAM lparam )
             int index = markers[i].GetIndex();
             sizingMarkerType = markers[i].GetType();
             currentMovingState = TMovingState::MS_Sizing;
-            SelectRectangle( rectanglesIds[index] );
+            SelectDrawableObject( rectanglesIds[index] );
             startSize = rectangles[index];
             lastSize = startSize;
             selectedId = rectanglesIds[index];
@@ -295,7 +295,7 @@ void CEditorRenderingWindow::onMouseDown( const LPARAM lparam )
             currentMovingState = TMovingState::MS_Moving;
             startSize = rectangles[i];
             lastSize = startSize;
-            SelectRectangle( rectanglesIds[i] );
+            SelectDrawableObject( rectanglesIds[i] );
             selectedId = rectanglesIds[i];
             ReDraw();
             return;
@@ -303,7 +303,7 @@ void CEditorRenderingWindow::onMouseDown( const LPARAM lparam )
     }
     lastPoint = point;
     selectedId = CObjectIdGenerator::GetEmptyId();
-    SelectRectangle( CObjectIdGenerator::GetEmptyId() );
+    SelectDrawableObject( CObjectIdGenerator::GetEmptyId() );
     currentMovingState = TMovingState::MS_MovingCanvas;
 }
 
