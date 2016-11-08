@@ -1,8 +1,8 @@
 #pragma once
-#include "Canvas.h"
-#include "Drawable.h"
-#include "JsonConverter.h"
-#include "Viewport.h"
+#include <Canvas.h>
+#include <Drawable.h>
+#include <JsonConverter.h>
+#include <Viewport.h>
 #include <ObjectIdGenerator.h>
 
 // this class stores everything that was created on canvas;

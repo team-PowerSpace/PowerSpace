@@ -1,6 +1,6 @@
 #include <stdafx.h>
 #include "PyObjectBuilder.h"
-#include "CDrawableBuilder.h"
+#include <CDrawableBuilder.h>
 
 CPyObjectBuilder::CPyObjectBuilder( std::shared_ptr<IDrawable> object )
 {

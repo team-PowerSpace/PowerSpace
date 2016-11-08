@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include <stdafx.h>
 #include "ObjectIdGenerator.h"
 
 std::unordered_map<std::wstring, int> CObjectIdGenerator::typeCounter;

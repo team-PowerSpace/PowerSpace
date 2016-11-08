@@ -1,6 +1,4 @@
 #include <stdafx.h>
-#include "resource.h"
-#include "Resource.h"
 #include "ViewerWindow.h"
 
 const wchar_t* CViewerWindow::ClassName = L"CViewerWindow";

@@ -1,7 +1,7 @@
 #include <stdafx.h>
 #include <Winuser.h>
 #include "EditorRenderingWindow.h"
-#include "Resource.h"
+#include "resource.h"
 
 #define MAX_RESOURCE_LENGTH 100
 

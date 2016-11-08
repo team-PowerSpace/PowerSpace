@@ -1,6 +1,6 @@
 #include <stdafx.h>
 #include "StageObjects.h"
-#include "JsonConverter.h"
+#include <JsonConverter.h>
 
 CRectangleObject::CRectangleObject( COLORREF _color, TBox _box )
     : CDrawable( _color, _box, false )

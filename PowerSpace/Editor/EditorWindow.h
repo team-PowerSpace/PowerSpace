@@ -1,7 +1,7 @@
 #pragma once
-#include "EditorRenderingWindow.h"
-#include "Stage.h"
-#include "Resource.h"
+#include <EditorRenderingWindow.h>
+#include <Stage.h>
+#include "resource.h"
 
 // This class in made to divide GUI and business-logic
 // CRenderingWindow is GUI, work with screen coordinates

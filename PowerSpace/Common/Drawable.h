@@ -1,8 +1,8 @@
 #pragma once
-#include "Script.h"
+#include <Script.h>
 #include <memory>
 #include <unordered_map>
-#include "JsonObject.h"
+#include <JsonObject.h>
 #include <ObjectIdGenerator.h>
 
 class CCanvas;

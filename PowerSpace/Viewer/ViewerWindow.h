@@ -1,7 +1,7 @@
 #pragma once
-#include "Stage.h"
-#include "Resource.h"
-#include "ScriptEngine.h"
+#include <Stage.h>
+#include "resource.h"
+#include <ScriptEngine.h>
 
 #define BLUE_FOR_CANVAS_CROSS RGB(0, 128, 255)
 enum ColorBufferActionType { RestoreColor, SetColor };

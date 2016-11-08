@@ -1,6 +1,6 @@
 #include <stdafx.h>
 #include "JsonObject.h"
-#include "JsonWorker.h"
+#include <JsonWorker.h>
 
 CJsonArray::~CJsonArray() {}
 

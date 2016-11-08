@@ -1,6 +1,6 @@
 #include <stdafx.h>
 #include "EditorWindow.h"
-#include "Editor.h"
+#include <Editor.h>
 
 
 CEditorWindow::CEditorWindow()
