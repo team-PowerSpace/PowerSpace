@@ -11,6 +11,9 @@
 
 #define IDC_MAIN_BUTTON 101 
 
+const COLORREF CEditor::defaultColorOfNewObject = RGB( 100, 90, 80 );
+const int CEditor::defaultBoxMarginDividor = 4;
+
 CEditor::CEditor()
 {
 	menu = 0;
@@ -104,7 +107,7 @@ CEditor* CEditor::GetWindowByHandle( HWND handle )
 	return reinterpret_cast<CEditor*>(GetWindowLongPtr( handle, GWLP_USERDATA ));
 }
 
-void  CEditor::SetActiveId( const int id )
+void CEditor::SetActiveId( const int id )
 {
 	activeId = id;
 	if( id < 0 ) {
@@ -211,14 +214,13 @@ void CEditor::OnSize()
 	nHeight = (rect.bottom - currentTop);
 
 	SetWindowPos( renderingWindow.GetHandle(), HWND_TOP, middleX, currentTop, nWidth, nHeight, 0 );
-	SetWindowPos( editControl.GetHandle(), HWND_TOP, rect.left, currentTop, nWidth / 3,
-		nHeight * 3 / 4, 0 );
-	SetWindowPos( saveTextButton, HWND_TOP, rect.left, currentTop + nHeight * 3 / 4,
-		nWidth / 3, nHeight / 12, 0 );
-	SetWindowPos( setColorButton, HWND_TOP, rect.left, currentTop + nHeight * 3 / 4 + nHeight / 12,
-		nWidth / 3, nHeight / 12, 0 );
-	SetWindowPos( addScriptButton, HWND_TOP, rect.left, currentTop + nHeight * 3 / 4 + nHeight / 6,
-		nWidth / 3, nHeight / 12, 0 );
+	int widthOfButton = nWidth / 3;
+	int yOfButton = nHeight * 3 / 4;
+	int cyOfButton = nHeight / 12;
+	SetWindowPos( editControl.GetHandle(), HWND_TOP, rect.left, currentTop, widthOfButton, yOfButton, 0 );
+	SetWindowPos( saveTextButton, HWND_TOP, rect.left, currentTop + yOfButton, widthOfButton, cyOfButton, 0 );
+	SetWindowPos( setColorButton, HWND_TOP, rect.left, currentTop + yOfButton + cyOfButton, widthOfButton, cyOfButton, 0 );
+	SetWindowPos( addScriptButton, HWND_TOP, rect.left, currentTop + yOfButton + cyOfButton * 2, widthOfButton, cyOfButton, 0 );
 
 	SendMessage(handleToolbar, TB_AUTOSIZE, 0, 0);
 }
@@ -232,32 +234,33 @@ void CEditor::GetText()
 	delete[] text;
 }
 
+template< class ObjectClass>
+void CEditor::addObject( std::shared_ptr<ObjectClass> object )
+{
+	auto ret = stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( object->GetID(), object ) );
+	if( ret.second ) {
+		SetActiveId( ret.first->first );
+	}
+	renderingWindow.ReDraw();
+}
+
 void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 {
 	switch LOWORD( wParam )
 	{
 		case ID_ADD_RECTANGLE:
 		{
-			// TODO const for color
-			std::shared_ptr<CRectangleObject> rectangle = std::make_shared<CRectangleObject>(RGB(100, 90, 80), generateDefaultBox());
-			stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( rectangle->GetId(), rectangle ) );
-			renderingWindow.ReDraw();
+			addObject( std::make_shared<CRectangleObject>( defaultColorOfNewObject, generateDefaultBox() ) );
 			break;
 		}
 		case ID_ADD_ELLIPSE:
 		{
-			// TODO const for color
-			std::shared_ptr<CEllipseObject> ellipse = std::make_shared<CEllipseObject>(RGB(100, 90, 80), generateDefaultBox());
-			stage->GetObjects().insert( std::pair<int, std::shared_ptr<IDrawable>>( ellipse->GetId(), ellipse ) );
-			renderingWindow.ReDraw();
+			addObject( std::make_shared<CEllipseObject>( defaultColorOfNewObject, generateDefaultBox() ) );
 			break;
 		}
 		case ID_ADD_TEXTBOX:
 		{
-			// TODO const for color
-			stage->GetObjects().insert(std::pair<int, std::shared_ptr<IDrawable>>(searchEmptyId(),
-				std::make_shared<CTextBoxObject>( RGB( 100 , 90, 80 ), generateDefaultBox(), L"Text" ) ) );
-			renderingWindow.ReDraw();
+			addObject( std::make_shared<CTextBoxObject>( defaultColorOfNewObject, generateDefaultBox(), L"Text" ) );
 			break;
 		}
 		case ID_FILE_SAVE:
@@ -320,12 +323,8 @@ TBox CEditor::generateDefaultBox() const
 	TBox box;
 	RECT rect;
 	GetWindowRect( renderingWindow.GetHandle(), &rect );
-	long width = rect.right - rect.left;
-	long height = rect.bottom - rect.top;
-	box.left = width / defaultBoxMarginDividor;
-	box.top = height / defaultBoxMarginDividor;
-	box.right = 3 * width / defaultBoxMarginDividor;
-	box.bottom = 3 * height / defaultBoxMarginDividor;
+	box.right = 3 * ( box.left = ( rect.right - rect.left ) / defaultBoxMarginDividor);
+	box.bottom = 3 * ( box.top = ( rect.bottom - rect.top ) / defaultBoxMarginDividor);
 	return stage->GetViewPort().ConvertToModelCoordinates( box );
 }
 
@@ -460,5 +459,3 @@ LRESULT CEditor::windowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lP
 			return DefWindowProc( handle, message, wParam, lParam );
 	}
 }
-
-const int CEditor::defaultBoxMarginDividor = 4;

@@ -51,8 +51,13 @@ private:
 	HMENU menu;
 	CEditorWindow renderingWindow;
 	CEditControlWindow editControl;
+	
 	TBox generateDefaultBox() const;
 	int searchEmptyId() const;
+
+	template< class ObjectClass>
+	void addObject(std::shared_ptr<ObjectClass> object);
+
 	HWND saveTextButton;
 	HWND setColorButton;
 	HWND addScriptButton;
@@ -66,6 +71,7 @@ private:
 	static LRESULT __stdcall windowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
 
 	static const int defaultBoxMarginDividor;
+	static const COLORREF defaultColorOfNewObject;
 
 	HBITMAP MakeBitMapTransparent(HBITMAP hbmSrc);
 	HBITMAP loadTransparentBitmap(HINSTANCE hInstance, int resource);
