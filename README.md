@@ -1,4 +1,4 @@
-# PowerSpace
+﻿# PowerSpace
 "Powerpoint for mindmaps."
 
 __Общее описание структуры проекта__
@@ -101,8 +101,9 @@ __Code Style__
 
 __Инструкции по сборке__  
 Перед сборкой проекта необходимо:  
-1. установить Python3;  
-2. выставить три переменные среды:  
+1. Установить Python3;  
+2. Выставить три переменные среды:  
 * Python_Include — путь к папке \<Python3 Installation Path\>\\include  
 * Python_Libs — путь к папке \<Python3 Installation Path\>\\libs
 * PYTHONPATH — путь к папке PowerSpace\\PowerSpace\\scripts
+2a. Если ошибки линковки остались, попробовать поменять конфигурацию (мне помогло)
