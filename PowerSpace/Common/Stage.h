@@ -14,7 +14,7 @@ public:
 	const std::unordered_map<IdType, IDrawablePtr>& CStage::GetObjects() const;
     std::unordered_map<IdType, IDrawablePtr>& GetObjects();
 
-    void AddObject( IdType objectId, IDrawablePtr object );
+    bool AddObject( IdType objectId, IDrawablePtr object );
 
 	// method for transforming objects to vector
 	std::vector<IDrawablePtrConst> GetObjectsAsVector() const;

@@ -59,6 +59,9 @@ protected:
 private:
     static const int defaultBoxMarginDividor;
 
+    template<class ObjectClass>
+    void addObject( std::shared_ptr<ObjectClass> object );
+
     TBox generateDefaultBox() const;
     void onColorSelect();
     void onFileSelect();

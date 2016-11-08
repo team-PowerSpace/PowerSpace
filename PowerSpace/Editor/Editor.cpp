@@ -224,24 +224,17 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 	{
 		case ID_ADD_RECTANGLE:
 		{
-            IDrawablePtr object = std::make_shared<CRectangleObject>( defaultObjectColor, generateDefaultBox() );
-            stage->AddObject( object->GetId(), object );
-			renderingWindow.ReDraw();
+            addObject( std::make_shared<CRectangleObject>( defaultObjectColor, generateDefaultBox() ) );
 			break;
 		}
 		case ID_ADD_ELLIPSE:
 		{
-            IDrawablePtr object = std::make_shared<CEllipseObject>( defaultObjectColor, generateDefaultBox() );
-            stage->AddObject( object->GetId(), object );
-			renderingWindow.ReDraw();
+            addObject( std::make_shared<CEllipseObject>( defaultObjectColor, generateDefaultBox() ) );
 			break;
 		}
 		case ID_ADD_TEXTBOX:
 		{
-            IDrawablePtr object = std::make_shared<CTextBoxObject>( defaultObjectColor, generateDefaultBox(), L"Text" );
-            stage->AddObject( object->GetId(), object );
-            renderingWindow.ReDraw();
-
+            addObject( std::make_shared<CTextBoxObject>( defaultObjectColor, generateDefaultBox(), L"Text" ) );
 			break;
 		}
 		case ID_FILE_SAVE:
@@ -297,6 +290,16 @@ void CEditor::OnCommand( WPARAM wParam, LPARAM lParam )
 			break;
 		}
 	}
+}
+
+template<class ObjectClass>
+void CEditor::addObject( std::shared_ptr<ObjectClass> object )
+{
+    bool isAdded = stage->AddObject( object->GetId(), object );
+    if( isAdded ) {
+        SetActiveId( object->GetId() );
+    }
+    renderingWindow.ReDraw();
 }
 
 TBox CEditor::generateDefaultBox() const

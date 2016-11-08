@@ -11,9 +11,9 @@ std::unordered_map<IdType, IDrawablePtr>& CStage::GetObjects()
 	return objects;
 }
 
-void CStage::AddObject( IdType objectId, IDrawablePtr object )
+bool CStage::AddObject( IdType objectId, IDrawablePtr object )
 {
-    objects.insert( std::make_pair( objectId, object ) );
+    return objects.insert( std::make_pair( objectId, object ) ).second;
 }
 
 std::vector<IDrawablePtrConst> CStage::GetObjectsAsVector() const
