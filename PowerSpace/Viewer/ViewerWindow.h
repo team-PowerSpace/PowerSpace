@@ -42,7 +42,7 @@ private:
 	int bitmapWidth; // canvas params
 	int bitmapHeight;
 
-	int activeId; // id of currently active object
+	IdType activeId; // id of currently active object
 	int colorBuf; // Bufferized color of object for clever selection
 
 	bool viewerIsRunning; // Pause/Play indicator
@@ -75,5 +75,5 @@ private:
 
 	bool isPointInBox( TBox box, POINT point );
 
-	void updateColorWithBuffer( int prevActiveId, ColorBufferActionType actionType );
+	void updateColorWithBuffer( IdType prevActiveId, ColorBufferActionType actionType );
 };

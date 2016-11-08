@@ -23,7 +23,7 @@
 class CEditor {
 public:
 	CEditor();
-	~CEditor();
+	~CEditor() = default;
 
 	static bool RegisterClass();
 
@@ -37,7 +37,7 @@ public:
 
 	static CEditor* GetWindowByHandle( HWND handle );
 
-	void SetActiveId( const int id );
+	void SetActiveId( const IdType& id );
 
 protected:
 	// WM_DESTROY message handler
@@ -57,28 +57,28 @@ protected:
 	void OnSave( ) const;
 
 private:
-	HWND handle;
-	HWND handleToolbar;
-	HMENU menu;
-	CEditorWindow renderingWindow;
-	CEditControlWindow editControl;
+	static const int defaultBoxMarginDividor;
+
 	TBox generateDefaultBox() const;
-	int searchEmptyId() const;
-	HWND saveTextButton;
-	HWND setColorButton;
-	HWND addScriptButton;
-
-	std::shared_ptr<CStage> stage;
-	int activeId;
-
 	void onColorSelect();
 	void onFileSelect();
-
-	static LRESULT __stdcall windowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
-
-	static const int defaultBoxMarginDividor;
 
 	HBITMAP MakeBitMapTransparent(HBITMAP hbmSrc);
 	HBITMAP loadTransparentBitmap(HINSTANCE hInstance, int resource);
 	void createToolbar();
+	
+    static LRESULT __stdcall windowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
+	
+    HWND handle;
+	HWND handleToolbar;
+	HMENU menu;
+	CEditorWindow renderingWindow;
+	CEditControlWindow editControl;
+	HWND saveTextButton;
+	HWND setColorButton;
+	HWND addScriptButton;
+
+    COLORREF defaultObjectColor;
+	std::shared_ptr<CStage> stage;
+	IdType activeId;
 };

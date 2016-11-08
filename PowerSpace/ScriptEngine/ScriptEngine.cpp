@@ -15,15 +15,15 @@ CScriptEngine::CScriptEngine( CStage& _stage )
 {}
 
 
-std::vector<int> CScriptEngine::RunScripts( const int objectId, const std::vector<CScript>& scripts, EventType eventType )
+std::vector<int> CScriptEngine::RunScripts( const IdType objectId, const std::vector<CScript>& scripts, EventType eventType )
 {
-	if (!isPythonRunning)
+    if( !isPythonRunning )
 	{
 		Py_Initialize(); //starting up Python if first run
 		holder = std::make_shared<ScriptHolder>(ScriptHolder());
 		isPythonRunning = true;
 	}
-	else if (objectId == -1) 
+    else if( objectId == CObjectIdGenerator::GetEmptyId() )
 	{
 		Py_Finalize(); //finlazing Python before turning the programm off
 		holder->decAllRefsAndClearObjects();

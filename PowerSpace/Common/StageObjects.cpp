@@ -3,8 +3,10 @@
 #include "JsonConverter.h"
 
 CRectangleObject::CRectangleObject( COLORREF _color, TBox _box )
-    : CDrawable( _color, _box )
-{}
+    : CDrawable( _color, _box, false )
+{
+    id = CObjectIdGenerator::GenerateNewId<CRectangleObject>();
+}
 
 void CRectangleObject::Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const
 {
@@ -22,8 +24,10 @@ IJsonPtr CRectangleObject::ToJson() const
 }
 
 CEllipseObject::CEllipseObject( COLORREF _color, TBox _box )
-    : CDrawable( _color, _box )
-{}
+    : CDrawable( _color, _box, false )
+{
+    id = CObjectIdGenerator::GenerateNewId<CEllipseObject>();
+}
 
 void CEllipseObject::Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const
 {
@@ -42,8 +46,10 @@ IJsonPtr CEllipseObject::ToJson() const
 
 
 CTextBoxObject::CTextBoxObject( COLORREF _color, TBox _box, const std::wstring& _contents )
-    : CDrawable( _color, _box ), contents( _contents )
-{}
+    : CDrawable( _color, _box, false ), contents( _contents )
+{
+    id = CObjectIdGenerator::GenerateNewId<CTextBoxObject>();
+}
 
 void CTextBoxObject::Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const
 {

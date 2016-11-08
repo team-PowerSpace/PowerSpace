@@ -2,44 +2,52 @@
 #include <string>
 #include <type_traits>
 #include <unordered_map>
-#include <StageObjects.h>
 
+class CRectangleObject;
+class CEllipseObject;
+class CTextBoxObject;
+
+using IdType = std::wstring;
+
+// generates a new unique identifier for the object
 class CObjectIdGenerator
 {
 public:
     CObjectIdGenerator() = default;
     ~CObjectIdGenerator() = default;
 
+    static IdType GetEmptyId();
+
     // generic implementation
-    template <typename T> static std::string GenerateNewId();
+    template <typename T> static IdType GenerateNewId();
 
     // specific implementations
-    template<> static std::string GenerateNewId<CRectangleObject>();
-    template<> static std::string GenerateNewId<CEllipseObject>();
-    template<> static std::string GenerateNewId<CTextBoxObject>();
+    template<> static IdType GenerateNewId<CRectangleObject>();
+    template<> static IdType GenerateNewId<CEllipseObject>();
+    template<> static IdType GenerateNewId<CTextBoxObject>();
 private:
-    static std::string generateNewIdByTypeName( const std::string& typeName );
+    static IdType generateNewIdByTypeName( const std::wstring& typeName );
 
-    static std::unordered_map<std::string, int> typeCounter;
+    // counter of objects that have already been created; is used to generate new ids
+    static std::unordered_map<std::wstring, int> typeCounter;
 };
 
-template<typename T> std::string CObjectIdGenerator::GenerateNewId()
+template<typename T> IdType CObjectIdGenerator::GenerateNewId()
 {
-    return generateNewIdByTypeName( "object" );
+    return generateNewIdByTypeName( L"object" );
 }
 
-template<> std::string CObjectIdGenerator::GenerateNewId<CRectangleObject>()
+template<> IdType CObjectIdGenerator::GenerateNewId<CRectangleObject>()
 {
-    return generateNewIdByTypeName( "rect" );
+    return generateNewIdByTypeName( L"rect" );
 }
 
-template<> std::string CObjectIdGenerator::GenerateNewId<CEllipseObject>()
+template<> IdType CObjectIdGenerator::GenerateNewId<CEllipseObject>()
 {
-    return generateNewIdByTypeName( "ellipse" );
+    return generateNewIdByTypeName( L"ellipse" );
 }
 
-template<> std::string CObjectIdGenerator::GenerateNewId<CTextBoxObject>()
+template<> IdType CObjectIdGenerator::GenerateNewId<CTextBoxObject>()
 {
-    return generateNewIdByTypeName( "text" );
+    return generateNewIdByTypeName( L"text" );
 }
-

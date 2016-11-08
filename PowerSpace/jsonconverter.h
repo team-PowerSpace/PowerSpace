@@ -1,10 +1,11 @@
 #pragma once
-#include "Stage.h"
 #include "StageObjects.h"
 #include <iostream>
 #include "JsonObject.h"
 
 const bool LAST_PROP = true;
+
+class CStage;
 
 class CJsonConverter
 {

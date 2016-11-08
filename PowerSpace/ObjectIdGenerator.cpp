@@ -1,10 +1,15 @@
 #include "stdafx.h"
 #include "ObjectIdGenerator.h"
 
-std::unordered_map<std::string, int> CObjectIdGenerator::typeCounter;
+std::unordered_map<std::wstring, int> CObjectIdGenerator::typeCounter;
 
-std::string CObjectIdGenerator::generateNewIdByTypeName( const std::string& typeName )
+IdType CObjectIdGenerator::GetEmptyId()
+{
+    return std::wstring();
+}
+
+IdType CObjectIdGenerator::generateNewIdByTypeName( const std::wstring& typeName )
 {
     int newIntId = typeCounter[typeName]++;
-    return typeName + std::to_string( newIntId );
+    return typeName + std::to_wstring( newIntId );
 }
