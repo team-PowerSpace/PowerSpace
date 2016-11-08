@@ -102,6 +102,7 @@ __Code Style__
 __Инструкции по сборке__  
 Перед сборкой проекта необходимо:  
 1. установить Python3;  
-2. выставить две переменные среды:  
-* Python_Include --- путь к папке <Python3 Installation Path>/include  
-* Python_Libs --- путь к папке <Python3 Installation Path>/libs
+2. выставить три переменные среды:  
+* Python_Include --- путь к папке \<Python3 Installation Path\>\\include  
+* Python_Libs --- путь к папке \<Python3 Installation Path\>\\libs
+* PYTHONPATH --- путь к папке PowerSpace\\PowerSpace\\scripts
