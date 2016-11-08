@@ -1,5 +1,14 @@
 #include <stdafx.h>
+#include <iostream>
+#include <fstream>
 #include "Editor.h"
+#include "resource.h"
+#include "EditControlWindow.h"
+#include "Viewer.h"
+#include "Stage.h"
+#include "StageObjects.h"
+#include "JsonConverter.h"
+#include "ScriptEditor.h"
 
 #define IDC_MAIN_BUTTON 101 
 
@@ -181,6 +190,7 @@ void CEditor::createToolbar() {
 	ImageList_Add(hImageList, loadTransparentBitmap(hInstance, IDB_TEXTBOX), NULL);
 	ImageList_Add(hImageList, loadTransparentBitmap(hInstance, IDB_PLAY), NULL);
 	ImageList_Add(hImageList, loadTransparentBitmap(hInstance, IDB_DELETE), NULL);
+	ImageList_Add(hImageList, loadTransparentBitmap( hInstance, IDB_EDIT ), NULL);
 	SendMessage(handleToolbar, TB_SETIMAGELIST, (WPARAM)1, (LPARAM)hImageList);
 
 	TBBUTTON tbb[] =
@@ -190,6 +200,7 @@ void CEditor::createToolbar() {
 		{ MAKELONG(2, 1), ID_ADD_TEXT, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
 		{ MAKELONG(3, 1), ID_PLAY_LAUNCHPLAYER, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
 		{ MAKELONG(4, 1), ID_DELETE_OBJECT, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
+		{ MAKELONG(5, 1), ID_EDIT, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
 	};
 	SendMessage(handleToolbar, (UINT)TB_ADDBUTTONS, _countof(tbb), (LPARAM)&tbb);
 
@@ -264,7 +275,7 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 			CViewer viewer( *stage, CViewport() );
             if( viewer.Create() ) {
                 const CViewerWindow& viewerWindow = viewer.GetViewerWindow();
-                HWND viewerHandle = viewerWindow.GetHandle();;
+                HWND viewerHandle = viewerWindow.GetHandle();
                 MSG message;
                 BOOL getMessageResult = 0;
                 while( (getMessageResult = ::GetMessage( &message, viewerHandle, 0, 0 )) != 0 ) {
@@ -277,7 +288,26 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
             }
 			break;
 		}
-		case ID_DELETE_OBJECT: 
+		case ID_EDIT:
+		{
+
+			CScriptEditor scriptEditor;
+
+			if( scriptEditor.Create() ) {
+				HWND scriptEditorWindow = scriptEditor.GetHandle();
+				MSG message;
+				BOOL getMessageResult = 0;
+				while( (getMessageResult = GetMessage( &message, scriptEditorWindow, 0, 0 )) != 0 ) {
+					if( getMessageResult == -1 ) {
+						break;
+					}
+					TranslateMessage( &message );
+					DispatchMessage( &message );
+				}
+			}
+			break;
+		}
+		case ID_DELETE_OBJECT:
 		{
 			stage->GetObjects().erase(activeId);
 			SetActiveId( CObjectIdGenerator::GetEmptyId() );

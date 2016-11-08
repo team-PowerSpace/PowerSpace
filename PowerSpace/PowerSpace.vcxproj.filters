@@ -149,6 +149,9 @@
     <ClInclude Include="Editor\EditControlWindow.h">
       <Filter>Editor\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ScriptEditor.h">
+      <Filter>Editor\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PowerSpace.cpp">
@@ -220,6 +223,9 @@
     <ClCompile Include="Editor\EditControlWindow.cpp">
       <Filter>Editor\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ScriptEditor.cpp">
+      <Filter>Editor\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PowerSpace.rc">
@@ -246,6 +252,12 @@
       <Filter>Root\Resource Files</Filter>
     </Image>
     <Image Include="bitmaps\delete.bmp">
+      <Filter>Root\Resource Files</Filter>
+    </Image>
+    <Image Include="bitmaps\bitmap1.bmp">
+      <Filter>Root\Resource Files</Filter>
+    </Image>
+    <Image Include="bitmaps\edit.bmp">
       <Filter>Root\Resource Files</Filter>
     </Image>
   </ItemGroup>
