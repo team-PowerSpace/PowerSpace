@@ -116,9 +116,6 @@
     <ClInclude Include="Editor\EditorRenderingWindow.h">
       <Filter>Editor\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EditControlWindow.h">
-      <Filter>Editor\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Viewer\ViewerWindow.h">
       <Filter>RenderingEngine\Header Files</Filter>
     </ClInclude>
@@ -137,16 +134,19 @@
     <ClInclude Include="ScriptEngine\CScriptHolder.h">
       <Filter>ScriptEngine\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="JsonConverter.h">
+    <ClInclude Include="Editor\ObjectIdGenerator.h">
+      <Filter>Editor\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Json\JsonConverter.h">
       <Filter>Json\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="JsonObject.h">
+    <ClInclude Include="Json\JsonObject.h">
       <Filter>Json\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="JsonWorker.h">
+    <ClInclude Include="Json\JsonWorker.h">
       <Filter>Json\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectIdGenerator.h">
+    <ClInclude Include="Editor\EditControlWindow.h">
       <Filter>Editor\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -190,9 +190,6 @@
     <ClCompile Include="Editor\EditorRenderingWindow.cpp">
       <Filter>Editor\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EditControlWindow.cpp">
-      <Filter>Editor\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Viewer\ViewerWindow.cpp">
       <Filter>RenderingEngine\Source Files</Filter>
     </ClCompile>
@@ -208,16 +205,19 @@
     <ClCompile Include="ScriptEngine\CScriptHolder.cpp">
       <Filter>ScriptEngine\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="JsonConverter.cpp">
+    <ClCompile Include="Editor\ObjectIdGenerator.cpp">
+      <Filter>Editor\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Json\JsonConverter.cpp">
       <Filter>Json\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="JsonObject.cpp">
+    <ClCompile Include="Json\JsonObject.cpp">
       <Filter>Json\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="JsonWorker.cpp">
+    <ClCompile Include="Json\JsonWorker.cpp">
       <Filter>Json\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ObjectIdGenerator.cpp">
+    <ClCompile Include="Editor\EditControlWindow.cpp">
       <Filter>Editor\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

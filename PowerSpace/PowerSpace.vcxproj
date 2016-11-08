@@ -89,7 +89,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
-      <AdditionalIncludeDirectories>$(Python_Include);$(ProjectDir);$(ProjectDir)Viewer;$(ProjectDir)Editor;$(ProjectDir)Common;$(ProjectDir)ScriptEngine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(Python_Include);$(ProjectDir);$(ProjectDir)Viewer;$(ProjectDir)Editor;$(ProjectDir)Common;$(ProjectDir)ScriptEngine;$(ProjectDir)Json;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
@@ -104,7 +104,7 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(Python_Include);$(ProjectDir);$(ProjectDir)Viewer;$(ProjectDir)Editor;$(ProjectDir)Common;$(ProjectDir)ScriptEngine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(Python_Include);$(ProjectDir);$(ProjectDir)Viewer;$(ProjectDir)Editor;$(ProjectDir)Common;$(ProjectDir)ScriptEngine;$(ProjectDir)Json;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -122,7 +122,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(Python_Include);$(ProjectDir);$(ProjectDir)Viewer;$(ProjectDir)Editor;$(ProjectDir)Common;$(ProjectDir)ScriptEngine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(Python_Include);$(ProjectDir);$(ProjectDir)Viewer;$(ProjectDir)Editor;$(ProjectDir)Common;$(ProjectDir)ScriptEngine;$(ProjectDir)Json;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -140,7 +140,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(Python_Include);$(ProjectDir);$(ProjectDir)Viewer;$(ProjectDir)Editor;$(ProjectDir)Common;$(ProjectDir)ScriptEngine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(Python_Include);$(ProjectDir);$(ProjectDir)Viewer;$(ProjectDir)Editor;$(ProjectDir)Common;$(ProjectDir)ScriptEngine;$(ProjectDir)Json;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -156,14 +156,14 @@
     <ClInclude Include="Common\Drawable.h" />
     <ClInclude Include="Common\StageObjects.h" />
     <ClInclude Include="Common\Viewport.h" />
-    <ClInclude Include="EditControlWindow.h" />
+    <ClInclude Include="Editor\EditControlWindow.h" />
     <ClInclude Include="Editor\Editor.h" />
     <ClInclude Include="Editor\EditorWindow.h" />
     <ClInclude Include="Editor\EditorRenderingWindow.h" />
-    <ClInclude Include="JsonConverter.h" />
-    <ClInclude Include="JsonObject.h" />
-    <ClInclude Include="JsonWorker.h" />
-    <ClInclude Include="ObjectIdGenerator.h" />
+    <ClInclude Include="Json\JsonConverter.h" />
+    <ClInclude Include="Json\JsonObject.h" />
+    <ClInclude Include="Json\JsonWorker.h" />
+    <ClInclude Include="Editor\ObjectIdGenerator.h" />
     <ClInclude Include="PowerSpace.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Common\Script.h" />
@@ -190,17 +190,17 @@
     </ClCompile>
     <ClCompile Include="Common\StageObjects.cpp" />
     <ClCompile Include="Common\Viewport.cpp" />
-    <ClCompile Include="EditControlWindow.cpp" />
+    <ClCompile Include="Editor\EditControlWindow.cpp" />
     <ClCompile Include="Editor\Editor.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="Editor\EditorWindow.cpp" />
     <ClCompile Include="Editor\EditorRenderingWindow.cpp" />
-    <ClCompile Include="JsonConverter.cpp" />
-    <ClCompile Include="JsonObject.cpp" />
-    <ClCompile Include="JsonWorker.cpp" />
-    <ClCompile Include="ObjectIdGenerator.cpp" />
+    <ClCompile Include="Json\JsonConverter.cpp" />
+    <ClCompile Include="Json\JsonObject.cpp" />
+    <ClCompile Include="Json\JsonWorker.cpp" />
+    <ClCompile Include="Editor\ObjectIdGenerator.cpp" />
     <ClCompile Include="PowerSpace.cpp" />
     <ClCompile Include="Common\Script.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
