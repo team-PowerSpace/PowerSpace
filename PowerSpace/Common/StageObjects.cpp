@@ -66,6 +66,11 @@ void CTextBoxObject::SetContents( const std::wstring &_contents )
 	contents = _contents;
 }
 
+//void CTextBoxObject::SetFont(HFONT newFont)
+//{
+//
+//}
+
 std::wstring CTextBoxObject::ToWString( ) const
 {
 	return CJsonConverter::ToJsonObject( *this )->ToJson();
