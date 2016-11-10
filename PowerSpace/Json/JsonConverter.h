@@ -12,7 +12,7 @@ class CJsonConverter
 public:
 
 	template<typename T>
-	static T fromJson( const JSON& description );
+	static T fromJson( const IJsonObject& object);
 
 	static IJsonPtr ToJsonObject( const CStage& stage );
 
