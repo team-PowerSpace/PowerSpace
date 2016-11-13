@@ -66,10 +66,10 @@ void CTextBoxObject::SetContents( const std::wstring &_contents )
 	contents = _contents;
 }
 
-//void CTextBoxObject::SetFont(HFONT newFont)
-//{
-//
-//}
+void CTextBoxObject::SetFont( LOGFONT newFont )
+{
+	font = newFont;
+}
 
 std::wstring CTextBoxObject::ToWString( ) const
 {
