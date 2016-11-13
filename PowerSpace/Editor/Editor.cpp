@@ -9,7 +9,7 @@
 #include "StageObjects.h"
 #include "JsonConverter.h"
 #include "ScriptEditor.h"
-
+#include <JsonWorker.h>
 #define IDC_MAIN_BUTTON 101 
 
 const int CEditor::defaultBoxMarginDividor = 4;
@@ -408,7 +408,9 @@ void CEditor::OnSave() const
 
     if( ::GetSaveFileName( &filename ) ) {
         std::wofstream saveStream( filename.lpstrFile, std::ofstream::out );
-        saveStream << stage->ToWString();
+        auto stage_info = CJsonWorker::GetNextObjectDescription(stage->ToWString());
+        auto json_stage = CJsonMap( stage_info.name, stage_info.body );
+        saveStream << json_stage.ToJson();
         saveStream.close();
     }
 }

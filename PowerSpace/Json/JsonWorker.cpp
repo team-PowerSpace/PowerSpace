@@ -80,19 +80,20 @@ JsonObjectDescription CJsonWorker::GetNextObjectDescription( const JSON& descrip
 {
     JsonObjectDescription objectDescription = {};
 
-    objectDescription.nameBeginPosition = description.find_first_of( L"\"", position );
-    objectDescription.nameEndPosition = description.find_first_of( L"\"", objectDescription.nameBeginPosition + 1 ) + 1;
+    objectDescription.nameBeginPosition = description.find_first_of( L"\"", position ) + 1;
+    objectDescription.nameEndPosition = description.find_first_of( L"\"", objectDescription.nameBeginPosition );
 
     int nameSize = objectDescription.nameEndPosition - objectDescription.nameBeginPosition;
     objectDescription.name = description.substr( objectDescription.nameBeginPosition, nameSize );
-    objectDescription.bodyBeginPosition = description.find_first_of( L"\"[{", objectDescription.nameEndPosition ) + 1;
+    objectDescription.bodyBeginPosition = description.find_first_of( L"\"[{", objectDescription.nameEndPosition + 1 ) + 1;
 
     position = objectDescription.bodyBeginPosition;
     objectDescription.type = CJsonWorker::typeFromTag.at( description[position - 1] );
     std::stack<JsonTag> operators;
     operators.push( description[position - 1] );
+    ++position;
     while( !operators.empty() && position < description.size() ) {
-        position = description.find_first_of( L"\"[]{}" );
+        position = description.find_first_of( L"\"[]{}", position );
         CJsonWorker::updateOperatorsStack( operators, description[position] );
         ++position;
     }
@@ -105,7 +106,7 @@ JsonObjectDescription CJsonWorker::GetNextObjectDescription( const JSON& descrip
     return objectDescription;
 }
 
-void CJsonWorker::updateOperatorsStack( std::stack<JsonTag> operators, JsonTag newTag )
+void CJsonWorker::updateOperatorsStack( std::stack<JsonTag>& operators, JsonTag newTag )
 {
     JsonTag topTag = operators.top();
     if( typeFromTag.at( topTag ) != typeFromTag.at( newTag ) ) {
@@ -116,5 +117,7 @@ void CJsonWorker::updateOperatorsStack( std::stack<JsonTag> operators, JsonTag n
         } else {
             operators.push( newTag );
         }
+    } else {
+        operators.pop();
     }
 }

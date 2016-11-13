@@ -41,6 +41,6 @@ public:
     static const std::unordered_map<JsonTag, JsonObjectType> typeFromTag;
 
 private:
-    static void updateOperatorsStack( std::stack<JsonTag> operators, JsonTag newTag );
+    static void updateOperatorsStack( std::stack<JsonTag>& operators, JsonTag newTag );
 
 };
