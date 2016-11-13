@@ -1,5 +1,5 @@
 #include <stdafx.h>
-#include "JsonObject.h"
+#include <JsonObject.h>
 #include <JsonWorker.h>
 
 //Temp include for cout
@@ -12,9 +12,10 @@ CJsonArray::CJsonArray( const JsonName& _name )
     name = _name;
 }
 
-CJsonArray::CJsonArray( const JSON& _description )
+CJsonArray::CJsonArray( const JsonName& _name, const JsonObjectBody& _body )
 {
-    std::wcout << _description;
+    name = _name;
+    objects = CJsonWorker::ReadObjects( _body );
 }
 
 JSON CJsonArray::ToJson( int depth ) const
@@ -33,14 +34,10 @@ JSON CJsonArray::ToJson( int depth ) const
     return description;
 }
 
-CJsonWString::CJsonWString( const JsonContent& _content, const JsonName& _name ) : content( _content )
+CJsonWString::CJsonWString( const JsonName& _name, const JsonObjectBody& _body )
 {
     name = _name;
-}
-
-CJsonWString::CJsonWString( const JSON& _description )
-{
-    std::wcout << _description;
+    content = _body;
 }
 
 CJsonWString::~CJsonWString() {}
@@ -59,9 +56,13 @@ CJsonMap::CJsonMap( const JsonName& _name )
     name = _name;
 }
 
-CJsonMap::CJsonMap( const JSON& _description )
+CJsonMap::CJsonMap( const JsonName& _name, const JsonObjectBody& _body )
 {
-    std::wcout << _description;
+    name = _name;
+    auto objectPtrs = CJsonWorker::ReadObjects( _body );
+    for( auto objectPtr : objectPtrs ) {
+        objects.insert( std::make_pair( objectPtr->name, objectPtr ) );
+    }
 }
 
 CJsonMap::~CJsonMap() {}
