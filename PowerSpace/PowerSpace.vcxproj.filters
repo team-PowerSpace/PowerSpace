@@ -152,6 +152,9 @@
     <ClInclude Include="ScriptEditor.h">
       <Filter>Editor\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ScriptEngine\CViewPortWrap.h">
+      <Filter>ScriptEngine\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PowerSpace.cpp">
@@ -225,6 +228,9 @@
     </ClCompile>
     <ClCompile Include="ScriptEditor.cpp">
       <Filter>Editor\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptEngine\CViewPortWrap.cpp">
+      <Filter>ScriptEngine\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
