@@ -71,7 +71,7 @@ std::vector<std::shared_ptr<IJsonObject>> CJsonWorker::ReadObjects( const JSON& 
         default:
             assert( JsonObjectType::COUNT == 3 );
         }
-        objectDescription = GetNextObjectDescription( description, objectDescription.bodyEndPosition );
+        objectDescription = GetNextObjectDescription( description, objectDescription.bodyEndPosition + 2 );
     }
     return objects;
 }
@@ -80,7 +80,14 @@ JsonObjectDescription CJsonWorker::GetNextObjectDescription( const JSON& descrip
 {
     JsonObjectDescription objectDescription = {};
 
-    objectDescription.nameBeginPosition = description.find_first_of( L"\"", position ) + 1;
+    objectDescription.nameBeginPosition = description.find_first_of( L"\"", position );
+    if( objectDescription.nameBeginPosition == std::wstring::npos ) {
+        objectDescription.name = EMPTY_NAME;
+        objectDescription.body = EMPTY_BODY;
+        return objectDescription;
+    } else {
+        ++objectDescription.nameBeginPosition;
+    }
     objectDescription.nameEndPosition = description.find_first_of( L"\"", objectDescription.nameBeginPosition );
 
     int nameSize = objectDescription.nameEndPosition - objectDescription.nameBeginPosition;
@@ -97,7 +104,7 @@ JsonObjectDescription CJsonWorker::GetNextObjectDescription( const JSON& descrip
         CJsonWorker::updateOperatorsStack( operators, description[position] );
         ++position;
     }
-    int bodySize = position - objectDescription.bodyBeginPosition;
+    int bodySize = position - 1 - objectDescription.bodyBeginPosition;
     if( operators.empty() ) {
         objectDescription.body = description.substr( objectDescription.bodyBeginPosition, bodySize );
     }

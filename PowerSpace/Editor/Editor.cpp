@@ -408,9 +408,7 @@ void CEditor::OnSave() const
 
     if( ::GetSaveFileName( &filename ) ) {
         std::wofstream saveStream( filename.lpstrFile, std::ofstream::out );
-        auto stage_info = CJsonWorker::GetNextObjectDescription(stage->ToWString());
-        auto json_stage = CJsonMap( stage_info.name, stage_info.body );
-        saveStream << json_stage.ToJson();
+        saveStream << stage->ToWString();
         saveStream.close();
     }
 }
