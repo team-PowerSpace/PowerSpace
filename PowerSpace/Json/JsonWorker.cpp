@@ -71,6 +71,7 @@ std::vector<std::shared_ptr<IJsonObject>> CJsonWorker::ReadObjects( const JSON& 
         default:
             assert( JsonObjectType::COUNT == 3 );
         }
+        objectDescription = GetNextObjectDescription( description, objectDescription.bodyEndPosition );
     }
     return objects;
 }
