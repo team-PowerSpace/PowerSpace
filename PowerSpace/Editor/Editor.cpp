@@ -9,7 +9,7 @@
 #include "StageObjects.h"
 #include "JsonConverter.h"
 #include "ScriptEditor.h"
-
+#include <JsonWorker.h>
 #define IDC_MAIN_BUTTON 101 
 
 const int CEditor::defaultBoxMarginDividor = 4;
