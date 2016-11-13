@@ -26,6 +26,7 @@ IJsonPtr CJsonConverter::ToJsonObject( const CViewport &viewPort )
 {
     auto jViewPort = std::make_shared<CJsonMap>( L"ViewPort" );
     jViewPort->objects[L"Scale"] = std::make_shared<CJsonWString>( L"Scale", std::to_wstring( viewPort.GetScale() ) );
+    jViewPort->objects[L"Angle"] = std::make_shared<CJsonWString>( L"Angle", std::to_wstring( viewPort.GetAngle() ) );
     jViewPort->objects[L"Zero Location"] = ToJsonObject( viewPort.GetZeroLocation() );
     return std::static_pointer_cast<IJsonObject>(jViewPort);
 }

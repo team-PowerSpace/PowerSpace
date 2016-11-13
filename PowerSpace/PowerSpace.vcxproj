@@ -172,6 +172,7 @@
     <ClInclude Include="ScriptEngine\CDrawableBuilder.h" />
     <ClInclude Include="ScriptEngine\CPyObjectManager.h" />
     <ClInclude Include="ScriptEngine\CScriptHolder.h" />
+    <ClInclude Include="ScriptEngine\CViewPortWrap.h" />
     <ClInclude Include="ScriptEngine\PyObjectBuilder.h" />
     <ClInclude Include="ScriptEngine\ScriptEngine.h" />
     <ClInclude Include="ScriptEngine\ScriptSolver.h" />
@@ -214,6 +215,7 @@
     <ClCompile Include="ScriptEditor.cpp" />
     <ClCompile Include="ScriptEngine\CDrawableBuilder.cpp" />
     <ClCompile Include="ScriptEngine\CScriptHolder.cpp" />
+    <ClCompile Include="ScriptEngine\CViewPortWrap.cpp" />
     <ClCompile Include="ScriptEngine\PyObjectBuilder.cpp" />
     <ClCompile Include="ScriptEngine\ScriptEngine.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
