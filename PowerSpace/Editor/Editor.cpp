@@ -107,6 +107,7 @@ CEditor* CEditor::GetWindowByHandle( HWND handle )
 
 void CEditor::SetActiveId( const IdType& id )
 {
+	activeId = id;
 	wchar_t firstLetter = id[0];
 	if ( firstLetter ==  L't') {
 		EnableWindow( setFontButton, true );
