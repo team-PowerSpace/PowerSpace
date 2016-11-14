@@ -6,13 +6,14 @@
 #include <Exception>
 #include <iostream>
 #include <fstream>
+#include <ObjectIdGenerator.h>
 
 
 class ScriptHolder
 {
 	//key -> pair of <objId, typeOfScript>
 	//value -> all scripts of type associated with the object
-	std::unordered_map<std::pair<IdType, EventType>, std::vector<PyObject*>> Scripts; //Scripts, that were run on this session
+	std::unordered_map<std::pair<IdType, EventType>, std::vector<PyObject*>, IdTypeHash> Scripts; //Scripts, that were run on this session
 
 public:
 	//not sure if we will need it later
@@ -20,9 +21,9 @@ public:
 	std::vector<PyObject*> getScript(std::pair<IdType, EventType> key);				 //Get script by path
 	bool addScript(std::pair<IdType, EventType> key, PyObject* script );   //Add script that is not into the Holder yet
 	bool addScript(std::pair<IdType, EventType> key, CScript script);		//Add script by it's CScript
-	void removeScripts(IdType objectId);	//Remove scripts when object removed
+	void removeScripts(IdType& objectId);	//Remove scripts when object removed
 
-	int getSize() const;
+	size_t getSize() const;
 	void decAllRefs();
 	
 

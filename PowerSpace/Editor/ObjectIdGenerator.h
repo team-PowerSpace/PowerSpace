@@ -9,6 +9,17 @@ class CTextBoxObject;
 
 using IdType = std::wstring;
 
+
+struct IdTypeHash
+{
+	std::size_t operator()(IdType& k)
+	{
+		return (std::hash<std::wstring>()(k));
+	}
+};
+
+
+
 // generates a new unique identifier for the object
 class CObjectIdGenerator
 {

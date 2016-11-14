@@ -25,12 +25,12 @@ bool ScriptHolder::addScript(std::pair<IdType, EventType> key, PyObject* script 
 	return false;
 }
 
-void ScriptHolder::removeScripts(std::string objectId)
+void ScriptHolder::removeScripts(IdType& objectId)
 {
 	std::vector<EventType> types;
 	types.push_back(EventType::EventClick);
 	types.push_back(EventType::EventTick);
-	assert(types.size() == (size_t) EventType::ALWAYS_LAST_FOR_SIZE);
+	assert(types.size() == (size_t) EventType::EventAll);
 	for (auto type : types)
 	{
 		Scripts.erase(std::pair<IdType, EventType>(objectId, type));
@@ -111,7 +111,8 @@ void ScriptHolder::decAllRefs()
 	return true;			 //If you want to support hotfixes to scripts -- don't forget to update code here
 }*/
 
-void ScriptHolder::decAllRefsAndClearObjects()
+//Not sure if I'll need to DECREF later on. We'll see
+/*void ScriptHolder::decAllRefsAndClearObjects()
 {
     for( auto a = Scripts.begin(); a != Scripts.end(); a++ ) {
         PyObject* toDecRef = a->second;
@@ -119,7 +120,7 @@ void ScriptHolder::decAllRefsAndClearObjects()
         Py_CLEAR( toDecRef );
         Scripts.erase( a );
     }
-}
+}*/
 //TODO: Need to solve link error with scriptEngine.obj
 /*
 ScriptHolder::~ScriptHolder()

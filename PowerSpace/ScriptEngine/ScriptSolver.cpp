@@ -19,7 +19,7 @@ std::shared_ptr<IDrawable> CScriptSolver::Run()
 	Py_XDECREF(pModule);
 
 	if( pModule != nullptr ) {
-		pFunc = GetPyFunction( pModule, func);
+		pFunc = GetPyFunction( pModule );
 		Py_XDECREF(pModule);
 		if( pFunc && PyCallable_Check( pFunc ) ) {
 			pArgs = PyTuple_New( 1 );

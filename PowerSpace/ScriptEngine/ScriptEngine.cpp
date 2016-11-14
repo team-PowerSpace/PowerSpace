@@ -15,10 +15,6 @@ CScriptEngine::CScriptEngine( CStage& _stage )
 
 std::vector<int> CScriptEngine::RunScripts(IdType objectId, EventType type,  std::vector<PyObject*> scripts)
 {
-	if (objectId == "-1") 
-	{
-		return std::vector<int>();
-	}
 	std::shared_ptr<IDrawable> workingObject = stage.GetObjectById(objectId);
 
 	for( auto currentScript = scripts.begin(); currentScript != scripts.end(); currentScript++ ) {

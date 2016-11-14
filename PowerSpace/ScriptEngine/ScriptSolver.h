@@ -21,6 +21,6 @@ private:
 	std::shared_ptr<IDrawable> object;
 	std::shared_ptr<CDrawableBuilder> pObject;
 
-	PyObject *GetPyFunction(PyObject *pModule, std::string func) const;
+	PyObject *GetPyFunction(PyObject *pModule) const;
 	void UpdateObject();
 };
