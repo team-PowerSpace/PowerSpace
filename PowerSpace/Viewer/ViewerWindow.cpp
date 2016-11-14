@@ -107,11 +107,15 @@ LRESULT CViewerWindow::WindowProc( HWND handle, UINT msg, WPARAM wParam, LPARAM 
 		return 0;
 
 	case WM_LBUTTONDOWN:
-		wndPtr->onMouseClick( msg, wParam, lParam );
+		wndPtr->onLButtonMouseClick( msg, wParam, lParam );
+		return 0;
+
+	case WM_RBUTTONDOWN:
+		wndPtr->onRButtonMouseClick( msg, wParam, lParam );
 		return 0;
 
 	case WM_LBUTTONDBLCLK:
-		wndPtr->onMouseClick( msg, wParam, lParam);
+		wndPtr->onLButtonMouseClick( msg, wParam, lParam);
 		return 0;
 
 	case WM_COMMAND:
@@ -268,11 +272,11 @@ void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 }
 
 //
-//  FUNCTION: onMouseClick()
+//  FUNCTION: onLButtonMouseClick()
 //
 //  PURPOSE: HERE WE HANDLE THE ONCLICK EVENTS
 //
-void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lParam )
+void CViewerWindow::onLButtonMouseClick( UINT msg, const WPARAM wParam, const LPARAM lParam )
 {
 	if( !viewerIsRunning )
 		return;
@@ -322,6 +326,10 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 	RECT rect;
 	::GetClientRect( handle, &rect );
 	::InvalidateRect( handle, &rect, false );
+}
+
+void CViewerWindow::onRButtonMouseClick( UINT msg, const WPARAM wParam, const LPARAM lParam )
+{
 }
 
 void CViewerWindow::onCommandMenu( WPARAM wParam, LPARAM lParam )

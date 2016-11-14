@@ -61,7 +61,9 @@ private:
 
 	void onMouseMove( const WPARAM wParam, const LPARAM lParam );
 
-	void onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lParam );
+	void onLButtonMouseClick( UINT msg, const WPARAM wParam, const LPARAM lParam );
+
+	void onRButtonMouseClick( UINT msg, const WPARAM wParam, const LPARAM lParam );
 
 	void onCommand( WPARAM wParam, LPARAM lParam );
 
