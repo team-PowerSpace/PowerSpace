@@ -35,10 +35,10 @@ public:
 	IJsonPtr ToJson() const;
 	std::wstring GetContents() const;
 	void SetContents( const std::wstring &_contents );
-	void SetFont( LOGFONT newFont );
+	void SetFont( HFONT newFont );
 private:
 	// text, that is stored in the text box
 	std::wstring contents;
 	// font of the text
-	LOGFONT font;
+	HFONT font;
 };

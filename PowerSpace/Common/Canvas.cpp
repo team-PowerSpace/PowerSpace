@@ -17,10 +17,11 @@ void CCanvas::DrawEllipse( HDC hdc, TBox box, COLORREF color ) const
     ::DeleteObject( brush );
 }
 
-void CCanvas::DrawTextBox( HDC hdc, TBox box, COLORREF color, const std::wstring& text, UINT format ) const
+void CCanvas::DrawTextBox( HDC hdc, TBox box, COLORREF color, const std::wstring& text, HFONT hFont, UINT format ) const
 {
 	int bkModeOld = ::SetBkMode(hdc, TRANSPARENT);
     COLORREF colorOld = ::SetTextColor( hdc, color );
+	::SelectObject(hdc, hFont);
     ::DrawText( hdc, text.c_str(), -1, &box, format );
     ::SetTextColor( hdc, colorOld );
 	::SetBkMode(hdc, bkModeOld);

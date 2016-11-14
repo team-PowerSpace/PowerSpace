@@ -394,8 +394,9 @@ void CEditor::onFontSelect()
 	chooseFont.rgbColors = rgbCurrent;
 	chooseFont.Flags = CF_SCREENFONTS | CF_EFFECTS;
 	if (::ChooseFont(&chooseFont)) {
-		hFont = CreateFontIndirect(chooseFont.lpLogFont);
-		//stage->GetObjectById(activeId)->SetColor(chooseFont.rgbColors);
+		hFont = CreateFontIndirect( chooseFont.lpLogFont );
+		reinterpret_cast<CTextBoxObject*>( stage->GetObjectById(activeId).get() )->SetColor( chooseFont.rgbColors );
+		reinterpret_cast<CTextBoxObject*>( stage->GetObjectById(activeId).get() )->SetFont( hFont );
 		renderingWindow.ReDraw();
 	}
 }

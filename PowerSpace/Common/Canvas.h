@@ -12,7 +12,7 @@ public:
     void DrawEllipse( HDC hdc, TBox box, COLORREF color ) const;
 
     // draws text on canvas
-    void DrawTextBox( HDC hdc, TBox box, COLORREF color, const std::wstring& text,
+    void DrawTextBox( HDC hdc, TBox box, COLORREF color, const std::wstring& text, HFONT hFont,
         UINT format = DT_CENTER | DT_SINGLELINE | DT_VCENTER ) const;
 };
 
