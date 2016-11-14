@@ -38,12 +38,12 @@ public:
 	unsigned int GetFontSize() const;
 	unsigned long int GetFontColor() const;
 	void SetContents( const std::wstring &_contents );
-	void SetFont( LOGFONT newFont );
+	void SetFont( HFONT newFont );
 	void SetFontColor( COLORREF color_ );
 private:
 	// text, that is stored in the text box
 	std::wstring contents;
 	// font of the text
-	LOGFONT font;
+	HFONT font;
 	COLORREF fontColor;
 };
