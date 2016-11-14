@@ -37,9 +37,9 @@ public:
 	std::string GetText() const;
 	unsigned int GetFontSize() const;
 	unsigned long int GetFontColor() const;
-	void SetContents( const std::wstring &_contents );
-	void SetFont( HFONT newFont );
-	void SetFontColor( COLORREF color_ );
+	void SetContents(const std::wstring &_contents);
+	void SetFont(HFONT newFont);
+	void SetFontColor(COLORREF color_);
 private:
 	// text, that is stored in the text box
 	std::wstring contents;
