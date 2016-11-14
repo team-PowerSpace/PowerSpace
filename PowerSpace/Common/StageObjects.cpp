@@ -53,7 +53,7 @@ CTextBoxObject::CTextBoxObject( COLORREF _color, TBox _box, const std::wstring& 
 
 void CTextBoxObject::Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const
 {
-    canvas.DrawTextBox( hdc, viewport.ConvertToScreenCoordinates( containingBox ), color, contents );
+    canvas.DrawTextBox( hdc, viewport.ConvertToScreenCoordinates( containingBox ), color, contents, font );
 }
 
 std::wstring CTextBoxObject::GetContents( ) const
@@ -81,7 +81,7 @@ void CTextBoxObject::SetContents( const std::wstring &_contents )
 	contents = _contents;
 }
 
-void CTextBoxObject::SetFont( LOGFONT newFont )
+void CTextBoxObject::SetFont( HFONT newFont )
 {
 	font = newFont;
 }
