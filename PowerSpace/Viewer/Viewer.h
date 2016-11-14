@@ -1,6 +1,6 @@
 #pragma once
-#include "Stage.h"
-#include "ViewerWindow.h"
+#include <Stage.h>
+#include <ViewerWindow.h>
 
 class CViewer
 {

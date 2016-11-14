@@ -1,9 +1,10 @@
 #pragma once
-#include "Stage.h"
-#include "Resource.h"
-#include "ScriptEngine.h"
+#include <Stage.h>
+#include "resource.h"
+#include <ScriptEngine.h>
 
 #define BLUE_FOR_CANVAS_CROSS RGB(0, 128, 255)
+enum ColorBufferActionType { RestoreColor, SetColor };
 
 // win32 window of the viewer module
 // has references to viewport and canvas (to modify them easily)
@@ -41,7 +42,8 @@ private:
 	int bitmapWidth; // canvas params
 	int bitmapHeight;
 
-	int activeId; // id of currently active object
+	IdType activeId; // id of currently active object
+	int colorBuf; // Bufferized color of object for clever selection
 
 	bool viewerIsRunning; // Pause/Play indicator
 
@@ -65,7 +67,13 @@ private:
 
 	void onCommandMenu( WPARAM wParam, LPARAM lParam );
 
+	void enableTimer( int timeDelay, int timerId = 0 );
+
+	void disableTimer( int timerId = 0 );
+
 	POINT getMouseCoords( LPARAM lParam );
 
 	bool isPointInBox( TBox box, POINT point );
+
+	void updateColorWithBuffer( IdType prevActiveId, ColorBufferActionType actionType );
 };

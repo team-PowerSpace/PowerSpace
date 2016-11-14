@@ -74,9 +74,9 @@ bool ScriptHolder::addScript(std::pair<IdType, EventType> key, CScript script)
 	//Returns true if was inserted succefully
 }
 
-int ScriptHolder::getSize() const
+size_t ScriptHolder::getSize() const
 {
-	return Scripts.size();
+    return Scripts.size();
 }
 
 std::vector<PyObject*> ScriptHolder::getScript(std::pair<IdType, EventType> key)
@@ -111,12 +111,21 @@ void ScriptHolder::decAllRefs()
 	return true;			 //If you want to support hotfixes to scripts -- don't forget to update code here
 }*/
 
+void ScriptHolder::decAllRefsAndClearObjects()
+{
+    for( auto a = Scripts.begin(); a != Scripts.end(); a++ ) {
+        PyObject* toDecRef = a->second;
+        Py_XDECREF( toDecRef );
+        Py_CLEAR( toDecRef );
+        Scripts.erase( a );
+    }
+}
 //TODO: Need to solve link error with scriptEngine.obj
 /*
 ScriptHolder::~ScriptHolder()
 {
-	for (auto iterator : Scripts) {
-	Py_DECREF(iterator.second);
-	}
+    for (auto iterator : Scripts) {
+    Py_DECREF(iterator.second);
+    }
 }
 */

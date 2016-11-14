@@ -33,7 +33,18 @@ std::shared_ptr<IDrawable> CScriptSolver::Run()
 	return object;
 }
 
-PyObject *CScriptSolver::GetPyFunction( PyObject *pModule, std::string func ) const
+PyObject *SafeGetFunc( PyObject *pModule, const char *funcName )
+{
+	if ( PyObject_HasAttrString( pModule, funcName ) )
+	{
+		return PyObject_GetAttrString( pModule, funcName );
+	}
+	else {
+		return NULL;
+	}
+}
+
+PyObject *CScriptSolver::GetPyFunction( PyObject *pModule ) const
 {
 	//Strings will be added to enum (need to discuss location)
 	PyObject *pFunc = NULL;

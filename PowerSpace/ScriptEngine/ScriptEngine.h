@@ -1,6 +1,6 @@
 #pragma once
-#include "Stage.h"
-#include "CScriptHolder.h"
+#include <Stage.h>
+#include <CScriptHolder.h>
 
 // this class processes python scripts and changes the stage
 class CScriptEngine

@@ -1,15 +1,13 @@
 #include <stdafx.h>
-#include "resource.h"
-#include "Resource.h"
 #include "ViewerWindow.h"
 
 const wchar_t* CViewerWindow::ClassName = L"CViewerWindow";
 const wchar_t* CViewerWindow::ViewerApplicationName = L"Powerspace Viewer";
-const UINT TICK_LENGTH = 10;
+const UINT TICK_LENGTH = 1000;
 
 CViewerWindow::CViewerWindow( CStage& _stage, CViewport& _viewport, CCanvas& _canvas ) :
 	windowHeight( 600 ), windowWidth( 800 ), viewport( _viewport ), canvas( _canvas ),
-	handle( nullptr ), stage( _stage ), scriptEngine( stage ), activeId(0),
+	handle( nullptr ), stage( _stage ), scriptEngine( stage ), activeId( CObjectIdGenerator::GetEmptyId() ), colorBuf( -1 ),
 	viewerIsRunning( true )
 {}
 
@@ -56,7 +54,9 @@ bool CViewerWindow::Create()
 		WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
 		windowHeight, windowWidth, nullptr, nullptr, 
 		hInstance, this );
-
+	if ( handle != 0 ) {
+		enableTimer( TICK_LENGTH );
+	}
 	return (handle != 0);
 }
 
@@ -110,19 +110,25 @@ LRESULT CViewerWindow::WindowProc( HWND handle, UINT msg, WPARAM wParam, LPARAM 
 		wndPtr->onMouseClick( msg, wParam, lParam );
 		return 0;
 
+	case WM_LBUTTONDBLCLK:
+		wndPtr->onMouseClick( msg, wParam, lParam);
+		return 0;
+
 	case WM_COMMAND:
 		wndPtr->onCommand( wParam, lParam );
 		return 0;
+	case WM_TIMER: 
+	{
+		wndPtr->onTimer( );
+		return 0;
+	}
 
 	default:
 		return ::DefWindowProc( handle, msg, wParam, lParam );
 	}
 }
 
-void CViewerWindow::onCreate()
-{
-	::SetTimer( handle, 1, TICK_LENGTH, nullptr );
-}
+void CViewerWindow::onCreate() {}
 
 void CViewerWindow::onClose()
 {
@@ -144,9 +150,11 @@ void CViewerWindow::onTimer()
 	for( auto pair : stage.GetObjects() ) {
 		//auto scripts = pair.second->GetScripts( EventType::EventTick );
 		auto scripts = stage.getScripts(activeId, EventType::EventTick);
+		updateColorWithBuffer(activeId, ColorBufferActionType::RestoreColor);
 		if( !scripts.empty() ) {
 			scriptEngine.RunScripts( activeId, EventType::EventTick, scripts );
 		}
+		updateColorWithBuffer( activeId, ColorBufferActionType::SetColor );
 	}
 
 	RECT rect;
@@ -225,7 +233,7 @@ void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 
 	POINT mouseCoords = getMouseCoords( lParam );
 
-	int topId = -1;
+	IdType topId = CObjectIdGenerator::GetEmptyId();
 
 	for( auto pair : stage.GetObjects() ) {
 		TBox curBox = pair.second->GetContainingBox();
@@ -235,7 +243,7 @@ void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 		}
 	}
 
-	if( topId == -1 )
+	if( topId == CObjectIdGenerator::GetEmptyId() )
 		return;
 
 	/*
@@ -275,11 +283,10 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 	POINT mouseCoords = getMouseCoords( lParam );
 
 	// storage space for usual color of currently active object
-	int prevActiveId = activeId;
-	activeId = 0;
+	IdType prevActiveId = activeId;
+	activeId = CObjectIdGenerator::GetEmptyId();
 
-	static COLORREF colorBuf;
-
+	
 	for( auto pair : stage.GetObjects() ) {
 		TBox curBox = pair.second->GetContainingBox();
 
@@ -289,15 +296,18 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 	}
 
 	// same active object as before => no action needed
-	if( activeId == prevActiveId )
-		return;
-
-	if( prevActiveId != 0 ) // not the first click => we have to restore smth
-		stage.GetObjectById( prevActiveId )->SetColor( colorBuf ); // restore original color
+	// // Strange behaviour. May be I want to change cycled colors,
+	// // this way, I have to change focus every time. 
+	// // Following code will be commented until the discussion.
+	// if( activeId == prevActiveId )
+	//	 return;
+	
+	
 
 	// clicked on new object => have to process it
-	if( activeId != 0 ) {
-		colorBuf = stage.GetObjectById( activeId )->GetColor();
+	updateColorWithBuffer(prevActiveId, ColorBufferActionType::RestoreColor);
+	if(activeId != CObjectIdGenerator::GetEmptyId()) {
+		
 
 		stage.GetObjectById( activeId )->SetColor( static_cast<COLORREF> (colorBuf * 0.8));
 
@@ -307,6 +317,7 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 			scriptEngine.RunScripts(activeId, EventType::EventClick, scripts);
 		}
 	}
+	updateColorWithBuffer( prevActiveId, ColorBufferActionType::SetColor );
 
 	RECT rect;
 	::GetClientRect( handle, &rect );
@@ -321,6 +332,12 @@ void CViewerWindow::onCommandMenu( WPARAM wParam, LPARAM lParam )
 	{
 	case ID_CONTROL_PLAY:
 		viewerIsRunning = !viewerIsRunning;
+		if ( viewerIsRunning ) {
+			enableTimer( TICK_LENGTH );
+		}
+		else {
+			disableTimer( );
+		}
 
 		HMENU pMenu = ::GetMenu( handle );
 
@@ -367,4 +384,36 @@ bool CViewerWindow::isPointInBox( TBox box, POINT point )
 		return true;
 	else
 		return false;
+}
+
+void CViewerWindow::enableTimer( int timeDelay, int timerId)
+{
+	::SetTimer( handle, timerId, timeDelay, 0 );
+}
+
+void CViewerWindow::disableTimer( int timerId)
+{
+	::KillTimer( handle, timerId );
+}
+
+void CViewerWindow::updateColorWithBuffer( IdType prevActiveId, ColorBufferActionType actionType )
+{
+	switch ( actionType )
+	{
+		case ColorBufferActionType::RestoreColor:
+		{
+			if ( prevActiveId != CObjectIdGenerator::GetEmptyId() ) {
+				stage.GetObjectById( prevActiveId )->SetColor( colorBuf );
+			}
+			break;
+		}
+		case ColorBufferActionType::SetColor:
+		{
+			if ( activeId != CObjectIdGenerator::GetEmptyId() ) {
+				colorBuf = stage.GetObjectById( activeId )->GetColor( );
+				stage.GetObjectById( activeId )->SetColor( static_cast<COLORREF> (colorBuf * 0.9) );
+			}
+			break;
+		}
+	}
 }

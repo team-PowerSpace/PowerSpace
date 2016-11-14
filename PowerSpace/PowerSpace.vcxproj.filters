@@ -60,6 +60,15 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Json">
+      <UniqueIdentifier>{b4bfd954-b4d1-42c7-ad8b-aaf720cf6fec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Json\Headers">
+      <UniqueIdentifier>{e61e1c59-668e-494b-8e9c-4e92a29c4dd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Json\Source Files">
+      <UniqueIdentifier>{db68bdbb-60a6-4397-af2e-a9d891508d6b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="targetver.h">
@@ -107,9 +116,6 @@
     <ClInclude Include="Editor\EditorRenderingWindow.h">
       <Filter>Editor\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EditControlWindow.h">
-      <Filter>Editor\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Viewer\ViewerWindow.h">
       <Filter>RenderingEngine\Header Files</Filter>
     </ClInclude>
@@ -126,6 +132,27 @@
       <Filter>ScriptEngine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="ScriptEngine\CScriptHolder.h">
+      <Filter>ScriptEngine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\ObjectIdGenerator.h">
+      <Filter>Editor\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Json\JsonConverter.h">
+      <Filter>Json\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Json\JsonObject.h">
+      <Filter>Json\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Json\JsonWorker.h">
+      <Filter>Json\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditControlWindow.h">
+      <Filter>Editor\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptEditor.h">
+      <Filter>Editor\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptEngine\CViewPortWrap.h">
       <Filter>ScriptEngine\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -169,9 +196,6 @@
     <ClCompile Include="Editor\EditorRenderingWindow.cpp">
       <Filter>Editor\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EditControlWindow.cpp">
-      <Filter>Editor\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Viewer\ViewerWindow.cpp">
       <Filter>RenderingEngine\Source Files</Filter>
     </ClCompile>
@@ -187,6 +211,27 @@
     <ClCompile Include="ScriptEngine\CScriptHolder.cpp">
       <Filter>ScriptEngine\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Editor\ObjectIdGenerator.cpp">
+      <Filter>Editor\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Json\JsonConverter.cpp">
+      <Filter>Json\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Json\JsonObject.cpp">
+      <Filter>Json\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Json\JsonWorker.cpp">
+      <Filter>Json\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditControlWindow.cpp">
+      <Filter>Editor\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptEditor.cpp">
+      <Filter>Editor\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptEngine\CViewPortWrap.cpp">
+      <Filter>ScriptEngine\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PowerSpace.rc">
@@ -198,6 +243,27 @@
       <Filter>Root\Resource Files</Filter>
     </Image>
     <Image Include="PowerSpace.ico">
+      <Filter>Root\Resource Files</Filter>
+    </Image>
+    <Image Include="bitmaps\rectangle.bmp">
+      <Filter>Root\Resource Files</Filter>
+    </Image>
+    <Image Include="bitmaps\ellipse.bmp">
+      <Filter>Root\Resource Files</Filter>
+    </Image>
+    <Image Include="bitmaps\textbox.bmp">
+      <Filter>Root\Resource Files</Filter>
+    </Image>
+    <Image Include="bitmaps\play.bmp">
+      <Filter>Root\Resource Files</Filter>
+    </Image>
+    <Image Include="bitmaps\delete.bmp">
+      <Filter>Root\Resource Files</Filter>
+    </Image>
+    <Image Include="bitmaps\bitmap1.bmp">
+      <Filter>Root\Resource Files</Filter>
+    </Image>
+    <Image Include="bitmaps\edit.bmp">
       <Filter>Root\Resource Files</Filter>
     </Image>
   </ItemGroup>

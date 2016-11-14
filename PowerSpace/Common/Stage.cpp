@@ -1,32 +1,37 @@
 #include <stdafx.h>
 #include "Stage.h"
 
-const std::unordered_map<int, IDrawablePtr>& CStage::GetObjects() const
+const std::unordered_map<IdType, IDrawablePtr>& CStage::GetObjects() const
 {
 	return objects;
 }
 
-std::unordered_map<int, IDrawablePtr>& CStage::GetObjects()
+std::unordered_map<IdType, IDrawablePtr>& CStage::GetObjects()
 {
 	return objects;
+}
+
+bool CStage::AddObject( IdType objectId, IDrawablePtr object )
+{
+    return objects.insert( std::make_pair( objectId, object ) ).second;
 }
 
 std::vector<IDrawablePtrConst> CStage::GetObjectsAsVector() const
 {
 	std::vector<IDrawablePtrConst> result;
 	result.reserve( objects.size() );
-	for( const std::pair< int, IDrawablePtr> pair : objects ) {
+	for( const std::pair< IdType, IDrawablePtr> pair : objects ) {
 		result.push_back( pair.second );
 	}
 	return result;
 }
 
-IDrawablePtrConst CStage::GetObjectById( int objectId ) const
+IDrawablePtrConst CStage::GetObjectById( IdType objectId ) const
 {
 	return objects.at( objectId );
 }
 
-IDrawablePtr CStage::GetObjectById( int objectId )
+IDrawablePtr CStage::GetObjectById( IdType objectId )
 {
 	return objects.at( objectId );
 }
@@ -70,6 +75,16 @@ CViewport & CStage::GetViewPort()
 const CViewport & CStage::GetViewPort() const
 {
 	return viewport;
+}
+
+std::wstring CStage::ToWString( ) const
+{
+	return CJsonConverter::ToJsonObject( *this )->ToJson();
+}
+
+IJsonPtr CStage::ToJson() const
+{
+	return CJsonConverter::ToJsonObject( *this );
 }
 
 void CStage::addScript(EventType type, IdType objectId, CScript script)
