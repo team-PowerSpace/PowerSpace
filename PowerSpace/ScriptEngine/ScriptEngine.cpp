@@ -11,7 +11,34 @@ CScriptEngine::CScriptEngine( CStage& _stage )
 	: stage( _stage ), isPythonRunning( false )
 {}
 
+void CScriptEngine::LoadScene()
+{
+	std::unordered_map<IdType, IDrawablePtr>& objects = stage.GetObjects();
+	PyObject* mainModule = PyImport_AddModule( "__main__" );
+	globalDictionary = PyModule_GetDict( mainModule );
+	for( std::pair<IdType, IDrawablePtr> object : objects ) {		
+		AddPyObject(object.first, object.second);
+	}
+}
 
+void CScriptEngine::AddPyObject( IdType name, IDrawablePtr description )
+{
+	std::string constructorScript( name.begin(), name.end() );
+	PyObject* pyObjName = PyUnicode_FromString( constructorScript.c_str() );
+	constructorScript.append( "=Engine.CDrawable()" );
+	PyObject* localDictionary = PyDict_New();
+	PyObject* result = PyRun_String( constructorScript.c_str(), Py_file_input, globalDictionary, localDictionary );
+	if( !result ) {
+		throw "Error: invalid input";		
+	}
+	PyDict_Update( globalDictionary, localDictionary );
+	if( PyDict_Contains( localDictionary, pyObjName ) ) {
+		PyObject* pyVal = PyDict_GetItem( localDictionary, pyObjName );
+		pyScene.insert( std::pair<IdType, PyObject*>( name, pyVal ));
+	} else {
+		throw "Error: failed get object";
+	}
+}
 
 std::vector<int> CScriptEngine::RunScripts(IdType objectId, EventType type,  std::vector<PyObject*> scripts)
 {
