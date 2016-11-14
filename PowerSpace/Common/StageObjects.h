@@ -34,11 +34,16 @@ public:
 	std::wstring ToWString() const;
 	IJsonPtr ToJson() const;
 	std::wstring GetContents() const;
-	void SetContents( const std::wstring &_contents );
-	void SetFont( HFONT newFont );
+	std::string GetText() const;
+	unsigned int GetFontSize() const;
+	unsigned long int GetFontColor() const;
+	void SetContents(const std::wstring &_contents);
+	void SetFont(HFONT newFont);
+	void SetFontColor(COLORREF color_);
 private:
 	// text, that is stored in the text box
 	std::wstring contents;
 	// font of the text
 	HFONT font;
+	COLORREF fontColor;
 };
