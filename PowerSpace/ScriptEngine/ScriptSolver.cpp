@@ -3,18 +3,19 @@
 #include <iostream>
 #include <exception>
 
-CScriptSolver::CScriptSolver( std::shared_ptr<IDrawable> obj, PyObject* pyObject_,
-	std::string func_) : pyObject( pyObject_ ), func( func_ ), object( obj )
+CScriptSolver::CScriptSolver( std::shared_ptr<IDrawable> obj, PyObject* module_, /*PyObject* sceneObject,*/
+	std::string func_) : module( module_ ), func( func_ ), object( obj ) /*pObject(sceneObject)*/
 {
-	pObject = std::make_shared<CDrawableBuilder>(obj);
+	pObject = std::make_shared<CDrawableBuilder>(obj);	
 }
+
 
 std::shared_ptr<IDrawable> CScriptSolver::Run()
 {
 	PyObject *pModule, *pFunc;
 	PyObject *pArgs, *pValue;
 
-	pModule = PyImport_Import(pyObject);
+	pModule = PyImport_Import(module);
 	//Because the pyimport creates 2 ref for unrealiesd reason
 	Py_XDECREF(pModule);
 
@@ -24,6 +25,7 @@ std::shared_ptr<IDrawable> CScriptSolver::Run()
 		if( pFunc && PyCallable_Check( pFunc ) ) {
 			pArgs = PyTuple_New( 1 );
 			PyTuple_SetItem( pArgs, 0, pObject->GetRawpObjectRef() );
+			//PyTuple_SetItem( pArgs, 0, pObject );
 			pValue = PyObject_CallObject( pFunc, pArgs );
 			Py_XDECREF( pValue );
 			Py_CLEAR( pFunc );
