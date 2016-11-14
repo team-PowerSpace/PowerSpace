@@ -1,5 +1,6 @@
 #include <stdafx.h>
 #include "CTextBoxBuilder.h"
+#include "StageObjects.h"
 #pragma warning( disable : 4100 )
 
 CTextBoxBuilder::CTextBoxBuilder( std::shared_ptr<IDrawable> object )
@@ -17,9 +18,9 @@ CTextBoxBuilder::CTextBoxBuilder( std::shared_ptr<IDrawable> object )
 		PythonTextBox_set_text(
 			reinterpret_cast<engine_PythonTextBoxObject *>(pObject.get()), castedObject->GetText(), 0 );
 		PythonTextBox_set_fontSize(
-			reinterpret_cast<engine_PythonTextBoxObject *>(pObject.get()), castedObject->GetText(), 0 );
+			reinterpret_cast<engine_PythonTextBoxObject *>(pObject.get()), castedObject->GetFontSize(), 0 );
 		PythonTextBox_set_fontColor(
-			reinterpret_cast<engine_PythonTextBoxObject *>(pObject.get()), castedObject->GetText(), 0 );
+			reinterpret_cast<engine_PythonTextBoxObject *>(pObject.get()), castedObject->GetFontColor(), 0 );
 	}
 }
 
@@ -133,7 +134,7 @@ std::shared_ptr<PyObject> CTextBoxBuilder::GetpObject() const
 	return pObject;
 }
 
-char* CTextBoxBuilder::PythonTextBox_get_text( engine_PythonTextBoxObject *self, void *closure )
+std::string CTextBoxBuilder::PythonTextBox_get_text( engine_PythonTextBoxObject *self, void *closure )
 {
 	return self->text;
 }
@@ -149,7 +150,7 @@ unsigned long int CTextBoxBuilder::PythonTextBox_get_fontColor( engine_PythonTex
 }
 
 /*setters for the object*/
-int CTextBoxBuilder::PythonTextBox_set_text( engine_PythonTextBoxObject *self, char* value, void *closure )
+int CTextBoxBuilder::PythonTextBox_set_text( engine_PythonTextBoxObject *self, std::string value, void *closure )
 {
 	self->text = value;
 	return 0;

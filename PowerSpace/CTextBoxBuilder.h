@@ -7,7 +7,7 @@ public:
 
 	typedef struct {
 		PyObject_HEAD
-			char* text;
+			std::string text;
 		unsigned int fontSize;
 		unsigned long int fontColor;
 	} engine_PythonTextBoxObject;
@@ -34,7 +34,7 @@ public:
 
 	std::shared_ptr<PyObject> GetpObject() const;
 
-	static char* PythonTextBox_get_text( engine_PythonTextBoxObject *self, void *closure );
+	static std::string PythonTextBox_get_text( engine_PythonTextBoxObject *self, void *closure );
 
 	static unsigned int PythonTextBox_get_fontSize( engine_PythonTextBoxObject *self, void *closure );
 
@@ -42,7 +42,7 @@ public:
 
 	/*setters for the object*/
 
-	static int PythonTextBox_set_text( engine_PythonTextBoxObject *self, char* value, void *closure );
+	static int PythonTextBox_set_text( engine_PythonTextBoxObject *self, std::string value, void *closure );
 
 	static int PythonTextBox_set_fontSize( engine_PythonTextBoxObject *self, unsigned int, void *closure );
 

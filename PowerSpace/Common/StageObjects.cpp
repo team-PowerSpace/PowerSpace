@@ -46,7 +46,7 @@ IJsonPtr CEllipseObject::ToJson() const
 
 
 CTextBoxObject::CTextBoxObject( COLORREF _color, TBox _box, const std::wstring& _contents )
-    : CDrawable( _color, _box, false ), contents( _contents )
+    : CDrawable( _color, _box, false ), contents( _contents ), fontColor(0)
 {
     id = CObjectIdGenerator::GenerateNewId<CTextBoxObject>();
 }
@@ -61,6 +61,21 @@ std::wstring CTextBoxObject::GetContents( ) const
 	return contents;
 }
 
+std::string CTextBoxObject::GetText() const
+{
+	return std::string( contents.begin(), contents.end() );
+}
+
+unsigned int CTextBoxObject::GetFontSize() const
+{
+	return font.lfHeight;
+}
+
+unsigned long int CTextBoxObject::GetFontColor() const
+{
+	return fontColor;
+}
+
 void CTextBoxObject::SetContents( const std::wstring &_contents )
 {
 	contents = _contents;
@@ -69,6 +84,11 @@ void CTextBoxObject::SetContents( const std::wstring &_contents )
 void CTextBoxObject::SetFont( LOGFONT newFont )
 {
 	font = newFont;
+}
+
+void CTextBoxObject::SetFontColor( COLORREF color_ ) 
+{
+	fontColor = color_;
 }
 
 std::wstring CTextBoxObject::ToWString( ) const
