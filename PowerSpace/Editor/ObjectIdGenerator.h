@@ -8,13 +8,13 @@ class CEllipseObject;
 class CTextBoxObject;
 
 using IdType = std::wstring;
-
+enum class EventType;
 
 struct IdTypeHash
 {
-	std::size_t operator()(IdType& k)
+	std::size_t operator()(std::pair<IdType, EventType> k) const
 	{
-		return (std::hash<std::wstring>()(k));
+		return (std::hash<std::wstring>()(k.first));
 	}
 };
 

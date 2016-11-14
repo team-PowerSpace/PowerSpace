@@ -11,7 +11,7 @@ CScriptSolver::CScriptSolver( std::shared_ptr<IDrawable> obj, PyObject* pyObject
 
 std::shared_ptr<IDrawable> CScriptSolver::Run()
 {
-	PyObject *pName, *pModule, *pFunc;
+	PyObject *pModule, *pFunc;
 	PyObject *pArgs, *pValue;
 
 	pModule = PyImport_Import(pyObject);
