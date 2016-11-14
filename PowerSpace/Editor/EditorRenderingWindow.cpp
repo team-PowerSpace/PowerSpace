@@ -1,6 +1,7 @@
-#include <stdafx.h>
+﻿#include <stdafx.h>
 #include <Winuser.h>
 #include "EditorRenderingWindow.h"
+//#include "ProtertyEditor.h"
 #include "resource.h"
 
 #define MAX_RESOURCE_LENGTH 100
@@ -180,18 +181,23 @@ LRESULT CEditorRenderingWindow::WindowProc( HWND handle, UINT message, WPARAM wP
     }
     case WM_LBUTTONDOWN:
     {
-        wndPtr->onMouseDown( lParam );
+        wndPtr->onLButtonMouseDown( lParam );
         break;
     }
+	case WM_RBUTTONDOWN:
+	{
+		wndPtr->onRButtonMouseDown( lParam );
+		break;
+	}
 	case WM_LBUTTONDBLCLK:
     {
-		wndPtr->onMouseDown(lParam);
+		wndPtr->onLButtonMouseDown(lParam);
         break;
     }
     case WM_MOUSELEAVE:
     case WM_LBUTTONUP:
     {
-        wndPtr->onMouseUpOrLeave( lParam );
+        wndPtr->onLButtonMouseUpOrLeave( lParam );
         break;
     }
     default:
@@ -274,7 +280,16 @@ void CEditorRenderingWindow::onMouseWheel( WPARAM wParam )
     ReDraw();
 }
 
-void CEditorRenderingWindow::onMouseDown( const LPARAM lparam )
+void CEditorRenderingWindow::onRButtonMouseDown( const LPARAM lparam )
+{
+	// IN PROGRESS
+	// selectedId;
+	//1. По id получить объект
+	//2. Вызвать создание диалогового окна с ссылкой на объект.
+	MessageBox( 0, L"sdfsdf", 0, 0 );
+}
+
+void CEditorRenderingWindow::onLButtonMouseDown( const LPARAM lparam )
 {
     POINT point = getPointByLParam( lparam );
     for( int i = static_cast<int>(markers.size()) - 1; i >= 0; i-- ) {
@@ -307,7 +322,7 @@ void CEditorRenderingWindow::onMouseDown( const LPARAM lparam )
     currentMovingState = TMovingState::MS_MovingCanvas;
 }
 
-void CEditorRenderingWindow::onMouseUpOrLeave( const LPARAM lparam )
+void CEditorRenderingWindow::onLButtonMouseUpOrLeave( const LPARAM lparam )
 {
     onMouseMove( lparam );
     currentMovingState = TMovingState::MS_None;

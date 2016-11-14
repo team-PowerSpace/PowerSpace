@@ -18,8 +18,6 @@ struct IdTypeHash
 	}
 };
 
-
-
 // generates a new unique identifier for the object
 class CObjectIdGenerator
 {

@@ -93,8 +93,9 @@ private:
 	void onMouseMove( const WPARAM wParam, const LPARAM lParam );
 	void onMouseMove( const LPARAM lParam );
 	void onMouseWheel( WPARAM wParam );
-	void onMouseDown( const LPARAM lparam );
-	void onMouseUpOrLeave( const LPARAM lparam );
+	void onLButtonMouseDown( const LPARAM lparam );
+	void onRButtonMouseDown( const LPARAM lparam );
+	void onLButtonMouseUpOrLeave( const LPARAM lparam );
 	void onResize( const RECT* area );
 
 	void drawEraseRectangle( HDC paintDC, const int width, const int height ) const;

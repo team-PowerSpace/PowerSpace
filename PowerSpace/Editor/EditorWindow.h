@@ -30,7 +30,6 @@ protected:
 	virtual void Scaling( const int direction ) override;
 	virtual void SelectDrawableObject( const IdType& id ) override;
 
-
 private:
 	static const wchar_t* ClassName;
 	std::shared_ptr<CStage> stage;
