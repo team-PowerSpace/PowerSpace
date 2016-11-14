@@ -9,7 +9,9 @@
 
 CScriptEngine::CScriptEngine( CStage& _stage )
 	: stage( _stage ), isPythonRunning( false )
-{}
+{
+	//LoadScene();
+}
 
 void CScriptEngine::LoadScene()
 {
@@ -40,10 +42,14 @@ void CScriptEngine::AddPyObject( IdType name, IDrawablePtr description )
 	}
 }
 
-std::vector<int> CScriptEngine::RunScripts(IdType objectId, EventType type,  std::vector<PyObject*> scripts)
+std::vector<int> CScriptEngine::RunScripts( IdType objectId, EventType type, std::vector<PyObject*> scripts )
 {
-	std::shared_ptr<IDrawable> workingObject = stage.GetObjectById(objectId);
-
+	std::shared_ptr<IDrawable> workingObject = stage.GetObjectById( objectId );
+	/*auto it = pyScene.find( objectId );
+	if( it == pyScene.end() ) {
+		throw "Can't find object in scene";
+	}
+	PyObject* sceneObject = it->second;*/
 	for( auto currentScript = scripts.begin(); currentScript != scripts.end(); currentScript++ ) {
 		std::string eventName = "";
 		switch (type) //last_for_size handled in default
@@ -58,8 +64,8 @@ std::vector<int> CScriptEngine::RunScripts(IdType objectId, EventType type,  std
 			assert(false); //In case we will add more functions
 		}
 		//Empty string left for ability to call different functions located in single script
-		CScriptSolver solver(workingObject, *currentScript, eventName);
-
+		CScriptSolver solver(workingObject, /*sceneObject,*/ *currentScript, eventName);
+		
         std::shared_ptr<IDrawable> changedObject = solver.Run();   //Returns shared_ptr to changed object, but values already set in the scene
 		assert( changedObject == workingObject );
 	}
