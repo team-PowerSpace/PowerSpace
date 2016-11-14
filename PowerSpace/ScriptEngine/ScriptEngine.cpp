@@ -13,7 +13,7 @@ CScriptEngine::CScriptEngine( CStage& _stage )
 
 
 
-std::vector<int> CScriptEngine::RunScripts(std::string objectId, EventType type,  std::vector<PyObject*> scripts)
+std::vector<int> CScriptEngine::RunScripts(IdType objectId, EventType type,  std::vector<PyObject*> scripts)
 {
 	if (objectId == "-1") 
 	{

@@ -3,7 +3,7 @@
 #include "CScriptHolder.h"
 
 
-bool ScriptHolder::addScript(std::pair<std::string, EventType> key, PyObject* script )
+bool ScriptHolder::addScript(std::pair<IdType, EventType> key, PyObject* script )
 {
 	//For now scripts hotfixes in running Viewer are not supported
 	Py_INCREF( script );
@@ -16,7 +16,7 @@ bool ScriptHolder::addScript(std::pair<std::string, EventType> key, PyObject* sc
 	{
 		std::vector<PyObject*> newVector;
 		newVector.push_back(script);
-		std::pair<std::pair<std::string, EventType>, std::vector<PyObject*>> toInsert(key, newVector);
+		std::pair<std::pair<IdType, EventType>, std::vector<PyObject*>> toInsert(key, newVector);
 		Scripts.insert(toInsert);
 		return true;
 
@@ -33,11 +33,11 @@ void ScriptHolder::removeScripts(std::string objectId)
 	assert(types.size() == (size_t) EventType::ALWAYS_LAST_FOR_SIZE);
 	for (auto type : types)
 	{
-		Scripts.erase(std::pair<std::string, EventType>(objectId, type));
+		Scripts.erase(std::pair<IdType, EventType>(objectId, type));
 	}
 }
 
-bool ScriptHolder::addScript(std::pair<std::string, EventType> key, CScript script)
+bool ScriptHolder::addScript(std::pair<IdType, EventType> key, CScript script)
 {
 	TPath wstrPath(script.GetPath());
 	std::ifstream stream(wstrPath.data(), std::ifstream::in); //The best way to check path validity is trying to open it
@@ -65,7 +65,7 @@ bool ScriptHolder::addScript(std::pair<std::string, EventType> key, CScript scri
 	{
 		std::vector<PyObject*> newVector;
 		newVector.push_back(pName);
-		std::pair<std::pair<std::string, EventType>, std::vector<PyObject*>> toInsert(key, newVector);
+		std::pair<std::pair<IdType, EventType>, std::vector<PyObject*>> toInsert(key, newVector);
 		Scripts.insert(toInsert);
 		return true;
 
@@ -79,7 +79,7 @@ int ScriptHolder::getSize() const
 	return Scripts.size();
 }
 
-std::vector<PyObject*> ScriptHolder::getScript(std::pair<std::string, EventType> key)
+std::vector<PyObject*> ScriptHolder::getScript(std::pair<IdType, EventType> key)
 {
 	std::vector<PyObject*> objects;
 	try {

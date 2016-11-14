@@ -37,10 +37,10 @@ public:
 	const CViewport& GetViewPort() const;
 
 	//add new script
-	void addScript(EventType type, std::string objectId, CScript script);
+	void addScript(EventType type, IdType objectId, CScript script);
 
 	//get scripts by type of function and object
-	std::vector<PyObject*> getScripts(std::string objId, EventType eventType);
+	std::vector<PyObject*> getScripts(IdType objId, EventType eventType);
 
 	//script correct removal
 	void decScriptRefs();
