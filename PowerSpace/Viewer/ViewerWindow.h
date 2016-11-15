@@ -4,6 +4,7 @@
 #include "ScriptEngine.h"
 
 #define BLUE_FOR_CANVAS_CROSS RGB(0, 128, 255)
+#define GREEN_FOR_CANVAS_CROSS RGB(0, 255, 128)
 enum ColorBufferActionType { RestoreColor, SetColor };
 
 enum TMovingState_Viewer

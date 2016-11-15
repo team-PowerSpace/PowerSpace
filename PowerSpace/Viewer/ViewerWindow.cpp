@@ -10,7 +10,7 @@ const double SPEED_MULTIPLIER = 1.1;
 UINT SPEED = TICK_LENGTH;
 
 CViewerWindow::CViewerWindow( CStage& _stage, CViewport& _viewport, CCanvas& _canvas ) :
-	windowHeight( 600 ), windowWidth( 800 ), viewport( _viewport ), canvas( _canvas ),
+	windowHeight( 1376 ), windowWidth( 768 ), viewport( _viewport ), canvas( _canvas ),
 	handle( nullptr ), stage( _stage ), scriptEngine( stage ), activeId( 0 ), colorBuf( -1 ),
 	viewerIsRunning( true ), currentMovingState( MSV_None )
 {
@@ -27,7 +27,7 @@ CViewerWindow::~CViewerWindow()
 //
 bool CViewerWindow::RegisterClass()
 {
-	HBRUSH backgroundBrush = ::CreateHatchBrush( HS_CROSS, 0x66FF66 );
+	HBRUSH backgroundBrush = ::CreateHatchBrush( HS_CROSS, GREEN_FOR_CANVAS_CROSS );
 	HMODULE instance = ::GetModuleHandleW( nullptr );
 
 	WNDCLASSEX windowClassInformation;
@@ -191,6 +191,10 @@ void CViewerWindow::onTimer()
 
 	RECT rect;
 	::GetClientRect( handle, &rect );
+	rect.top -= rect.bottom;
+	rect.bottom *= 2;
+	rect.left -= rect.right;
+	rect.right *= 2;
 	::InvalidateRect( handle, &rect, true );
 }
 
@@ -206,8 +210,21 @@ void CViewerWindow::onPaint()
 	RECT rect;
 	::GetClientRect( handle, &rect );
 
-	int winWidth = rect.right - rect.left;
-	int winHeight = rect.bottom + rect.left;
+	float cosine = (float)cos( viewport.GetAngle() );
+	float sine = (float)sin( viewport.GetAngle() );
+
+	int oldWinWidth = rect.right - rect.left;
+	int oldWinHeight = rect.bottom + rect.left;
+/*
+	int x1 = (int)(oldWinHeight * sine);
+	int y1 = (int)(oldWinHeight * cosine);
+	int x2 = (int)(oldWinWidth * cosine + oldWinHeight * sine);
+	int y2 = (int)(oldWinHeight * cosine - oldWinWidth * sine);
+	int x3 = (int)(oldWinWidth * cosine);
+	int y3 = (int)(-oldWinWidth * sine);
+	*/
+	int winWidth = oldWinWidth * 3;
+	int winHeight = oldWinHeight * 3;
 
 	HDC Memhdc = ::CreateCompatibleDC( hdc );
 	HBITMAP Membitmap = ::CreateCompatibleBitmap( hdc, winWidth, winHeight );
@@ -217,11 +234,27 @@ void CViewerWindow::onPaint()
 
 	::FillRect( Memhdc, &paintStruct.rcPaint, canvasBrush );
 
+	SetGraphicsMode( hdc, GM_ADVANCED );
+	XFORM xForm;
+	xForm.eM11 = (FLOAT)cosine;
+	xForm.eM12 = (FLOAT)sine;
+	xForm.eM21 = (FLOAT)-sine;
+	xForm.eM22 = (FLOAT)cosine;
+	xForm.eDx = (FLOAT)0.0;
+	xForm.eDy = (FLOAT)0.0;
+	::SetWorldTransform( hdc, &xForm );
+
 	stage.ClipAndDrawObjects( Memhdc );
 
-	POINT zero = viewport.GetZeroLocation();
+	POINT oldZero = viewport.GetZeroLocation();
+	POINT zero;
 
-	BOOL result = ::BitBlt( hdc, 0, 0, winWidth, winHeight, Memhdc, -zero.x, -zero.y, SRCCOPY );
+	zero.x = static_cast<LONG>(oldZero.x * cosine + oldZero.y * sine + oldWinWidth);
+	zero.y = static_cast<LONG>(-oldZero.x * sine + oldZero.y * cosine + oldWinHeight);
+
+	viewport.SetZeroLocation( zero );
+
+	BOOL result = ::BitBlt( hdc, -oldWinWidth, -oldWinHeight, winWidth, winHeight, Memhdc, -zero.x, -zero.y, SRCCOPY );
 	if( !result ) {
 		::MessageBox( handle, L"BitBlt : onPaint() : CViewerWindow", L"Error", MB_ICONERROR );
 		::PostQuitMessage( NULL );
@@ -299,9 +332,13 @@ void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 		::SetCursor( ::LoadCursor( 0, IDC_SIZEALL ) );
 		break;
 	}
-
+	
 	RECT rect;
 	::GetClientRect( handle, &rect );
+	rect.top -= rect.bottom;
+	rect.bottom *= 2;
+	rect.left -= rect.right;
+	rect.right *= 2;
 	::InvalidateRect( handle, &rect, true );
 
 	/*
@@ -385,6 +422,10 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 
 	RECT rect;
 	::GetClientRect( handle, &rect );
+	rect.top -= rect.bottom;
+	rect.bottom *= 2;
+	rect.left -= rect.right;
+	rect.right *= 2;
 	::InvalidateRect( handle, &rect, true );
 }
 

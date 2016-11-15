@@ -34,10 +34,14 @@ public:
 	float GetScale() const;
 	void SetScale( const float );
 
+	float GetAngle() const;
+	void SetAngle( const float );
 
 private:
 	// coeff of scaling
 	float scale;
+	// rotation angle
+	float angle;
 	// location of model point (0, 0) in screen coordinates
 	TPoint zeroLocation;
 };

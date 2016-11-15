@@ -1,7 +1,7 @@
 #include <stdafx.h>
 #include "Viewport.h"
 
-CViewport::CViewport() : scale( 1 ), zeroLocation()
+CViewport::CViewport() : scale( 1 ), zeroLocation(), angle( static_cast<FLOAT>( 0.785 ) ) // 0.785
 {
 	zeroLocation.x = 0;
 	zeroLocation.y = 0;
@@ -94,4 +94,14 @@ float CViewport::GetScale() const
 void CViewport::SetScale( const float value )
 {
 	scale = value;
+}
+
+float CViewport::GetAngle() const
+{
+	return angle;
+}
+
+void CViewport::SetAngle( const float value )
+{
+	angle = value;
 }
