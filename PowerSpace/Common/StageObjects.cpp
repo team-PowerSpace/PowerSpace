@@ -44,9 +44,9 @@ IJsonPtr CEllipseObject::ToJson() const
 	return CJsonConverter::ToJsonObject( *this );
 }
 
-
+// font size is temprorary fix of code, because it caused the crush of code
 CTextBoxObject::CTextBoxObject( COLORREF _color, TBox _box, const std::wstring& _contents )
-    : CDrawable( _color, _box, false ), contents( _contents ), fontColor(0)
+    : CDrawable( _color, _box, false ), contents( _contents ), fontColor(0), fontSize(12)
 {
     id = CObjectIdGenerator::GenerateNewId<CTextBoxObject>();
 }
@@ -68,7 +68,7 @@ std::string CTextBoxObject::GetText() const
 
 unsigned int CTextBoxObject::GetFontSize() const
 {
-	return font.lfHeight;
+	return fontSize;
 }
 
 unsigned long int CTextBoxObject::GetFontColor() const
