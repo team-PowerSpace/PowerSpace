@@ -16,11 +16,8 @@ public:
 	typedef struct
 	{
 		PyObject_HEAD
-			unsigned long int color;
-		int xPos, yPos, width, height;
+			const int typeOfFunction; //0 for click 1 for timer
 	} engine_PythonScriptObject;
-
-	static void PythonScript_makeRed(engine_PythonScriptObject* self);
 
 	static void PythonScript_dealloc(engine_PythonScriptObject* self);
 

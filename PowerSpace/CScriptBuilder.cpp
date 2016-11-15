@@ -18,10 +18,15 @@ CScriptBuilder::CScriptBuilder(std::shared_ptr<CScript> object)
 }
 
 
-/*void CScriptBuilder::PythonDrawable_makeRed(engine_PythonDrawableObject* self)
+int CScriptBuilder::PythonScript_onClick(engine_PythonScriptObject *self, void *closure)
 {
-	self->color = RGB(255, 0, 0);
-}*/
+	//TODO
+}
+
+int CScriptBuilder::PythonScript_onTimer(engine_PythonScriptObject *self, void *closure)
+{
+	//TODO
+}
 
 void CScriptBuilder::PythonScript_dealloc(engine_PythonScriptObject* self)
 {
@@ -31,7 +36,13 @@ void CScriptBuilder::PythonScript_dealloc(engine_PythonScriptObject* self)
 int CScriptBuilder::PythonScript_init(engine_PythonScriptObject *self, PyObject *args,
 	PyObject *kwds)
 {
-	//TODO
+/*	static char *kwlist[] = { "scriptType", NULL };
+	if (!PyArg_ParseTupleAndKeywords(args, kwds, "|i", kwlist,
+		&self->typeOfFunction)) 
+	{
+		return -1;
+	} */ //Seems like we will be better without it
+	return 0;
 }
 
 PyObject *CScriptBuilder::PythonScript_new(PyTypeObject *type, PyObject *args,
@@ -46,7 +57,7 @@ PyObject *CScriptBuilder::PythonScript_new(PyTypeObject *type, PyObject *args,
 
 PyMethodDef CScriptBuilder::PythonScript_methods[] = {
 	{ "onClick", (PyCFunction)PythonScript_onClick, METH_VARARGS, "Action on click" },
-	{ "onTimer", (PyCFunction)PythonScript_onTimer, METH_VARARGS, "Action on timer" }
+	{ "onTimer", (PyCFunction)PythonScript_onTimer, METH_VARARGS, "Action on timer" },
 	{ NULL }  /* Sentinel */
 };
 
@@ -82,7 +93,7 @@ PyTypeObject CScriptBuilder::engine_PythonScriptObject = {
 	0,                            /* tp_iter */
 	0,                            /* tp_iternext */
 	PythonScript_methods,             /* tp_methods */
-	0,             /* tp_members */
+	0,                         /* tp_members */
 	0,                         /* tp_getset */
 	0,                         /* tp_base */
 	0,                         /* tp_dict */

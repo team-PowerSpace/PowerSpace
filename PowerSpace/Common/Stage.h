@@ -44,7 +44,7 @@ public:
 	void addScript(EventType type, IdType objectId, CScript script);
 
 	//get scripts by type of function and object
-	std::vector<PyObject*> getScripts(IdType objId, EventType eventType);
+	std::vector<std::shared_ptr<CScriptBuilder>> getScripts(IdType objId, EventType eventType);
 
 	//script correct removal
 	void decScriptRefs();

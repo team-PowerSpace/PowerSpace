@@ -6,6 +6,7 @@
 #include <Exception>
 #include <iostream>
 #include <fstream>
+#include <CScriptBuilder.h>
 #include <ObjectIdGenerator.h>
 
 

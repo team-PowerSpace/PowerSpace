@@ -42,7 +42,7 @@ void CScriptEngine::AddPyObject( IdType name, IDrawablePtr description )
 	}
 }
 
-std::vector<int> CScriptEngine::RunScripts( IdType objectId, EventType type, std::vector<PyObject*> scripts )
+std::vector<int> CScriptEngine::RunScripts( IdType objectId, EventType type, std::vector<std::shared_ptr<CScriptBuilder>> scripts )
 {
 	std::shared_ptr<IDrawable> workingObject = stage.GetObjectById( objectId );
 	/*auto it = pyScene.find( objectId );
@@ -64,7 +64,7 @@ std::vector<int> CScriptEngine::RunScripts( IdType objectId, EventType type, std
 			assert(false); //In case we will add more functions
 		}
 		//Empty string left for ability to call different functions located in single script
-		CScriptSolver solver(workingObject, /*sceneObject,*/ *currentScript, eventName);
+		CScriptSolver solver(workingObject, /*sceneObject,*/ (*currentScript)->GetRawpObjectRef, eventName);
 		
         std::shared_ptr<IDrawable> changedObject = solver.Run();   //Returns shared_ptr to changed object, but values already set in the scene
 		assert( changedObject == workingObject );
