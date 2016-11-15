@@ -1,8 +1,11 @@
 ﻿#include <stdafx.h>
 #include <Winuser.h>
 #include "EditorRenderingWindow.h"
-//#include "ProtertyEditor.h"
+#include "ProtertyEditor.h"
 #include "resource.h"
+
+#include "Editor.h"
+class CEditorWindow;
 
 #define MAX_RESOURCE_LENGTH 100
 
@@ -282,11 +285,10 @@ void CEditorRenderingWindow::onMouseWheel( WPARAM wParam )
 
 void CEditorRenderingWindow::onRButtonMouseDown( const LPARAM lparam )
 {
-	// IN PROGRESS
-	// selectedId;
-	//1. По id получить объект
-	//2. Вызвать создание диалогового окна с ссылкой на объект.
-	MessageBox( 0, L"sdfsdf", 0, 0 );
+	onLButtonMouseDown( lparam );
+	IDrawablePtr object = reinterpret_cast<CEditorWindow*>(this)->GetStage()->GetObjectById( selectedId );
+	ProtertyEditor propertyDialog;
+	propertyDialog.Create( handle, object );
 }
 
 void CEditorRenderingWindow::onLButtonMouseDown( const LPARAM lparam )

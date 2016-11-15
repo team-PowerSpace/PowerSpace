@@ -1,6 +1,8 @@
 #pragma once
 #include <ObjectIdGenerator.h>
 
+class CEditor;
+
 enum TMarkerType {
 	MT_LeftTop, MT_Top, MT_RightTop, MT_Right, MT_RightBottom, MT_Bottom, MT_LeftBottom, MT_Left
 };
