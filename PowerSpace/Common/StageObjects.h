@@ -46,4 +46,5 @@ private:
 	// font of the text
 	HFONT font;
 	COLORREF fontColor;
+    unsigned int fontSize;
 };
