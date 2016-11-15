@@ -90,7 +90,7 @@ JsonObjectDescription CJsonWorker::GetNextObjectDescription( const JSON& descrip
     }
     objectDescription.nameEndPosition = description.find_first_of( L"\"", objectDescription.nameBeginPosition );
 
-    int nameSize = objectDescription.nameEndPosition - objectDescription.nameBeginPosition;
+    int nameSize = static_cast<int>(objectDescription.nameEndPosition - objectDescription.nameBeginPosition);
     objectDescription.name = description.substr( objectDescription.nameBeginPosition, nameSize );
     objectDescription.bodyBeginPosition = description.find_first_of( L"\"[{", objectDescription.nameEndPosition + 1 ) + 1;
 
@@ -104,7 +104,7 @@ JsonObjectDescription CJsonWorker::GetNextObjectDescription( const JSON& descrip
         CJsonWorker::updateOperatorsStack( operators, description[position] );
         ++position;
     }
-    int bodySize = position - 1 - objectDescription.bodyBeginPosition;
+    int bodySize = static_cast<int>(position - 1 - objectDescription.bodyBeginPosition);
     if( operators.empty() ) {
         objectDescription.body = description.substr( objectDescription.bodyBeginPosition, bodySize );
     }
