@@ -10,7 +10,8 @@ class CTextBoxObject;
 using IdType = std::wstring;
 enum class EventType;
 
-struct IdTypeHash
+//hash function for map storage
+struct IdTypeHash 
 {
 	std::size_t operator()(std::pair<IdType, EventType> k) const
 	{

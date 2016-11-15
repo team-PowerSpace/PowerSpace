@@ -156,6 +156,7 @@
     <ClInclude Include="Common\Drawable.h" />
     <ClInclude Include="Common\StageObjects.h" />
     <ClInclude Include="Common\Viewport.h" />
+    <ClInclude Include="CScriptBuilder.h" />
     <ClInclude Include="CTextBoxBuilder.h" />
     <ClInclude Include="Editor\EditControlWindow.h" />
     <ClInclude Include="Editor\Editor.h" />
@@ -193,6 +194,7 @@
     </ClCompile>
     <ClCompile Include="Common\StageObjects.cpp" />
     <ClCompile Include="Common\Viewport.cpp" />
+    <ClCompile Include="CScriptBuilder.cpp" />
     <ClCompile Include="CTextBoxBuilder.cpp" />
     <ClCompile Include="Editor\EditControlWindow.cpp" />
     <ClCompile Include="Editor\Editor.cpp">

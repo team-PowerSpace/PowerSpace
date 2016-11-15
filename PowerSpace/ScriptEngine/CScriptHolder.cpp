@@ -1,5 +1,5 @@
 #include <stdafx.h>
-
+#include <CScriptBuilder.h>
 #include "CScriptHolder.h"
 
 
@@ -7,16 +7,17 @@ bool ScriptHolder::addScript(std::pair<IdType, EventType> key, PyObject* script 
 {
 	//For now scripts hotfixes in running Viewer are not supported
 	Py_INCREF( script );
+	auto scriptObject = std::make_shared<CScriptBuilder>(script);
 	if (Scripts.find(key) != Scripts.end())
 	{
-		Scripts.find(key)->second.push_back(script);
+		Scripts.find(key)->second.push_back(scriptObject);
 		return true;
 	}
 	else 
 	{
-		std::vector<PyObject*> newVector;
-		newVector.push_back(script);
-		std::pair<std::pair<IdType, EventType>, std::vector<PyObject*>> toInsert(key, newVector);
+		std::vector<std::shared_ptr<CScriptBuilder>> newVector;
+		newVector.push_back(scriptObject);
+		std::pair<std::pair<IdType, EventType>, std::vector<std::shared_ptr<CScriptBuilder>>> toInsert(key, newVector);
 		Scripts.insert(toInsert);
 		return true;
 
@@ -56,16 +57,17 @@ bool ScriptHolder::addScript(std::pair<IdType, EventType> key, CScript script)
 	//For now scripts hotfixes in running Viewer are not supported
 	PyObject* pName;
 	pName = PyUnicode_FromUnicode(scriptNameWithoutExtention.c_str(), scriptNameWithoutExtention.size());
+	auto scriptObject = std::make_shared<CScriptBuilder>(script);
 	if (Scripts.find(key) != Scripts.end())
 	{
-		Scripts.find(key)->second.push_back(pName);
+		Scripts.find(key)->second.push_back(scriptObject);
 		return true;
 	}
 	else
 	{
-		std::vector<PyObject*> newVector;
-		newVector.push_back(pName);
-		std::pair<std::pair<IdType, EventType>, std::vector<PyObject*>> toInsert(key, newVector);
+		std::vector<std::shared_ptr<CScriptBuilder>> newVector;
+		newVector.push_back(scriptObject);
+		std::pair<std::pair<IdType, EventType>, std::vector<std::shared_ptr<CScriptBuilder>>> toInsert(key, newVector);
 		Scripts.insert(toInsert);
 		return true;
 
@@ -79,14 +81,14 @@ size_t ScriptHolder::getSize() const
     return Scripts.size();
 }
 
-std::vector<PyObject*> ScriptHolder::getScript(std::pair<IdType, EventType> key)
+std::vector<std::shared_ptr<CScriptBuilder>> ScriptHolder::getScript(std::pair<IdType, EventType> key)
 {
-	std::vector<PyObject*> objects;
+	std::vector<std::shared_ptr<CScriptBuilder>> objects;
 	try {
 		objects = Scripts.at( key );		//Is okay if operation succeful
 	} catch( std::out_of_range e ) {
 
-		return std::vector<PyObject*>();
+		return std::vector<std::shared_ptr<CScriptBuilder>>();
 	}
 	return objects;
 }
@@ -97,7 +99,7 @@ void ScriptHolder::decAllRefs()
 	{
 		for (auto script : iter.second)
 		{
-			Py_DecRef(script);
+			Py_DecRef(script->GetRawpObjectRef);
 		}
 	}
 }
