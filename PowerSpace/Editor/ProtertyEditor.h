@@ -6,9 +6,7 @@ class PropertiesParameters
 {
 public:
 	LOGFONT font;
-	BYTE opacity;
-	COLORREF fontColor;
-	COLORREF backgroundColor;
+	COLORREF color;
 };
 
 class ProtertyEditor
@@ -33,7 +31,6 @@ private:
 
 	HWND handle;
 	HWND parentHandle;
-	HWND editControlHandle;
 
 	PropertiesParameters oldParameters;
 	PropertiesParameters newParameters;

@@ -67,41 +67,33 @@ void ProtertyEditor::selectColor( COLORREF& _color )
 
 INT_PTR ProtertyEditor::OnCommand( WPARAM wParam )
 {
-	//switch LOWORD( wParam )
-	//{
+	switch LOWORD( wParam )
+	{
 	//	case IDC_BUTTON1:
 	//	{
-	//		selectColor( newParameters.backgroundColor );
-	//		CheckDlgButton( handle, IDC_CHECK1, BST_UNCHECKED );
+	//		//Выбрать скрипт и применить
 	//		break;
 	//	}
-	//	case IDC_BUTTON2:
-	//	{
-	//		selectColor( newParameters.fontColor );
-	//		CheckDlgButton( handle, IDC_CHECK1, BST_UNCHECKED );
-	//		break;
-	//	}
-	//	case IDC_CHECK1:
-	//	{
-	//		if( IsDlgButtonChecked( handle, IDC_CHECK1 ) == BST_CHECKED ) {
-	//			applyNewSettings( newParameters );
-	//		}
-	//		break;
-	//	}
-	//	case IDOK:
-	//	{
-	//		applyNewSettings( newParameters );
-	//		EndDialog( handle, wParam );
-	//		return true;
-	//	}
-	//	case IDCANCEL:
-	//	{
-	//		applyNewSettings( oldParameters );
-	//		EndDialog( handle, wParam );
-	//		return true;
-	//	}
-	//}
-	//
+		case IDC_BUTTON2:
+		{
+			newParameters.color = RGB( 0, 0, 0 );
+			selectColor( newParameters.color );
+			//CheckDlgButton( handle, IDC_BUTTON1, BST_UNCHECKED );
+			break;
+		}
+		case IDOK:
+		{
+			applyNewSettings( newParameters );
+			EndDialog( handle, wParam );
+			return true;
+		}
+		case IDCANCEL:
+		{
+			applyNewSettings( oldParameters );
+			EndDialog( handle, wParam );
+			return true;
+		}
+	}
 	return false;
 }
 
@@ -112,7 +104,6 @@ INT_PTR ProtertyEditor::OnCommand( WPARAM wParam )
 //	if( commandHandle == GetDlgItem( handle, IDC_SLIDER1 ) ) {
 //		newParameters.font.lfHeight = SendDlgItemMessage( handle, IDC_SLIDER1, TBM_GETPOS, 0, 0 );
 //	}
-//	CheckDlgButton( handle, IDC_CHECK1, BST_UNCHECKED );
 //}
 
 INT_PTR ProtertyEditor::dialogProc( HWND _handle, UINT message, WPARAM wParam, LPARAM lParam )
