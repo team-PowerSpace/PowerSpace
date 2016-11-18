@@ -65,6 +65,7 @@ private:
 
 	TBox generateDefaultBox() const;
 	void onColorSelect();
+	void onColorDelete();
 	void onFileSelect();
 	void onFontSelect();
 
@@ -82,6 +83,7 @@ private:
 	HWND setFontButton;
 	HWND saveTextButton;
 	HWND setColorButton;
+	HWND deleteColorButton;
 	HWND addScriptButton;
 
 	COLORREF defaultObjectColor;

@@ -88,6 +88,9 @@ void CEditor::OnCreate()
 	setColorButton = CreateWindow( L"BUTTON", L"Set Color", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
 		10, 10, 100, 100, handle, (HMENU)IDC_MAIN_BUTTON,
 		*(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
+	deleteColorButton = CreateWindow( L"BUTTON", L"Delete background", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
+		10, 10, 100, 100, handle, (HMENU)IDC_MAIN_BUTTON,
+		*(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
 	addScriptButton = CreateWindow( L"BUTTON", L"Add Script", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
 		10, 10, 100, 100, handle, (HMENU)IDC_MAIN_BUTTON,
 		*(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
@@ -96,6 +99,7 @@ void CEditor::OnCreate()
 	EnableWindow( setFontButton, false );
 	EnableWindow( saveTextButton, false );
 	EnableWindow( setColorButton, false );
+	EnableWindow( deleteColorButton, false );
 	EnableWindow( addScriptButton, false );
 
 }
@@ -112,15 +116,18 @@ void CEditor::SetActiveId( const IdType& id )
 	if( firstLetter == L't' ) {
 		EnableWindow( setFontButton, true );
 		EnableWindow( setColorButton, true );
+		EnableWindow( deleteColorButton, false );
 		EnableWindow( addScriptButton, true );
 	} else {
 		if( id == CObjectIdGenerator::GetEmptyId() ) {
 			EnableWindow( setFontButton, false );
 			EnableWindow( setColorButton, false );
+			EnableWindow( deleteColorButton, false );
 			EnableWindow( addScriptButton, false );
 		} else {
 			EnableWindow( setFontButton, false );
 			EnableWindow( setColorButton, true );
+			EnableWindow( deleteColorButton, true );
 			EnableWindow( addScriptButton, true );
 		}
 	}
@@ -218,7 +225,7 @@ void CEditor::OnSize()
 	int middleX, nWidth, nHeight;
 	int RELATIVE_WIDTH = 3;
 	int RELATIVE_HEIGHT = 4;
-	int RELATIVE_TOOLBAR = 16;
+	int RELATIVE_TOOLBAR = 20;
 	::GetClientRect( handle, &rect );
 	middleX = (rect.left + rect.right) / RELATIVE_HEIGHT;
 	nWidth = (rect.right - rect.left) * RELATIVE_WIDTH / RELATIVE_HEIGHT;
@@ -236,7 +243,8 @@ void CEditor::OnSize()
 	SetWindowPos( setFontButton, HWND_TOP, rect.left, currentTop + yOfButton, widthOfButton, cyOfButton, 0 );
 	SetWindowPos( saveTextButton, HWND_TOP, rect.left, currentTop + yOfButton + cyOfButton, widthOfButton, cyOfButton, 0 );
 	SetWindowPos( setColorButton, HWND_TOP, rect.left, currentTop + yOfButton + cyOfButton * 2, widthOfButton, cyOfButton, 0 );
-	SetWindowPos( addScriptButton, HWND_TOP, rect.left, currentTop + yOfButton + cyOfButton * 3, widthOfButton, cyOfButton, 0 );
+	SetWindowPos( deleteColorButton, HWND_TOP, rect.left, currentTop + yOfButton + cyOfButton * 3, widthOfButton, cyOfButton, 0 );
+	SetWindowPos( addScriptButton, HWND_TOP, rect.left, currentTop + yOfButton + cyOfButton * 4, widthOfButton, cyOfButton, 0 );
 
 	SendMessage( handleToolbar, TB_AUTOSIZE, 0, 0 );
 }
@@ -324,6 +332,8 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 			GetText();
 		} else if( (HWND)lParam == setColorButton ) {
 			onColorSelect();
+		} else if( (HWND)lParam == deleteColorButton ) {
+			onColorDelete();
 		} else if( (HWND)lParam == addScriptButton ) {
 			onFileSelect();
 		} else if( (HWND)lParam == setFontButton ) {
@@ -379,6 +389,12 @@ void CEditor::onColorSelect()
 		stage->GetObjectById( activeId )->SetColor( chooseColor.rgbResult );
 		renderingWindow.ReDraw();
 	}
+}
+
+void CEditor::onColorDelete()
+{
+	stage->GetObjectById( activeId )->SetColor( noColor );
+	renderingWindow.ReDraw();
 }
 
 void CEditor::onFontSelect()

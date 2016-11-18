@@ -2,6 +2,9 @@
 #include "StageObjects.h"
 #include <JsonConverter.h>
 
+//CRectangleObject:
+//-------------------------------------------------------------------------------------------------
+
 CRectangleObject::CRectangleObject( COLORREF _color, TBox _box )
 	: CDrawable( _color, _box, false )
 {
@@ -23,6 +26,11 @@ IJsonPtr CRectangleObject::ToJson() const
 	return CJsonConverter::ToJsonObject( *this );
 }
 
+
+
+//CEllipseObject:
+//-------------------------------------------------------------------------------------------------
+
 CEllipseObject::CEllipseObject( COLORREF _color, TBox _box )
 	: CDrawable( _color, _box, false )
 {
@@ -43,6 +51,11 @@ IJsonPtr CEllipseObject::ToJson() const
 {
 	return CJsonConverter::ToJsonObject( *this );
 }
+
+
+
+//CTextBoxObject:
+//-------------------------------------------------------------------------------------------------
 
 // font size is temprorary fix of code, because it caused the crush of code
 CTextBoxObject::CTextBoxObject( COLORREF _color, TBox _box, const std::wstring& _contents )

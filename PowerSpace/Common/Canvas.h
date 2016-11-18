@@ -1,6 +1,8 @@
 #pragma once
 #include <Drawable.h>
 
+const COLORREF noColor = RGB( 200, 150, 150 );
+
 class CCanvas
 {
 public:
