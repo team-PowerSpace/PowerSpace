@@ -7,10 +7,10 @@
 #define startCode L"def OnClick(): \r\n\t#put your code here \r\ndef OnTick():\r\n\t#put your code here"
 
 LRESULT __stdcall CScriptEditor::windowProc( HWND handle, UINT msg, WPARAM wParam, LPARAM lParam )
-{	
+{
 	CScriptEditor* window = 0;
 	if( msg == WM_NCCREATE ) {
-		window = reinterpret_cast< CScriptEditor*>(	reinterpret_cast<CREATESTRUCT*>(lParam)->lpCreateParams);
+		window = reinterpret_cast<CScriptEditor*>(reinterpret_cast<CREATESTRUCT*>(lParam)->lpCreateParams);
 		assert( window );
 		if( window ) {
 			SetWindowLongPtr( handle, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(window) );
@@ -20,18 +20,18 @@ LRESULT __stdcall CScriptEditor::windowProc( HWND handle, UINT msg, WPARAM wPara
 	} else {
 		window = reinterpret_cast<CScriptEditor*>(GetWindowLongPtr( handle, GWLP_USERDATA ));
 		switch( msg ) {
-			case WM_CREATE:
-				assert( window != 0 );
-				window->OnCreate( handle );
-				return 1;
-			case WM_CLOSE:
-				window->OnClose();
-				return 0;
-			case WM_COMMAND:
-				window->OnCommand( wParam);
-				return 0;
-			default:
-				return DefWindowProc( handle, msg, wParam, lParam );
+		case WM_CREATE:
+			assert( window != 0 );
+			window->OnCreate( handle );
+			return 1;
+		case WM_CLOSE:
+			window->OnClose();
+			return 0;
+		case WM_COMMAND:
+			window->OnCommand( wParam );
+			return 0;
+		default:
+			return DefWindowProc( handle, msg, wParam, lParam );
 		}
 	}
 }
@@ -48,8 +48,9 @@ bool CScriptEditor::RegisterClass()
 	return (RegisterClassEx( &windowClass ) != 0);
 }
 
-CScriptEditor::CScriptEditor() {
-	
+CScriptEditor::CScriptEditor()
+{
+
 }
 
 CScriptEditor::~CScriptEditor()
@@ -67,11 +68,11 @@ void CScriptEditor::OnNCCreate( HWND _handle )
 bool CScriptEditor::Create()
 {
 	HINSTANCE hInstance = GetModuleHandle( nullptr );
-	
+
 	handle = CreateWindowEx( 0, L"ScriptEditor", L"ScriptEditor",
 		WS_OVERLAPPEDWINDOW | WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT,
 		CW_USEDEFAULT, CW_USEDEFAULT, nullptr, nullptr,
-		hInstance, this );	
+		hInstance, this );
 	addToolbar();
 	return (handle != 0);
 }
@@ -96,14 +97,14 @@ HWND CScriptEditor::GetHandle() const
 
 void CScriptEditor::OnCreate( HWND hwnd )
 {
-	RECT windowRect;	
-	GetClientRect( hwnd, &windowRect );		
-	editBox = CreateWindowEx(0, L"EDIT", NULL,
+	RECT windowRect;
+	GetClientRect( hwnd, &windowRect );
+	editBox = CreateWindowEx( 0, L"EDIT", NULL,
 		WS_CHILD | WS_VISIBLE | ES_LEFT | ES_MULTILINE | WS_BORDER,
 		windowRect.left, windowRect.top + 30,
 		windowRect.right - windowRect.left,
 		windowRect.bottom - windowRect.top,
-		hwnd, NULL, GetModuleHandle( 0 ), NULL );	
+		hwnd, NULL, GetModuleHandle( 0 ), NULL );
 	SetWindowText( editBox, startCode );
 }
 
@@ -124,31 +125,31 @@ void CScriptEditor::Show( int cmdShow )
 	ShowWindow( handle, cmdShow );
 }
 
-void CScriptEditor::OnCommand( WPARAM wParam)
+void CScriptEditor::OnCommand( WPARAM wParam )
 {
 	switch( LOWORD( wParam ) ) {
-		case ID_FILE_SAVE:
-		{
-			OnFileSave();
-			break;
-		}
-		case ID_FILE_NEW:
-		{
-			OnFileNew();
-			break;
-		}
-		case ID_FILE_OPEN:
-		{
-			OnFileOpen();
-			break;
-		}
-		default:
-			break;
+	case ID_FILE_SAVE:
+	{
+		OnFileSave();
+		break;
+	}
+	case ID_FILE_NEW:
+	{
+		OnFileNew();
+		break;
+	}
+	case ID_FILE_OPEN:
+	{
+		OnFileOpen();
+		break;
+	}
+	default:
+		break;
 	}
 }
 
 void CScriptEditor::OnFileSave()
-{	
+{
 	wchar_t fileName[MAX_PATH];
 	*fileName = 0;
 	OPENFILENAME ofn;
@@ -167,9 +168,9 @@ void CScriptEditor::OnFileSave()
 	int result = GetSaveFileName( &ofn );
 
 	if( result ) {
-		std::wofstream file( ofn.lpstrFile );				
+		std::wofstream file( ofn.lpstrFile );
 		file << GetText();
-		file.close();		
+		file.close();
 	}
 }
 
@@ -197,13 +198,13 @@ void CScriptEditor::OnFileOpen()
 
 	int result = GetOpenFileName( &ofn );
 	if( result ) {
-		std::wifstream file;		
-		file.open( ofn.lpstrFile );			
-		
+		std::wifstream file;
+		file.open( ofn.lpstrFile );
+
 		std::wstring buffer;
 		wchar_t a[50];
 		do {
-			file.getline(a, 50);
+			file.getline( a, 50 );
 			buffer.append( a );
 			buffer.append( L"\r\n" );
 		} while( !file.eof() );

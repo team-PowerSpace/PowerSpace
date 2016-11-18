@@ -8,7 +8,8 @@
 // CEditorWindow is business-logic (mostly), work with model coordinates
 
 class CEditorWindow :
-	public CEditorRenderingWindow {
+	public CEditorRenderingWindow
+{
 public:
 	CEditorWindow();
 
@@ -20,7 +21,7 @@ public:
 
 	static bool RegisterClass();
 
-	bool Create(HWND hWndParent);
+	bool Create( HWND hWndParent );
 
 protected:
 	// Унаследовано через CEditorRenderingWindow

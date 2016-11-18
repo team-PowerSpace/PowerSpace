@@ -1,7 +1,8 @@
 #pragma once
 #include <Windows.h>
 
-class CScriptEditor {
+class CScriptEditor
+{
 public:
 	CScriptEditor();
 	~CScriptEditor();
@@ -13,7 +14,7 @@ public:
 	std::wstring GetText() const;
 	HWND GetHandle() const;
 protected:
-	void OnNCCreate( HWND hwnd );	
+	void OnNCCreate( HWND hwnd );
 	void OnCreate( HWND hwnd );
 	void OnDestroy();
 	void OnClose();
@@ -23,7 +24,7 @@ protected:
 	void OnFileOpen();
 	void OnFileNew();
 private:
-	HWND handle;	
+	HWND handle;
 	HWND editBox; //fix after resolving the problem with creating edit control
 	void addToolbar();
 	static LRESULT __stdcall windowProc( HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam );

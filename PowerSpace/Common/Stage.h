@@ -13,9 +13,9 @@ class CStage
 public:
 	// getters of objects field
 	const std::unordered_map<IdType, IDrawablePtr>& CStage::GetObjects() const;
-    std::unordered_map<IdType, IDrawablePtr>& GetObjects();
+	std::unordered_map<IdType, IDrawablePtr>& GetObjects();
 
-    bool AddObject( IdType objectId, IDrawablePtr object );
+	bool AddObject( IdType objectId, IDrawablePtr object );
 
 	// method for transforming objects to vector
 	std::vector<IDrawablePtrConst> GetObjectsAsVector() const;
@@ -41,10 +41,10 @@ public:
 	const CViewport& GetViewPort() const;
 
 	//add new script
-	void addScript(EventType type, IdType objectId, CScript script);
+	void addScript( EventType type, IdType objectId, CScript script );
 
 	//get scripts by type of function and object
-	std::vector<PyObject*> getScripts(IdType objId, EventType eventType);
+	std::vector<PyObject*> getScripts( IdType objId, EventType eventType );
 
 	//script correct removal
 	void decScriptRefs();

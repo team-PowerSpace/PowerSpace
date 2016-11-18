@@ -4,13 +4,11 @@
 
 
 CEditorWindow::CEditorWindow()
-{
-}
+{}
 
 
 CEditorWindow::~CEditorWindow()
-{
-}
+{}
 
 std::shared_ptr<CStage>& CEditorWindow::GetStage()
 {
@@ -81,7 +79,7 @@ void CEditorWindow::SelectDrawableObject( const IdType& id )
 
 bool CEditorWindow::Create( HWND hWndParent )
 {
-	return CEditorRenderingWindow::Create(hWndParent, ClassName );
+	return CEditorRenderingWindow::Create( hWndParent, ClassName );
 }
 
 const wchar_t* CEditorWindow::ClassName = L"CEditorWindow";

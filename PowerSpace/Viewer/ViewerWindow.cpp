@@ -52,9 +52,9 @@ bool CViewerWindow::Create()
 
 	handle = ::CreateWindowEx( 0, ClassName, ViewerApplicationName,
 		WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
-		windowHeight, windowWidth, nullptr, nullptr, 
+		windowHeight, windowWidth, nullptr, nullptr,
 		hInstance, this );
-	if ( handle != 0 ) {
+	if( handle != 0 ) {
 		enableTimer( TICK_LENGTH );
 	}
 	return (handle != 0);
@@ -111,15 +111,15 @@ LRESULT CViewerWindow::WindowProc( HWND handle, UINT msg, WPARAM wParam, LPARAM 
 		return 0;
 
 	case WM_LBUTTONDBLCLK:
-		wndPtr->onMouseClick( msg, wParam, lParam);
+		wndPtr->onMouseClick( msg, wParam, lParam );
 		return 0;
 
 	case WM_COMMAND:
 		wndPtr->onCommand( wParam, lParam );
 		return 0;
-	case WM_TIMER: 
+	case WM_TIMER:
 	{
-		wndPtr->onTimer( );
+		wndPtr->onTimer();
 		return 0;
 	}
 
@@ -149,8 +149,8 @@ void CViewerWindow::onTimer()
 
 	for( auto pair : stage.GetObjects() ) {
 		//auto scripts = pair.second->GetScripts( EventType::EventTick );
-		auto scripts = stage.getScripts(activeId, EventType::EventTick);
-		updateColorWithBuffer(activeId, ColorBufferActionType::RestoreColor);
+		auto scripts = stage.getScripts( activeId, EventType::EventTick );
+		updateColorWithBuffer( activeId, ColorBufferActionType::RestoreColor );
 		if( !scripts.empty() ) {
 			scriptEngine.RunScripts( activeId, EventType::EventTick, scripts );
 		}
@@ -286,7 +286,7 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 	IdType prevActiveId = activeId;
 	activeId = CObjectIdGenerator::GetEmptyId();
 
-	
+
 	for( auto pair : stage.GetObjects() ) {
 		TBox curBox = pair.second->GetContainingBox();
 
@@ -301,20 +301,20 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 	// // Following code will be commented until the discussion.
 	// if( activeId == prevActiveId )
 	//	 return;
-	
-	
+
+
 
 	// clicked on new object => have to process it
-	updateColorWithBuffer(prevActiveId, ColorBufferActionType::RestoreColor);
-	if(activeId != CObjectIdGenerator::GetEmptyId()) {
-		
+	updateColorWithBuffer( prevActiveId, ColorBufferActionType::RestoreColor );
+	if( activeId != CObjectIdGenerator::GetEmptyId() ) {
 
-		stage.GetObjectById( activeId )->SetColor( static_cast<COLORREF> (colorBuf * 0.8));
+
+		stage.GetObjectById( activeId )->SetColor( static_cast<COLORREF> (colorBuf * 0.8) );
 
 		//auto scripts = stage.GetObjectById( activeId )->GetScripts( EventType::EventClick );
-		auto scripts = stage.getScripts(activeId, EventType::EventClick);
-		if (!scripts.empty()) {
-			scriptEngine.RunScripts(activeId, EventType::EventClick, scripts);
+		auto scripts = stage.getScripts( activeId, EventType::EventClick );
+		if( !scripts.empty() ) {
+			scriptEngine.RunScripts( activeId, EventType::EventClick, scripts );
 		}
 	}
 	updateColorWithBuffer( prevActiveId, ColorBufferActionType::SetColor );
@@ -332,11 +332,10 @@ void CViewerWindow::onCommandMenu( WPARAM wParam, LPARAM lParam )
 	{
 	case ID_CONTROL_PLAY:
 		viewerIsRunning = !viewerIsRunning;
-		if ( viewerIsRunning ) {
+		if( viewerIsRunning ) {
 			enableTimer( TICK_LENGTH );
-		}
-		else {
-			disableTimer( );
+		} else {
+			disableTimer();
 		}
 
 		HMENU pMenu = ::GetMenu( handle );
@@ -386,34 +385,33 @@ bool CViewerWindow::isPointInBox( TBox box, POINT point )
 		return false;
 }
 
-void CViewerWindow::enableTimer( int timeDelay, int timerId)
+void CViewerWindow::enableTimer( int timeDelay, int timerId )
 {
 	::SetTimer( handle, timerId, timeDelay, 0 );
 }
 
-void CViewerWindow::disableTimer( int timerId)
+void CViewerWindow::disableTimer( int timerId )
 {
 	::KillTimer( handle, timerId );
 }
 
 void CViewerWindow::updateColorWithBuffer( IdType prevActiveId, ColorBufferActionType actionType )
 {
-	switch ( actionType )
+	switch( actionType ) {
+	case ColorBufferActionType::RestoreColor:
 	{
-		case ColorBufferActionType::RestoreColor:
-		{
-			if ( prevActiveId != CObjectIdGenerator::GetEmptyId() ) {
-				stage.GetObjectById( prevActiveId )->SetColor( colorBuf );
-			}
-			break;
+		if( prevActiveId != CObjectIdGenerator::GetEmptyId() ) {
+			stage.GetObjectById( prevActiveId )->SetColor( colorBuf );
 		}
-		case ColorBufferActionType::SetColor:
-		{
-			if ( activeId != CObjectIdGenerator::GetEmptyId() ) {
-				colorBuf = stage.GetObjectById( activeId )->GetColor( );
-				stage.GetObjectById( activeId )->SetColor( static_cast<COLORREF> (colorBuf * 0.9) );
-			}
-			break;
+		break;
+	}
+	case ColorBufferActionType::SetColor:
+	{
+		if( activeId != CObjectIdGenerator::GetEmptyId() ) {
+			colorBuf = stage.GetObjectById( activeId )->GetColor();
+			stage.GetObjectById( activeId )->SetColor( static_cast<COLORREF> (colorBuf * 0.9) );
 		}
+		break;
+	}
 	}
 }

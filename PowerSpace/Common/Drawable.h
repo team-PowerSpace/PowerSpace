@@ -53,7 +53,7 @@ public:
 class CDrawable : public IDrawable
 {
 public:
-    CDrawable( COLORREF _color, TBox _box, bool needGenerateId );
+	CDrawable( COLORREF _color, TBox _box, bool needGenerateId );
 	virtual ~CDrawable() {}
 
 	const IdType& GetId() const;

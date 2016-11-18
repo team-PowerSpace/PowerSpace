@@ -13,7 +13,7 @@ std::unordered_map<IdType, IDrawablePtr>& CStage::GetObjects()
 
 bool CStage::AddObject( IdType objectId, IDrawablePtr object )
 {
-    return objects.insert( std::make_pair( objectId, object ) ).second;
+	return objects.insert( std::make_pair( objectId, object ) ).second;
 }
 
 std::vector<IDrawablePtrConst> CStage::GetObjectsAsVector() const
@@ -45,9 +45,9 @@ void CStage::DrawObjects( HDC hdc, const std::vector<IDrawablePtrConst>& objectL
 
 void CStage::DrawObjects( HDC hdc ) const
 {
-    for( auto pair : objects ) {
-        pair.second->Draw( hdc, viewport, canvas );
-    }
+	for( auto pair : objects ) {
+		pair.second->Draw( hdc, viewport, canvas );
+	}
 }
 
 void CStage::ClipAndDrawObjects( HDC hdc, const std::vector<IDrawablePtrConst>& objectList ) const
@@ -63,8 +63,8 @@ void CStage::ClipAndDrawObjects( HDC hdc, const std::vector<IDrawablePtrConst>& 
 
 void CStage::ClipAndDrawObjects( HDC hdc ) const
 {
-    std::vector<IDrawablePtrConst> objectList = GetObjectsAsVector();
-    ClipAndDrawObjects(hdc, objectList);
+	std::vector<IDrawablePtrConst> objectList = GetObjectsAsVector();
+	ClipAndDrawObjects( hdc, objectList );
 }
 
 CViewport & CStage::GetViewPort()
@@ -77,7 +77,7 @@ const CViewport & CStage::GetViewPort() const
 	return viewport;
 }
 
-std::wstring CStage::ToWString( ) const
+std::wstring CStage::ToWString() const
 {
 	return CJsonConverter::ToJsonObject( *this )->ToJson();
 }
@@ -87,14 +87,14 @@ IJsonPtr CStage::ToJson() const
 	return CJsonConverter::ToJsonObject( *this );
 }
 
-void CStage::addScript(EventType type, IdType objectId, CScript script)
+void CStage::addScript( EventType type, IdType objectId, CScript script )
 {
-	scripts.addScript(std::pair<IdType, EventType>(objectId, type), script);
+	scripts.addScript( std::pair<IdType, EventType>( objectId, type ), script );
 }
 
-std::vector<PyObject*> CStage::getScripts(IdType objId, EventType eventType)
+std::vector<PyObject*> CStage::getScripts( IdType objId, EventType eventType )
 {
-	return scripts.getScript(std::pair<IdType, EventType>(objId, eventType));
+	return scripts.getScript( std::pair<IdType, EventType>( objId, eventType ) );
 }
 
 void CStage::decScriptRefs()
