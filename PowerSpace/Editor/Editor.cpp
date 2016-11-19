@@ -372,9 +372,6 @@ TBox CEditor::generateDefaultBox() const
 	GetWindowRect( renderingWindow.GetHandle(), &rect );
 	box.right = 3 * (box.left = (rect.right - rect.left) / defaultBoxMarginDividor);
 	box.bottom = 3 * (box.top = (rect.bottom - rect.top) / defaultBoxMarginDividor);
-	//box.left = 50;
-	//box.right = 3 * box.left;
-	//box.bottom = 2 * (box.top = box.left);
 	return stage->GetViewPort().ConvertToModelCoordinates( box );
 }
 

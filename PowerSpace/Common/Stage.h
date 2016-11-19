@@ -49,7 +49,6 @@ public:
 	//script correct removal
 	void decScriptRefs();
 
-
 	// get the JSON representation of stage
 	std::wstring ToWString() const;
 
