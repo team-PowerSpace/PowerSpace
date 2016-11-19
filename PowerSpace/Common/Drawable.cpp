@@ -2,8 +2,8 @@
 #include "Drawable.h"
 
 //Event All should be carefully changed with click, when the model of scripts will be defined
-CDrawable::CDrawable( COLORREF _color, TBox _box, bool needGenerateId = true )
-	: color( _color ), containingBox( _box ), scripts( { {EventType::EventAll/*Should be EventClick*/, std::vector<CScript>()},
+CDrawable::CDrawable( COLORREF _color, TBox _box, double _angle, bool needGenerateId = true )
+	: color( _color ), containingBox( _box ), angle( _angle ),  scripts( { {EventType::EventAll/*Should be EventClick*/, std::vector<CScript>()},
 	{EventType::EventAll/*Should be EventTick*/, std::vector<CScript>()} } )
 {
 	if( needGenerateId ) {

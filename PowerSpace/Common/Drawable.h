@@ -53,7 +53,7 @@ public:
 class CDrawable : public IDrawable
 {
 public:
-	CDrawable( COLORREF _color, TBox _box, bool needGenerateId );
+	CDrawable( COLORREF _color, TBox _box, double _angle, bool needGenerateId );
 	virtual ~CDrawable() {}
 
 	const IdType& GetId() const;
@@ -82,6 +82,9 @@ protected:
 
 	// the rectangle (position and size) that contains the object on stage
 	TBox containingBox;
+
+	// rotation of the object
+	double angle;
 
 	// maps event type to a list of scripts that are linked to the object;
 	// this map supports the idea that an object can have multiple scripts attached to an event type
