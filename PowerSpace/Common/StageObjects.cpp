@@ -6,14 +6,14 @@
 //-------------------------------------------------------------------------------------------------
 
 CRectangleObject::CRectangleObject( COLORREF _color, TBox _box )
-	: CDrawable( _color, _box, false )
+	: CDrawable( _color, _box, 0, false )
 {
 	id = CObjectIdGenerator::GenerateNewId<CRectangleObject>();
 }
 
 void CRectangleObject::Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const
 {
-	canvas.DrawRectangle( hdc, viewport.ConvertToScreenCoordinates( containingBox ), color );
+	canvas.DrawRectangle( hdc, viewport.ConvertToScreenCoordinates( containingBox ), color, angle );
 }
 
 std::wstring CRectangleObject::ToWString() const
@@ -32,14 +32,14 @@ IJsonPtr CRectangleObject::ToJson() const
 //-------------------------------------------------------------------------------------------------
 
 CEllipseObject::CEllipseObject( COLORREF _color, TBox _box )
-	: CDrawable( _color, _box, false )
+	: CDrawable( _color, _box, 0, false )
 {
 	id = CObjectIdGenerator::GenerateNewId<CEllipseObject>();
 }
 
 void CEllipseObject::Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const
 {
-	canvas.DrawEllipse( hdc, viewport.ConvertToScreenCoordinates( containingBox ), color );
+	canvas.DrawEllipse( hdc, viewport.ConvertToScreenCoordinates( containingBox ), color, angle );
 }
 
 std::wstring CEllipseObject::ToWString() const
@@ -59,14 +59,14 @@ IJsonPtr CEllipseObject::ToJson() const
 
 // font size is temprorary fix of code, because it caused the crush of code
 CTextBoxObject::CTextBoxObject( COLORREF _color, TBox _box, const std::wstring& _contents )
-	: CDrawable( _color, _box, false ), contents( _contents ), fontColor( 0 ), fontSize( 12 )
+	: CDrawable( _color, _box, 0, false ), contents( _contents ), fontColor( 0 ), fontSize( 12 )
 {
 	id = CObjectIdGenerator::GenerateNewId<CTextBoxObject>();
 }
 
 void CTextBoxObject::Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const
 {
-	canvas.DrawTextBox( hdc, viewport.ConvertToScreenCoordinates( containingBox ), color, contents, font );
+	canvas.DrawTextBox( hdc, viewport.ConvertToScreenCoordinates( containingBox ), color, angle, contents, font );
 }
 
 std::wstring CTextBoxObject::GetContents() const
