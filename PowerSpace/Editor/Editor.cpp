@@ -184,7 +184,7 @@ void CEditor::createToolbar()
 		0, HINST_COMMCTRL, IDB_STD_LARGE_COLOR, NULL, 0, 0, 0, 0, 0, sizeof( TBBUTTON ) );
 
 	//Enable multiple image lists
-	SendMessage( handleToolbar, CCM_SETVERSION, (WPARAM)5, 0 );
+	SendMessage( handleToolbar, CCM_SETVERSION, static_cast<WPARAM>(5), 0 );
 
 	//Add icons from default imagelist
 	TBBUTTON tbb_buildin[] = {
@@ -192,7 +192,7 @@ void CEditor::createToolbar()
         { STD_FILEOPEN, ID_FILE_OPEN, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, reinterpret_cast<INT_PTR>(L"Open") },
         { STD_FILESAVE, ID_FILE_SAVE, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, reinterpret_cast<INT_PTR>(L"Save") },
 	};
-	SendMessage( handleToolbar, (UINT)TB_ADDBUTTONS, _countof( tbb_buildin ), (LPARAM)&tbb_buildin );
+	SendMessage( handleToolbar, static_cast<UINT>(TB_ADDBUTTONS), _countof( tbb_buildin ), (LPARAM)&tbb_buildin );
 
 	//Create custom imagelist
 	HIMAGELIST hImageList = ImageList_Create( bitmapSize, bitmapSize, ILC_COLOR16 | ILC_MASK, 0, 0 );
@@ -202,7 +202,7 @@ void CEditor::createToolbar()
 	ImageList_Add( hImageList, loadTransparentBitmap( hInstance, IDB_PLAY_24 ), NULL );
 	ImageList_Add( hImageList, loadTransparentBitmap( hInstance, IDB_DELETE_24 ), NULL );
 	ImageList_Add( hImageList, loadTransparentBitmap( hInstance, IDB_EDIT_24 ), NULL );
-	SendMessage( handleToolbar, TB_SETIMAGELIST, (WPARAM)1, (LPARAM)hImageList );
+	SendMessage( handleToolbar, TB_SETIMAGELIST, static_cast<WPARAM>(1), (LPARAM)hImageList );
 
 	TBBUTTON tbb[] =
 	{
@@ -213,7 +213,7 @@ void CEditor::createToolbar()
         { MAKELONG( 4, 1 ), ID_DELETE_OBJECT, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, reinterpret_cast<INT_PTR>(L"Delete") },
         { MAKELONG( 5, 1 ), ID_EDIT, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, reinterpret_cast<INT_PTR>(L"Edit script") },
 	};
-	SendMessage( handleToolbar, (UINT)TB_ADDBUTTONS, _countof( tbb ), (LPARAM)&tbb );
+	SendMessage( handleToolbar, static_cast<UINT>(TB_ADDBUTTONS), _countof( tbb ), reinterpret_cast<LPARAM>(&tbb) );
 
 	SendMessage( handleToolbar, TB_AUTOSIZE, 0, 0 );
 	ShowWindow( handleToolbar, TRUE );
