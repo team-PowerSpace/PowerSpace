@@ -99,21 +99,21 @@ template<> std::shared_ptr<CRectangleObject> CJsonConverter::fromJson( const IJs
 {
     std::wcout << object.name;
     TBox temp = { 0, 0, 50, 50 };
-    return std::make_shared<CRectangleObject>( RGB( 100, 90, 80 ), temp );
+    return std::make_shared<CRectangleObject>( RGB( 100, 90, 80 ), temp, 0 );
 }
 
 template<> std::shared_ptr<CEllipseObject> CJsonConverter::fromJson( const IJsonObject& object )
 {
     std::wcout << object.name;
     TBox temp = { 0, 0, 50, 50 };
-    return std::make_shared<CEllipseObject>( RGB( 100, 90, 80 ), temp );
+    return std::make_shared<CEllipseObject>( RGB( 100, 90, 80 ), temp, 0 );
 }
 
 template<> std::shared_ptr<CTextBoxObject> CJsonConverter::fromJson( const IJsonObject& object )
 {
     std::wcout << object.name;
     TBox temp = { 0, 0, 50, 50 };
-    return std::make_shared<CTextBoxObject>( RGB( 100, 90, 80 ), temp, L"Text" );
+    return std::make_shared<CTextBoxObject>( RGB( 100, 90, 80 ), temp, 0, L"Text" );
 }
 
 template<> std::shared_ptr<CViewport> CJsonConverter::fromJson( const IJsonObject& object )

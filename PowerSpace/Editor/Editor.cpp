@@ -264,17 +264,17 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 	{
 	case ID_ADD_RECTANGLE:
 	{
-		addObject( std::make_shared<CRectangleObject>( defaultObjectColor, generateDefaultBox() ) );
+		addObject( std::make_shared<CRectangleObject>( defaultObjectColor, generateDefaultBox(), 0 ) );
 		break;
 	}
 	case ID_ADD_ELLIPSE:
 	{
-		addObject( std::make_shared<CEllipseObject>( defaultObjectColor, generateDefaultBox() ) );
+		addObject( std::make_shared<CEllipseObject>( defaultObjectColor, generateDefaultBox(), 0 ) );
 		break;
 	}
 	case ID_ADD_TEXT:
 	{
-		addObject( std::make_shared<CTextBoxObject>( defaultObjectColor, generateDefaultBox(), L"Text" ) );
+		addObject( std::make_shared<CTextBoxObject>( defaultObjectColor, generateDefaultBox(), 0, L"Text" ) );
 		break;
 	}
 	case ID_FILE_SAVE:

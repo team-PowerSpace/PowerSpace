@@ -5,8 +5,8 @@
 //CRectangleObject:
 //-------------------------------------------------------------------------------------------------
 
-CRectangleObject::CRectangleObject( COLORREF _color, TBox _box )
-	: CDrawable( _color, _box, 0, false )
+CRectangleObject::CRectangleObject( COLORREF _color, TBox _box, double _angle )
+	: CDrawable( _color, _box, _angle, false )
 {
 	id = CObjectIdGenerator::GenerateNewId<CRectangleObject>();
 }
@@ -31,8 +31,8 @@ IJsonPtr CRectangleObject::ToJson() const
 //CEllipseObject:
 //-------------------------------------------------------------------------------------------------
 
-CEllipseObject::CEllipseObject( COLORREF _color, TBox _box )
-	: CDrawable( _color, _box, 0, false )
+CEllipseObject::CEllipseObject( COLORREF _color, TBox _box, double _angle )
+	: CDrawable( _color, _box, _angle, false )
 {
 	id = CObjectIdGenerator::GenerateNewId<CEllipseObject>();
 }
@@ -58,8 +58,8 @@ IJsonPtr CEllipseObject::ToJson() const
 //-------------------------------------------------------------------------------------------------
 
 // font size is temprorary fix of code, because it caused the crush of code
-CTextBoxObject::CTextBoxObject( COLORREF _color, TBox _box, const std::wstring& _contents )
-	: CDrawable( _color, _box, 0, false ), contents( _contents ), fontColor( 0 ), fontSize( 12 )
+CTextBoxObject::CTextBoxObject( COLORREF _color, TBox _box, double _angle, const std::wstring& _contents )
+	: CDrawable( _color, _box, _angle, false ), contents( _contents ), fontColor( 0 ), fontSize( 12 )
 {
 	id = CObjectIdGenerator::GenerateNewId<CTextBoxObject>();
 }

@@ -45,7 +45,7 @@ bool CEditorWindow::RegisterClass()
 void CEditorWindow::DrawContent( HDC paintDC, const int width, const int height )
 {
 	std::unordered_map<IdType, IDrawablePtr>& objects = stage->GetObjects();
-	stage->ClipAndDrawObjects( paintDC, stage->GetObjectsAsVector() );
+	stage->ClipAndDrawObjects( paintDC );
 	CViewport& viewport = stage->GetViewPort();
 	for( auto it = objects.begin(); it != objects.end(); ++it ) {
 		DrawSizeableRectangle( paintDC, viewport.ConvertToScreenCoordinates( it->second->GetContainingBox() ), it->first, it->second->GetAngle() );
