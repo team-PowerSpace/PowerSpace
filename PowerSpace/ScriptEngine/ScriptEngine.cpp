@@ -4,7 +4,7 @@
 #include <ScriptSolver.h>
 #include <PyObjectBuilder.h>
 #include <CDrawableBuilder.h>
-
+#include "PyRunner.h"
 
 
 CScriptEngine::CScriptEngine( CStage& _stage )
@@ -50,6 +50,7 @@ std::vector<int> CScriptEngine::RunScripts( IdType objectId, EventType type, std
 		throw "Can't find object in scene";
 	}
 	PyObject* sceneObject = it->second;*/
+	/*PyRunner::run(objectId, type, )*/
 	for( auto currentScript = scripts.begin(); currentScript != scripts.end(); currentScript++ ) {
 		std::string eventName = "";
 		switch (type) //last_for_size handled in default

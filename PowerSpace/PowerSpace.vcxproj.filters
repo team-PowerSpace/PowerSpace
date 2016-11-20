@@ -161,6 +161,9 @@
     <ClInclude Include="CScriptBuilder.h">
       <Filter>ScriptEngine\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PyRunner.h">
+      <Filter>ScriptEngine\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PowerSpace.cpp">
@@ -242,6 +245,9 @@
       <Filter>ScriptEngine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CScriptBuilder.cpp">
+      <Filter>ScriptEngine\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PyRunner.cpp">
       <Filter>ScriptEngine\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

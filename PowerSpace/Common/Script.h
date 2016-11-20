@@ -7,8 +7,12 @@ using TPath = std::wstring;
 enum class EventType
 {
 	EventClick,
-	EventTick,
-	EventAll
+	EventTick	
+};
+
+static std::map<EventType, IdType> Events = {
+	{ EventType::EventClick, L"onClick" },
+	{ EventType::EventTick, L"onTick" }	
 };
 
 // this class wraps the path to the file with python script
