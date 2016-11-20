@@ -40,8 +40,8 @@ public:
 	virtual void Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const = 0;
 
 	// links new script to the object
-	virtual void AddScript( EventType eventType, CScript script ) = 0;
-	virtual const std::vector<CScript>& GetScripts( EventType eventType ) const = 0;
+	virtual void AddScript( CScript script ) = 0;
+	virtual const std::vector<CScript>& GetScripts( ) const = 0;
 
 	enum DrawableType
 	{
@@ -74,10 +74,10 @@ public:
 	virtual void Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const = 0;
 
 	// links new script to the object
-	void AddScript( EventType eventType, CScript script );
+	void AddScript( CScript script );
 
 	// getters for scripts field
-	const std::vector<CScript>& GetScripts( EventType eventType ) const;
+	const std::vector<CScript>& GetScripts() const;
 
 	virtual DrawableType GetType() const;
 protected:
@@ -95,5 +95,5 @@ protected:
 
 	// maps event type to a list of scripts that are linked to the object;
 	// this map supports the idea that an object can have multiple scripts attached to an event type
-	std::unordered_map<EventType, std::vector<CScript>> scripts;
+	std::vector<CScript> scripts;
 };

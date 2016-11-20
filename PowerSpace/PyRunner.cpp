@@ -8,7 +8,7 @@ void PyRunner::run( IdType object, EventType type, std::vector<IdType> scripts )
 	for( IdType script : scripts ) {
 		std::string buffer = std::string(script.begin(), script.end() );
 		buffer.append( "." );
-		IdType event = Events.at( type );
+		IdType event = CScript::Events.at( type );
 		buffer.append( std::string( event.begin(), event.end() ) );
 		buffer.append( "(" );
 		buffer.append( std::string( object.begin(), object.end() ) );

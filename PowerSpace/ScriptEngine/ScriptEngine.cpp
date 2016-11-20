@@ -1,7 +1,6 @@
 ﻿#include <stdafx.h>
 
 #include "ScriptEngine.h"
-#include <ScriptSolver.h>
 #include <PyObjectBuilder.h>
 #include <CDrawableBuilder.h>
 #include "PyRunner.h"

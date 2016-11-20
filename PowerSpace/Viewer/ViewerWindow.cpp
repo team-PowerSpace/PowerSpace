@@ -148,11 +148,15 @@ void CViewerWindow::onTimer()
 		return;
 
 	for( auto pair : stage.GetObjects() ) {
-		//auto scripts = pair.second->GetScripts( EventType::EventTick );
-		auto scripts = holder.getScripts( activeId );
+
+		auto scripts = pair.second->GetScripts();
+        auto names = std::vector<IdType>();
+        for( auto script : scripts ) {
+            names.push_back( script.GetName() );
+        }
 		updateColorWithBuffer( activeId, ColorBufferActionType::RestoreColor );
 		if( !scripts.empty() ) {
-			scriptEngine.RunScripts( activeId, EventType::EventTick, scripts );
+			scriptEngine.RunScripts( activeId, EventType::EventTick, names );
 		}
 		updateColorWithBuffer( activeId, ColorBufferActionType::SetColor );
 	}
@@ -311,10 +315,13 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 
 		stage.GetObjectById( activeId )->SetColor( static_cast<COLORREF> (colorBuf * 0.8) );
 
-		//auto scripts = stage.GetObjectById( activeId )->GetScripts( EventType::EventClick );
-		auto scripts = holder.getScripts( activeId );
+		auto scripts = stage.GetObjectById( activeId )->GetScripts();
+        auto names = std::vector<IdType>();
+        for( auto script : scripts ) {
+            names.push_back( script.GetName() );
+        }
 		if( !scripts.empty() ) {
-			scriptEngine.RunScripts( activeId, EventType::EventClick, scripts );
+			scriptEngine.RunScripts( activeId, EventType::EventClick, names);
 		}
 	}
 	updateColorWithBuffer( prevActiveId, ColorBufferActionType::SetColor );
