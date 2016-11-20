@@ -17,6 +17,6 @@ public:
 private:
 	bool isPythonRunning; // boolean parameter to set when we start the python running
     CStage& stage;
-	std::map<IdType, PyObject*> pyScene;
+	std::map<IdType, std::shared_ptr<CDrawableBuilder>> pyScene;
 	PyObject* globalDictionary;	
 };

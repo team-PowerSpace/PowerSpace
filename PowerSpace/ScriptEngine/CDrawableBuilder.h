@@ -11,7 +11,7 @@ class CDrawableBuilder
 {
 public:
 	CDrawableBuilder( std::shared_ptr<IDrawable> object );
-
+	CDrawableBuilder( PyObject* object, std::shared_ptr<IDrawable> description );
 	typedef struct
 	{
 		PyObject_HEAD

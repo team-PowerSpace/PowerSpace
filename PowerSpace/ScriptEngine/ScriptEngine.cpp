@@ -34,9 +34,10 @@ void CScriptEngine::AddPyObject( IdType name, IDrawablePtr description )
 		throw "Error: invalid input";		
 	}
 	PyDict_Update( globalDictionary, localDictionary );
-	if( PyDict_Contains( localDictionary, pyObjName ) ) {
-		PyObject* pyVal = PyDict_GetItem( localDictionary, pyObjName );
-		pyScene.insert( std::pair<IdType, PyObject*>( name, pyVal ));
+	if( PyDict_Contains( localDictionary, pyObjName ) ) {		
+		PyObject* pyVal = PyDict_GetItem( localDictionary, pyObjName );		
+		pyScene.insert( std::pair<IdType, std::shared_ptr<CDrawableBuilder>>( name, 
+			std::make_shared<CDrawableBuilder>( pyVal, description ) ));
 	} else {
 		throw "Error: failed get object";
 	}
