@@ -28,7 +28,6 @@ void PyScriptHolder::removeScripts( IdType& objectId )
     std::vector<EventType> types;
     types.push_back( EventType::EventClick );
     types.push_back( EventType::EventTick );
-    assert( types.size() == (size_t)EventType::EventAll );
     for( auto type : types ) {
         Scripts.erase( std::pair<IdType, EventType>( objectId, type ) );
     }

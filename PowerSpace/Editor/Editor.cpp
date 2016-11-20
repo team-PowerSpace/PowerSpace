@@ -290,7 +290,7 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
     }
     case ID_PLAY_LAUNCHPLAYER:
     {
-        CViewer viewer( *stage, CViewport() );
+        CViewer viewer( *stage, CViewport(), *holder );
         if( viewer.Create() ) {
             const CViewerWindow& viewerWindow = viewer.GetViewerWindow();
             HWND viewerHandle = viewerWindow.GetHandle();

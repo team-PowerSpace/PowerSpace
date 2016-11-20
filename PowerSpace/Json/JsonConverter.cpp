@@ -37,7 +37,7 @@ IJsonPtr CJsonConverter::ToJsonObject( const CRectangleObject &rectangle )
     jRectangle->objects[L"Id"] = std::make_shared<CJsonWString>( L"Id", std::wstring( rectangle.GetId() ) );
     jRectangle->objects[L"Color"] = std::make_shared<CJsonWString>( std::to_wstring( rectangle.GetColor() ), L"Color" );
     jRectangle->objects[L"Box"] = ToJsonObject( rectangle.GetContainingBox() );
-    jRectangle->objects[L"Scripts"] = ToJsonObject( rectangle.GetScripts( EventType::EventAll ) );
+    jRectangle->objects[L"Scripts"] = ToJsonObject( rectangle.GetScripts( EventType:: ) );
     return std::static_pointer_cast<IJsonObject>(jRectangle);
 }
 
@@ -58,7 +58,7 @@ IJsonPtr CJsonConverter::ToJsonObject( const CEllipseObject &ellipse )
     jEllipse->objects[L"Id"] = std::make_shared<CJsonWString>( L"Id", std::wstring( ellipse.GetId() ) );
     jEllipse->objects[L"Color"] = std::make_shared<CJsonWString>( L"Color", std::to_wstring( ellipse.GetColor() ) );
     jEllipse->objects[L"Box"] = ToJsonObject( ellipse.GetContainingBox() );
-    jEllipse->objects[L"Scripts"] = ToJsonObject( ellipse.GetScripts( EventType::EventAll ) );
+    jEllipse->objects[L"Scripts"] = ToJsonObject( ellipse.GetScripts( ) );
     return std::static_pointer_cast<IJsonObject>(jEllipse);
 }
 

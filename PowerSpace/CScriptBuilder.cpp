@@ -2,7 +2,7 @@
 #include "CScriptBuilder.h"
 #pragma warning( disable : 4100 )
 
-CScriptBuilder::CScriptBuilder(std::shared_ptr<CScript> object)
+CScriptBuilder::CScriptBuilder(const IdType& scriptName)
 {
 	if (PyType_Ready(&engine_PythonScriptType) < 0) {
 		pObject = nullptr;
