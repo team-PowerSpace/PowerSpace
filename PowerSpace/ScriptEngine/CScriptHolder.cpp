@@ -99,7 +99,7 @@ void ScriptHolder::decAllRefs()
 	{
 		for (auto script : iter.second)
 		{
-			Py_DecRef(script->GetRawpObjectRef);
+			Py_DecRef(script->GetRawpObjectRef());
 		}
 	}
 }

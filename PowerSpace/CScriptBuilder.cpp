@@ -20,12 +20,12 @@ CScriptBuilder::CScriptBuilder(std::shared_ptr<CScript> object)
 
 int CScriptBuilder::PythonScript_onClick(engine_PythonScriptObject *self, void *closure)
 {
-	//TODO
+    return 0;
 }
 
 int CScriptBuilder::PythonScript_onTimer(engine_PythonScriptObject *self, void *closure)
 {
-	//TODO
+    return 0;
 }
 
 void CScriptBuilder::PythonScript_dealloc(engine_PythonScriptObject* self)
