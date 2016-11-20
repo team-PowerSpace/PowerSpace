@@ -479,7 +479,7 @@ void CEditor::onFileSelect()
     filename.Flags = OFN_FILEMUSTEXIST;
 
     if( ::GetOpenFileName( &filename ) ) {
-        holder->addScript( activeId, filename.lpstrFile );
+        stage->GetObjectById(activeId)->AddScript( CScript(filename.lpstrFile) );
     }
 }
 
