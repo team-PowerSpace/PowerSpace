@@ -28,6 +28,26 @@ CDrawableBuilder::CDrawableBuilder( std::shared_ptr<IDrawable> object )
 	}
 }
 
+CDrawableBuilder::CDrawableBuilder( PyObject* object, std::shared_ptr<IDrawable> description )
+{
+	RECT rect = description->GetContainingBox();
+	pObject = std::shared_ptr<PyObject>(
+		reinterpret_cast<PyObject *>(object),
+		[=]( PyObject *pObject )
+	{
+		PyObject_FREE( pObject );
+	} );
+	PythonDrawable_set_color(
+		reinterpret_cast<engine_PythonDrawableObject *>(pObject.get()), description->GetColor(), 0 );
+	PythonDrawable_set_width(
+		reinterpret_cast<engine_PythonDrawableObject *>(pObject.get()), rect.right - rect.left, 0 );
+	PythonDrawable_set_height(
+		reinterpret_cast<engine_PythonDrawableObject *>(pObject.get()), rect.bottom - rect.top, 0 );
+	PythonDrawable_set_xPos(
+		reinterpret_cast<engine_PythonDrawableObject *>(pObject.get()), rect.left, 0 );
+	PythonDrawable_set_yPos(
+		reinterpret_cast<engine_PythonDrawableObject *>(pObject.get()), rect.top, 0 );
+}
 
 void CDrawableBuilder::PythonDrawable_makeRed( engine_PythonDrawableObject* self )
 {
