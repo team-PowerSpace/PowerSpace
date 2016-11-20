@@ -62,7 +62,7 @@ PyMethodDef CScriptBuilder::PythonScript_methods[] = {
 };
 
 
-PyTypeObject CScriptBuilder::engine_PythonScriptObject = {
+PyTypeObject CScriptBuilder::engine_PythonScriptType = {
 	PyVarObject_HEAD_INIT(NULL, 0)
 	"Engine.CScript",             /* tp_name */
 	sizeof(engine_PythonScriptObject), /* tp_basicsize */

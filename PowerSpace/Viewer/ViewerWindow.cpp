@@ -5,8 +5,8 @@ const wchar_t* CViewerWindow::ClassName = L"CViewerWindow";
 const wchar_t* CViewerWindow::ViewerApplicationName = L"Powerspace Viewer";
 const UINT TICK_LENGTH = 1000;
 
-CViewerWindow::CViewerWindow( CStage& _stage, CViewport& _viewport, CCanvas& _canvas ) :
-	windowHeight( 600 ), windowWidth( 800 ), viewport( _viewport ), canvas( _canvas ),
+CViewerWindow::CViewerWindow( CStage& _stage, CViewport& _viewport, CCanvas& _canvas, CScriptHolder& _holder ) :
+	windowHeight( 600 ), windowWidth( 800 ), viewport( _viewport ), canvas( _canvas ), holder(_holder),
 	handle( nullptr ), stage( _stage ), scriptEngine( stage ), activeId( CObjectIdGenerator::GetEmptyId() ), colorBuf( -1 ),
 	viewerIsRunning( true )
 {}
@@ -149,7 +149,7 @@ void CViewerWindow::onTimer()
 
 	for( auto pair : stage.GetObjects() ) {
 		//auto scripts = pair.second->GetScripts( EventType::EventTick );
-		auto scripts = stage.getScripts( activeId, EventType::EventTick );
+		auto scripts = holder.getScripts( activeId );
 		updateColorWithBuffer( activeId, ColorBufferActionType::RestoreColor );
 		if( !scripts.empty() ) {
 			scriptEngine.RunScripts( activeId, EventType::EventTick, scripts );
@@ -312,7 +312,7 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 		stage.GetObjectById( activeId )->SetColor( static_cast<COLORREF> (colorBuf * 0.8) );
 
 		//auto scripts = stage.GetObjectById( activeId )->GetScripts( EventType::EventClick );
-		auto scripts = stage.getScripts( activeId, EventType::EventClick );
+		auto scripts = holder.getScripts( activeId );
 		if( !scripts.empty() ) {
 			scriptEngine.RunScripts( activeId, EventType::EventClick, scripts );
 		}

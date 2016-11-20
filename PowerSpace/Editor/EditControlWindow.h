@@ -4,16 +4,16 @@
 class CEditControlWindow
 {
 public:
-	CEditControlWindow();
-	~CEditControlWindow();
+    CEditControlWindow();
+    ~CEditControlWindow();
 
-	// create edit control window
-	bool Create( HWND parentHandle );
+    // create edit control window
+    bool Create( HWND parentHandle );
 
-	// getter of handle field
-	HWND GetHandle();
+    // getter of handle field
+    HWND GetHandle();
 
 private:
-	void initializeText();
-	HWND handle;
+    void initializeText();
+    HWND handle;
 };
