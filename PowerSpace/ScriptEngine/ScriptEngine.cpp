@@ -1,7 +1,6 @@
 ﻿#include <stdafx.h>
 
 #include "ScriptEngine.h"
-#include <ScriptSolver.h>
 #include <PyObjectBuilder.h>
 #include <CDrawableBuilder.h>
 #include "PyRunner.h"
@@ -43,33 +42,10 @@ void CScriptEngine::AddPyObject( IdType name, IDrawablePtr description )
 	}
 }
 
-std::vector<int> CScriptEngine::RunScripts( IdType objectId, EventType type, std::vector<std::shared_ptr<CScriptBuilder>> scripts )
+ void CScriptEngine::RunScripts( const IdType& objectId, EventType type, const std::vector<IdType>& scripts )
 {
-	std::shared_ptr<IDrawable> workingObject = stage.GetObjectById( objectId );
-	/*auto it = pyScene.find( objectId );
-	if( it == pyScene.end() ) {
-		throw "Can't find object in scene";
-	}
-	PyObject* sceneObject = it->second;*/
-	/*PyRunner::run(objectId, type, )*/
-	for( auto currentScript = scripts.begin(); currentScript != scripts.end(); currentScript++ ) {
-		std::string eventName = "";
-		switch (type) //last_for_size handled in default
-		{
-		case EventType::EventClick :
-			eventName = "OnClick";
-			break;
-		case EventType::EventTick :
-			eventName = "OnTimer";
-			break;
-		default:
-			assert(false); //In case we will add more functions
-		}
-		//Empty string left for ability to call different functions located in single script
-		CScriptSolver solver(workingObject, /*sceneObject,*/ (*currentScript)->GetRawpObjectRef(), eventName);
-		
-        std::shared_ptr<IDrawable> changedObject = solver.Run();   //Returns shared_ptr to changed object, but values already set in the scene
-		assert( changedObject == workingObject );
-	}
-    return std::vector<int>(); //Not used for now, but later will allow to return list of objects changed (if needed) for 
+	PyRunner::run(objectId, type, scripts);
+    std::shared_ptr<CDrawableBuilder> pObject;// = getFromHolder();
+    std::shared_ptr<IDrawable> object = stage.GetObjectById( objectId );
+    PyRunner::update( pObject, object );
 }

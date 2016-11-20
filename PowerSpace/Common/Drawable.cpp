@@ -3,8 +3,7 @@
 
 //Event All should be carefully changed with click, when the model of scripts will be defined
 CDrawable::CDrawable( COLORREF _color, TBox _box, double _angle, bool needGenerateId = true )
-	: color( _color ), containingBox( _box ), angle( _angle ),  scripts( { {EventType::EventAll/*Should be EventClick*/, std::vector<CScript>()},
-	{EventType::EventAll/*Should be EventTick*/, std::vector<CScript>()} } )
+	: color( _color ), containingBox( _box ), angle( _angle ),  scripts( )
 {
 	if( needGenerateId ) {
 		id = CObjectIdGenerator::GenerateNewId<CDrawable>();
@@ -46,14 +45,14 @@ void CDrawable::SetAngle( double newAngle )
 	angle = newAngle;
 }
 
-void CDrawable::AddScript( EventType eventType, CScript script )
+void CDrawable::AddScript( CScript script )
 {
-	scripts[eventType].push_back( script );
+	scripts.push_back( script );
 }
 
-const std::vector<CScript>& CDrawable::GetScripts( EventType eventType ) const
+const std::vector<CScript>& CDrawable::GetScripts( ) const
 {
-	return scripts.at( eventType );
+	return scripts;
 }
 
 CDrawable::DrawableType CDrawable::GetType() const

@@ -4,14 +4,11 @@
 #include "structmember.h"
 #include <Drawable.h>
 #include <memory>
-#include <Script.h>
-
-
 
 class CScriptBuilder
 {
 public:
-	CScriptBuilder(std::shared_ptr<CScript> script);
+	CScriptBuilder(const IdType& scriptName);
 
 	typedef struct
 	{

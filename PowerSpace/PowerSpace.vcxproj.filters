@@ -125,13 +125,7 @@
     <ClInclude Include="ScriptEngine\CDrawableBuilder.h">
       <Filter>ScriptEngine\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ScriptEngine\ScriptSolver.h">
-      <Filter>ScriptEngine\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ScriptEngine\CPyObjectManager.h">
-      <Filter>ScriptEngine\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ScriptEngine\CScriptHolder.h">
       <Filter>ScriptEngine\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Editor\ObjectIdGenerator.h">
@@ -163,6 +157,12 @@
     </ClInclude>
     <ClInclude Include="PyRunner.h">
       <Filter>ScriptEngine\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\CScriptHolder.h">
+      <Filter>Editor\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptEngine\PyScriptHolder.h">
+      <Filter>Editor\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -208,16 +208,10 @@
     <ClCompile Include="Viewer\ViewerWindow.cpp">
       <Filter>RenderingEngine\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ScriptEngine\ScriptSolver.cpp">
-      <Filter>ScriptEngine\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="ScriptEngine\PyObjectBuilder.cpp">
       <Filter>ScriptEngine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ScriptEngine\CDrawableBuilder.cpp">
-      <Filter>ScriptEngine\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ScriptEngine\CScriptHolder.cpp">
       <Filter>ScriptEngine\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Editor\ObjectIdGenerator.cpp">
@@ -249,6 +243,12 @@
     </ClCompile>
     <ClCompile Include="PyRunner.cpp">
       <Filter>ScriptEngine\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\CScriptHolder.cpp">
+      <Filter>Editor\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptEngine\PyScriptHolder.cpp">
+      <Filter>Editor\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
