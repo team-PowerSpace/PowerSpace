@@ -11,6 +11,7 @@ public:
 
 	void LoadScene();
 	void AddPyObject( IdType name, IDrawablePtr description );
+	void AddPyScripts();
     // evaluates python scripts from "scripts", modifying the stage;
     // objectId - id of the object, which caused the event
     // returns the vector of objects that were modified during the evaluation of the scripts
