@@ -8,6 +8,7 @@
 const int CEditorRenderingWindow::DefaultHeight = 600;
 const int CEditorRenderingWindow::DefaultWidth = 1000;
 const int CEditorRenderingWindow::MarkerHalfSize = 5;
+const int CEditorRenderingWindow::RotateMarkerShift = 20;
 const COLORREF CEditorRenderingWindow::BackgroundColor = RGB( 255, 255, 255 );
 const COLORREF CEditorRenderingWindow::MarkerColor = RGB( 0, 0, 255 );
 const COLORREF CEditorRenderingWindow::AccentMarkerColor = RGB( 0, 255, 0 );
@@ -46,6 +47,8 @@ LPCTSTR Marker::GetCursor() const
 	case TMarkerType::MT_RightBottom:
 	case TMarkerType::MT_LeftTop:
 		return IDC_SIZENWSE;
+	case TMarkerType::MT_Rotate:
+		return IDC_HAND;
 	default:
 		assert( false );
 		return 0;
@@ -107,7 +110,7 @@ void CEditorRenderingWindow::OnDestroy()
 	::PostQuitMessage( 0 );
 }
 
-void CEditorRenderingWindow::DrawSizeableRectangle( HDC paintDC, const RECT & rectangle, const IdType& id )
+void CEditorRenderingWindow::DrawSizeableRectangle( HDC paintDC, const RECT & rectangle, const IdType& id, const double angle )
 {
 	SelectObject( paintDC, GetStockObject( NULL_BRUSH ) );
 	if( id == selectedId ) {
@@ -119,6 +122,7 @@ void CEditorRenderingWindow::DrawSizeableRectangle( HDC paintDC, const RECT & re
 
 	rectangles.push_back( rectangle );
 	rectanglesIds.push_back( id );
+	angles.push_back( angle );
 
 	addMarkersForRectangle( paintDC, rectangle.left, rectangle.top, rectangle.right - rectangle.left,
 		rectangle.bottom - rectangle.top, id, static_cast<int>(rectangles.size() - 1) );
@@ -214,6 +218,7 @@ void CEditorRenderingWindow::onPaint()
 
 	rectanglesIds.clear();
 	rectangles.clear();
+	angles.clear();
 	markers.clear();
 	DrawContent( bitmapContext, bitmapWidth, bitmapHeight );
 
@@ -240,7 +245,6 @@ void CEditorRenderingWindow::onMouseMove( const LPARAM lParam )
 	POINT point = getPointByLParam( lParam );
 	long dx = (point.x - lastPoint.x);
 	long dy = (point.y - lastPoint.y);
-	lastPoint = point;
 	// Actions which reuire redraw finished by break, others by return
 	switch( currentMovingState ) {
 	case TMovingState::MS_None:
@@ -264,7 +268,12 @@ void CEditorRenderingWindow::onMouseMove( const LPARAM lParam )
 		MoveDrawableObject( selectedId, lastSize );
 		SetCursor( LoadCursor( 0, IDC_SIZEALL ) );
 		break;
+	case TMovingState::MS_Rotating:
+		lastAngle += getAngleBetweenPoints(lastPoint, point, rectCentre);
+		RotateDrawableObject( selectedId, lastAngle );
+		break;
 	}
+	lastPoint = point;
 	ReDraw();
 }
 
@@ -281,11 +290,20 @@ void CEditorRenderingWindow::onMouseDown( const LPARAM lparam )
 		if( contains( markers[i].GetLocation(), point ) ) {
 			int index = markers[i].GetIndex();
 			sizingMarkerType = markers[i].GetType();
-			currentMovingState = TMovingState::MS_Sizing;
-			SelectDrawableObject( rectanglesIds[index] );
-			startSize = rectangles[index];
-			lastSize = startSize;
-			selectedId = rectanglesIds[index];
+			if( sizingMarkerType == TMarkerType::MT_Rotate ) {
+				currentMovingState = TMovingState::MS_Rotating;
+				SelectDrawableObject( rectanglesIds[index] );
+				startAngle = angles[index];
+				lastAngle = startAngle;
+				rectCentre = getRectangleCentre( rectangles[index] );
+				selectedId = rectanglesIds[index];
+			} else {
+				currentMovingState = TMovingState::MS_Sizing;
+				SelectDrawableObject( rectanglesIds[index] );
+				startSize = rectangles[index];
+				lastSize = startSize;
+				selectedId = rectanglesIds[index];
+			}
 			ReDraw();
 			return;
 		}
@@ -348,6 +366,7 @@ void CEditorRenderingWindow::addMarkersForRectangle( HDC paintDC, const int x, c
 	addMarker( paintDC, x + width / 2, y + height, TMarkerType::MT_Bottom, id, index );
 	addMarker( paintDC, x, y + height, TMarkerType::MT_LeftBottom, id, index );
 	addMarker( paintDC, x, y + height / 2, TMarkerType::MT_Left, id, index );
+	addMarker( paintDC, x + width / 2, y - RotateMarkerShift, TMarkerType::MT_Rotate, id, index );
 }
 
 void  CEditorRenderingWindow::addMarker( HDC paintDC, const int x, const int y, const TMarkerType type, const IdType& id, const int index )
@@ -427,4 +446,19 @@ POINT CEditorRenderingWindow::getPointByLParam( const LPARAM & lparam )
 	result.x = LOWORD( lparam );
 	result.y = HIWORD( lparam );
 	return result;
+}
+
+double CEditorRenderingWindow::getAngleBetweenPoints( const POINT& point_start, const POINT& point_end, const POINT& point_centre ) const
+{
+	POINT vector_start = { point_start.x - point_centre.x, point_start.y - point_centre.y };
+	POINT vector_end = { point_end.x - point_centre.x, point_end.y - point_centre.y };
+	double cosinus = (vector_start.x * vector_end.x + vector_start.y * vector_end.y) /
+		(sqrt( pow( vector_start.x, 2.0 ) + pow( vector_start.y, 2.0 ) ) * sqrt( pow( vector_end.x, 2.0 ) + pow( vector_end.y, 2.0 ) ));
+	return acos( cosinus );
+}
+
+POINT CEditorRenderingWindow::getRectangleCentre( const RECT& rect ) const
+{
+	POINT centre = { (rect.left + rect.right) / 2, (rect.bottom + rect.top) / 2 };
+	return centre;
 }

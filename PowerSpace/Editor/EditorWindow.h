@@ -30,6 +30,7 @@ protected:
 	virtual void MoveDrawableObject( const IdType& id, const RECT & newSize ) override;
 	virtual void Scaling( const int direction ) override;
 	virtual void SelectDrawableObject( const IdType& id ) override;
+	virtual void RotateDrawableObject( const IdType& id, const double newAngle ) override;
 
 
 private:

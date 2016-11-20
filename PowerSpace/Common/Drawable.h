@@ -32,6 +32,10 @@ public:
 	virtual COLORREF GetColor() const = 0;
 	virtual void SetColor( COLORREF color ) = 0;
 
+	// getter and setter for color field
+	virtual double GetAngle() const = 0;
+	virtual void SetAngle( double angle ) = 0;
+
 	// draws object on canvas
 	virtual void Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const = 0;
 
@@ -63,6 +67,9 @@ public:
 
 	COLORREF GetColor() const;
 	void SetColor( COLORREF newColor );
+
+	double GetAngle() const;
+	void SetAngle( double angle );
 
 	virtual void Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const = 0;
 

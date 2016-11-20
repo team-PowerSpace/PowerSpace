@@ -36,6 +36,16 @@ void CDrawable::SetColor( COLORREF newColor )
 	color = newColor;
 }
 
+double CDrawable::GetAngle() const
+{
+	return angle;
+}
+
+void CDrawable::SetAngle( double newAngle )
+{
+	angle = newAngle;
+}
+
 void CDrawable::AddScript( EventType eventType, CScript script )
 {
 	scripts[eventType].push_back( script );

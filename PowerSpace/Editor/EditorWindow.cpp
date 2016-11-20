@@ -48,7 +48,7 @@ void CEditorWindow::DrawContent( HDC paintDC, const int width, const int height 
 	stage->ClipAndDrawObjects( paintDC, stage->GetObjectsAsVector() );
 	CViewport& viewport = stage->GetViewPort();
 	for( auto it = objects.begin(); it != objects.end(); ++it ) {
-		DrawSizeableRectangle( paintDC, viewport.ConvertToScreenCoordinates( it->second->GetContainingBox() ), it->first );
+		DrawSizeableRectangle( paintDC, viewport.ConvertToScreenCoordinates( it->second->GetContainingBox() ), it->first, it->second->GetAngle() );
 	}
 
 	UNREFERENCED_PARAMETER( width );
@@ -75,6 +75,11 @@ void CEditorWindow::Scaling( const int direction )
 void CEditorWindow::SelectDrawableObject( const IdType& id )
 {
 	CEditor::GetWindowByHandle( GetParent( GetHandle() ) )->SetActiveId( id );
+}
+
+void CEditorWindow::RotateDrawableObject( const IdType& id, const double newAngle )
+{
+	stage->GetObjectById( id )->SetAngle(newAngle);
 }
 
 bool CEditorWindow::Create( HWND hWndParent )

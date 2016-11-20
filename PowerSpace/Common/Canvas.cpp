@@ -3,7 +3,8 @@
 
 void CCanvas::Rotate( HDC hdc, double angle ) const
 {
-	double radians = (2 * 3.1416 * angle) / 360;
+	//double radians = (2 * 3.1416 * angle) / 360;
+	double radians = angle;
 	double cosinus = (double)cos( radians );
 	double sinus = (double)sin( radians );
 	XFORM xForm;

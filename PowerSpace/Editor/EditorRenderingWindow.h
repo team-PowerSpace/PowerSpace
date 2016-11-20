@@ -3,7 +3,7 @@
 
 enum TMarkerType
 {
-	MT_LeftTop, MT_Top, MT_RightTop, MT_Right, MT_RightBottom, MT_Bottom, MT_LeftBottom, MT_Left
+	MT_LeftTop, MT_Top, MT_RightTop, MT_Right, MT_RightBottom, MT_Bottom, MT_LeftBottom, MT_Left, MT_Rotate
 };
 
 class Marker
@@ -27,7 +27,7 @@ private:
 
 enum TMovingState
 {
-	MS_None, MS_Moving, MS_MovingCanvas, MS_Sizing
+	MS_None, MS_Moving, MS_MovingCanvas, MS_Sizing, MS_Rotating
 };
 
 class CEditorRenderingWindow
@@ -48,7 +48,7 @@ protected:
 	// This metod should be calles in heir-class to draw frame and sizeable marker.
 	// Rectangle is stored in this class for moving and sizing.
 	// Drawing of object (not frame) should be in heir-class
-	void DrawSizeableRectangle( HDC paintDC, const RECT & rectangle, const IdType& id );
+	void DrawSizeableRectangle( HDC paintDC, const RECT & rectangle, const IdType& id, const double angle );
 
 	virtual void MoveCanvas( const POINT& point ) = 0;
 	virtual void MoveDrawableObject( const IdType& IdType, const RECT& newSize ) = 0;
@@ -57,12 +57,15 @@ protected:
 
 	virtual void SelectDrawableObject( const IdType& IdType ) = 0;
 
+	virtual void RotateDrawableObject( const IdType& id, const double newAngle ) = 0;
+
 	static LRESULT __stdcall WindowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
 
 private:
 	static const int DefaultWidth;
 	static const int DefaultHeight;
 	static const int MarkerHalfSize;
+	static const int RotateMarkerShift;
 	static const COLORREF BackgroundColor;
 	static const COLORREF MarkerColor;
 	static const COLORREF AccentMarkerColor;
@@ -93,6 +96,11 @@ private:
 	TMarkerType sizingMarkerType;
 	IdType selectedId;
 
+	double startAngle;
+	double lastAngle;
+	POINT rectCentre;
+	std::vector<double> angles;
+
 	void onPaint();
 	void onMouseMove( const WPARAM wParam, const LPARAM lParam );
 	void onMouseMove( const LPARAM lParam );
@@ -115,4 +123,7 @@ private:
 	static bool contains( const RECT& rect, const POINT& point );
 
 	static POINT getPointByLParam( const LPARAM& lparam );
+
+	double getAngleBetweenPoints( const POINT& point_start, const POINT& point_end, const POINT& point_centre ) const;
+	POINT getRectangleCentre( const RECT& rect ) const;
 };
