@@ -231,3 +231,27 @@ int CDrawableBuilder::PythonDrawable_set_yPos(engine_PythonDrawableObject *self,
 	self->yPos = value;
 	return 0;
 }
+
+PyModuleDef CDrawableBuilder::PythonDrawableModule = {
+	PyModuleDef_HEAD_INIT,
+	"noddy2",
+	"Example module that creates an extension type.",
+	-1,
+	NULL, NULL, NULL, NULL, NULL 
+};
+
+PyObject* CDrawableBuilder::PyInit_PythonDrawable( void )
+{
+	PyObject* m;
+
+	if( PyType_Ready( &engine_PythonDrawableType ) < 0 )
+		return NULL;
+
+	m = PyModule_Create( &PythonDrawableModule );
+	if( m == NULL )
+		return NULL;
+
+	Py_INCREF( &engine_PythonDrawableType );
+	PyModule_AddObject( m, "Drawable", (PyObject *)&engine_PythonDrawableType );
+	return m;
+}

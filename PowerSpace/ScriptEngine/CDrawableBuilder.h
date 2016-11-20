@@ -64,6 +64,9 @@ public:
 
 	static int PythonDrawable_set_yPos(engine_PythonDrawableObject *self, int value, void *closure);
 	
+	static PyModuleDef PythonDrawableModule;
+	
+	PyObject* PyInit_PythonDrawable( void );
 private:
 	std::shared_ptr<PyObject> pObject;
 };
