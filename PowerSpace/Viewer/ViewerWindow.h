@@ -11,7 +11,7 @@ enum ColorBufferActionType { RestoreColor, SetColor };
 class CViewerWindow
 {
 public:
-	CViewerWindow( CStage& stage, CViewport& _viewport, CCanvas& _canvas );
+	CViewerWindow( CStage& stage, CViewport& _viewport, CCanvas& _canvas, CScriptHolder& );
 	~CViewerWindow();
 
 	// all the WinAPI stuff
@@ -32,6 +32,7 @@ private:
 	const CViewport& viewport;
 	const CCanvas& canvas;
 	CStage& stage;
+    CScriptHolder& holder;
 	CScriptEngine scriptEngine;
 
 	static const wchar_t* ClassName; // win32 features

@@ -154,6 +154,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Common\Canvas.h" />
+    <ClInclude Include="Common\CScriptHolder.h" />
     <ClInclude Include="Common\Drawable.h" />
     <ClInclude Include="Common\StageObjects.h" />
     <ClInclude Include="Common\Viewport.h" />
@@ -175,7 +176,7 @@
     <ClInclude Include="ScriptEditor.h" />
     <ClInclude Include="ScriptEngine\CDrawableBuilder.h" />
     <ClInclude Include="ScriptEngine\CPyObjectManager.h" />
-    <ClInclude Include="ScriptEngine\CScriptHolder.h" />
+    <ClInclude Include="ScriptEngine\PyScriptHolder.h" />
     <ClInclude Include="ScriptEngine\CViewPortWrap.h" />
     <ClInclude Include="ScriptEngine\PyObjectBuilder.h" />
     <ClInclude Include="ScriptEngine\ScriptEngine.h" />
@@ -190,6 +191,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="Common\CScriptHolder.cpp" />
     <ClCompile Include="Common\Drawable.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
@@ -221,7 +223,7 @@
     <ClCompile Include="PyRunner.cpp" />
     <ClCompile Include="ScriptEditor.cpp" />
     <ClCompile Include="ScriptEngine\CDrawableBuilder.cpp" />
-    <ClCompile Include="ScriptEngine\CScriptHolder.cpp" />
+    <ClCompile Include="ScriptEngine\PyScriptHolder.cpp" />
     <ClCompile Include="ScriptEngine\CViewPortWrap.cpp" />
     <ClCompile Include="ScriptEngine\PyObjectBuilder.cpp" />
     <ClCompile Include="ScriptEngine\ScriptEngine.cpp">
