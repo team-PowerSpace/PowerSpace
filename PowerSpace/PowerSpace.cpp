@@ -10,7 +10,7 @@
 #pragma warning(disable:4100)
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
 {
-	if( !CEditor::RegisterClass() || !CViewerWindow::RegisterClass() || !CScriptEditor::RegisterClass()) {		
+	if( !CEditor::RegisterClass() || !CViewerWindow::RegisterClass() || !CScriptEditor::RegisterClass() ) {
 		return 1;
 	}
 	CEditor window;

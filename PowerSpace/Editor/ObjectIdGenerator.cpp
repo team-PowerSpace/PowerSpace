@@ -5,11 +5,11 @@ std::unordered_map<std::wstring, int> CObjectIdGenerator::typeCounter;
 
 IdType CObjectIdGenerator::GetEmptyId()
 {
-    return std::wstring();
+	return std::wstring();
 }
 
 IdType CObjectIdGenerator::generateNewIdByTypeName( const std::wstring& typeName )
 {
-    int newIntId = typeCounter[typeName]++;
-    return typeName + std::to_wstring( newIntId );
+	int newIntId = typeCounter[typeName]++;
+	return typeName + std::to_wstring( newIntId );
 }

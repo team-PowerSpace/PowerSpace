@@ -64,7 +64,7 @@ void CStage::ClipAndDrawObjects( HDC hdc, const std::vector<IDrawablePtrConst>& 
 void CStage::ClipAndDrawObjects( HDC hdc ) const
 {
     std::vector<IDrawablePtrConst> objectList = GetObjectsAsVector();
-    ClipAndDrawObjects(hdc, objectList);
+	ClipAndDrawObjects( hdc, objectList );
 }
 
 CViewport & CStage::GetViewPort()
@@ -77,7 +77,7 @@ const CViewport & CStage::GetViewPort() const
 	return viewport;
 }
 
-std::wstring CStage::ToWString( ) const
+std::wstring CStage::ToWString() const
 {
 	return CJsonConverter::ToJsonObject( *this )->ToJson();
 }
@@ -87,14 +87,14 @@ IJsonPtr CStage::ToJson() const
 	return CJsonConverter::ToJsonObject( *this );
 }
 
-void CStage::addScript(EventType type, IdType objectId, CScript script)
+void CStage::addScript( EventType type, IdType objectId, CScript script )
 {
-	scripts.addScript(std::pair<IdType, EventType>(objectId, type), script);
+	scripts.addScript( std::pair<IdType, EventType>( objectId, type ), script );
 }
 
-std::vector<std::shared_ptr<CScriptBuilder>> CStage::getScripts(IdType objId, EventType eventType)
+std::vector<PyObject*> CStage::getScripts( IdType objId, EventType eventType )
 {
-	return scripts.getScript(std::pair<IdType, EventType>(objId, eventType));
+	return scripts.getScript( std::pair<IdType, EventType>( objId, eventType ) );
 }
 
 void CStage::decScriptRefs()

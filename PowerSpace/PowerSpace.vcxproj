@@ -96,6 +96,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(PythonHome)\libs;$(Python_Libs);</AdditionalLibraryDirectories>
+      <ManifestFile>$(IntDir)$(TargetName)$(TargetExt).manifest</ManifestFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -243,12 +244,24 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="bitmaps\bitmap1.bmp" />
+    <Image Include="bitmaps\delete2.bmp" />
+    <Image Include="bitmaps\delete24.bmp" />
     <Image Include="bitmaps\edit.bmp" />
     <Image Include="bitmaps\delete.bmp" />
+    <Image Include="bitmaps\edit2.bmp" />
+    <Image Include="bitmaps\edit24.bmp" />
     <Image Include="bitmaps\ellipse.bmp" />
+    <Image Include="bitmaps\ellipse2.bmp" />
+    <Image Include="bitmaps\ellipse24.bmp" />
     <Image Include="bitmaps\play.bmp" />
+    <Image Include="bitmaps\play2.bmp" />
+    <Image Include="bitmaps\play24.bmp" />
     <Image Include="bitmaps\rectangle.bmp" />
+    <Image Include="bitmaps\rectangle2.bmp" />
+    <Image Include="bitmaps\rectangle24.bmp" />
     <Image Include="bitmaps\textbox.bmp" />
+    <Image Include="bitmaps\textbox2.bmp" />
+    <Image Include="bitmaps\textbox24.bmp" />
     <Image Include="PowerSpace.ico" />
     <Image Include="small.ico" />
   </ItemGroup>

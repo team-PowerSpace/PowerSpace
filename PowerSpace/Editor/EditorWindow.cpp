@@ -4,13 +4,11 @@
 
 
 CEditorWindow::CEditorWindow()
-{
-}
+{}
 
 
 CEditorWindow::~CEditorWindow()
-{
-}
+{}
 
 std::shared_ptr<CStage>& CEditorWindow::GetStage()
 {
@@ -47,10 +45,10 @@ bool CEditorWindow::RegisterClass()
 void CEditorWindow::DrawContent( HDC paintDC, const int width, const int height )
 {
 	std::unordered_map<IdType, IDrawablePtr>& objects = stage->GetObjects();
-	stage->ClipAndDrawObjects( paintDC, stage->GetObjectsAsVector() );
+	stage->ClipAndDrawObjects( paintDC );
 	CViewport& viewport = stage->GetViewPort();
 	for( auto it = objects.begin(); it != objects.end(); ++it ) {
-		DrawSizeableRectangle( paintDC, viewport.ConvertToScreenCoordinates( it->second->GetContainingBox() ), it->first );
+		DrawSizeableRectangle( paintDC, viewport.ConvertToScreenCoordinates( it->second->GetContainingBox() ), it->first, it->second->GetAngle() );
 	}
 
 	UNREFERENCED_PARAMETER( width );
@@ -79,9 +77,14 @@ void CEditorWindow::SelectDrawableObject( const IdType& id )
 	CEditor::GetWindowByHandle( GetParent( GetHandle() ) )->SetActiveId( id );
 }
 
+void CEditorWindow::RotateDrawableObject( const IdType& id, const double newAngle )
+{
+	stage->GetObjectById( id )->SetAngle(newAngle);
+}
+
 bool CEditorWindow::Create( HWND hWndParent )
 {
-	return CEditorRenderingWindow::Create(hWndParent, ClassName );
+	return CEditorRenderingWindow::Create( hWndParent, ClassName );
 }
 
 const wchar_t* CEditorWindow::ClassName = L"CEditorWindow";

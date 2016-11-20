@@ -41,14 +41,13 @@ public:
 	const CViewport& GetViewPort() const;
 
 	//add new script
-	void addScript(EventType type, IdType objectId, CScript script);
+	void addScript( EventType type, IdType objectId, CScript script );
 
 	//get scripts by type of function and object
-	std::vector<std::shared_ptr<CScriptBuilder>> getScripts(IdType objId, EventType eventType);
+	std::vector<PyObject*> getScripts( IdType objId, EventType eventType );
 
 	//script correct removal
 	void decScriptRefs();
-
 
 	// get the JSON representation of stage
 	std::wstring ToWString() const;

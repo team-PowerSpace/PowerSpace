@@ -32,6 +32,10 @@ public:
 	virtual COLORREF GetColor() const = 0;
 	virtual void SetColor( COLORREF color ) = 0;
 
+	// getter and setter for color field
+	virtual double GetAngle() const = 0;
+	virtual void SetAngle( double angle ) = 0;
+
 	// draws object on canvas
 	virtual void Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const = 0;
 
@@ -53,7 +57,7 @@ public:
 class CDrawable : public IDrawable
 {
 public:
-    CDrawable( COLORREF _color, TBox _box, bool needGenerateId );
+	CDrawable( COLORREF _color, TBox _box, double _angle, bool needGenerateId );
 	virtual ~CDrawable() {}
 
 	const IdType& GetId() const;
@@ -63,6 +67,9 @@ public:
 
 	COLORREF GetColor() const;
 	void SetColor( COLORREF newColor );
+
+	double GetAngle() const;
+	void SetAngle( double angle );
 
 	virtual void Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const = 0;
 
@@ -82,6 +89,9 @@ protected:
 
 	// the rectangle (position and size) that contains the object on stage
 	TBox containingBox;
+
+	// rotation of the object
+	double angle;
 
 	// maps event type to a list of scripts that are linked to the object;
 	// this map supports the idea that an object can have multiple scripts attached to an event type

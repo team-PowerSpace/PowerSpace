@@ -15,7 +15,7 @@
 const int CEditor::defaultBoxMarginDividor = 4;
 
 CEditor::CEditor()
-    : menu(0), defaultObjectColor( RGB( 100, 90, 80 ) )
+	: menu( 0 ), defaultObjectColor( RGB( 100, 90, 80 ) )
 {}
 
 bool CEditor::RegisterClass()
@@ -45,7 +45,7 @@ void CEditor::Show( int cmdShow )
 {
 	ShowWindow( handle, cmdShow );
 	renderingWindow.Show( cmdShow );
-	ShowWindow( setFontButton, cmdShow);
+	ShowWindow( setFontButton, cmdShow );
 	ShowWindow( saveTextButton, cmdShow );
 	ShowWindow( setColorButton, cmdShow );
 	ShowWindow( addScriptButton, cmdShow );
@@ -79,15 +79,18 @@ void CEditor::OnCreate()
 	CEditorWindow::RegisterClass();
 	menu = LoadMenu( GetModuleHandle( 0 ), MAKEINTRESOURCE( IDR_MENU1 ) );
 	renderingWindow.Create( handle );
-	setFontButton = CreateWindow(L"BUTTON", L"Set Font", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
+	setFontButton = CreateWindow( L"BUTTON", L"Set Font", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
 		10, 10, 100, 100, handle, (HMENU)IDC_MAIN_BUTTON,
-		*(HINSTANCE*)GetWindowLongPtr(handle, GWLP_HINSTANCE), NULL);
+		*(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
 	saveTextButton = CreateWindow( L"BUTTON", L"Save Text", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
 		10, 10, 100, 100, handle, (HMENU)IDC_MAIN_BUTTON,
 		*(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
 	setColorButton = CreateWindow( L"BUTTON", L"Set Color", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
 		10, 10, 100, 100, handle, (HMENU)IDC_MAIN_BUTTON,
         *(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
+	deleteColorButton = CreateWindow( L"BUTTON", L"Delete background", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
+		10, 10, 100, 100, handle, (HMENU)IDC_MAIN_BUTTON,
+		*(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
 	addScriptButton = CreateWindow( L"BUTTON", L"Add Script", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
 		10, 10, 100, 100, handle, (HMENU)IDC_MAIN_BUTTON,
         *(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
@@ -96,6 +99,7 @@ void CEditor::OnCreate()
 	EnableWindow( setFontButton, false );
 	EnableWindow( saveTextButton, false );
 	EnableWindow( setColorButton, false );
+	EnableWindow( deleteColorButton, false );
 	EnableWindow( addScriptButton, false );
 
 }
@@ -109,106 +113,110 @@ void CEditor::SetActiveId( const IdType& id )
 {
 	activeId = id;
 	wchar_t firstLetter = id[0];
-	if ( firstLetter ==  L't') {
+	if( firstLetter == L't' ) {
 		EnableWindow( setFontButton, true );
 		EnableWindow( setColorButton, true );
+		EnableWindow( deleteColorButton, false );
 		EnableWindow( addScriptButton, true );
-	}
-	else {
-		if (id == CObjectIdGenerator::GetEmptyId()) {
+	} else {
+		if( id == CObjectIdGenerator::GetEmptyId() ) {
 			EnableWindow( setFontButton, false );
 			EnableWindow( setColorButton, false );
+			EnableWindow( deleteColorButton, false );
 			EnableWindow( addScriptButton, false );
-		}
-		else {
+		} else {
 			EnableWindow( setFontButton, false );
 			EnableWindow( setColorButton, true );
+			EnableWindow( deleteColorButton, true );
 			EnableWindow( addScriptButton, true );
 		}
 	}
 }
 
-HBITMAP CEditor::MakeBitMapTransparent(HBITMAP hbmSrc) {
+HBITMAP CEditor::MakeBitMapTransparent( HBITMAP hbmSrc )
+{
 	HDC hdcSrc, hdcDst;
 	BITMAP bm;
 	COLORREF clrTP, clrBK;
 	HBITMAP hbmOld, hbmNew = NULL;
 
-	if ((hdcSrc = CreateCompatibleDC(NULL)) != NULL) {
-		if ((hdcDst = CreateCompatibleDC(NULL)) != NULL) {
+	if( (hdcSrc = CreateCompatibleDC( NULL )) != NULL ) {
+		if( (hdcDst = CreateCompatibleDC( NULL )) != NULL ) {
 			int nRow, nCol;
-			GetObject(hbmSrc, sizeof(bm), &bm);
-			hbmOld = (HBITMAP)SelectObject(hdcSrc, hbmSrc);
-			hbmNew = CreateBitmap(bm.bmWidth, bm.bmHeight, bm.bmPlanes, bm.bmBitsPixel, NULL);
-			SelectObject(hdcDst, hbmNew);
+			GetObject( hbmSrc, sizeof( bm ), &bm );
+			hbmOld = (HBITMAP)SelectObject( hdcSrc, hbmSrc );
+			hbmNew = CreateBitmap( bm.bmWidth, bm.bmHeight, bm.bmPlanes, bm.bmBitsPixel, NULL );
+			SelectObject( hdcDst, hbmNew );
 
-			BitBlt(hdcDst, 0, 0, bm.bmWidth, bm.bmHeight, hdcSrc, 0, 0, SRCCOPY);
+			BitBlt( hdcDst, 0, 0, bm.bmWidth, bm.bmHeight, hdcSrc, 0, 0, SRCCOPY );
 
-			clrTP = GetPixel(hdcDst, 1, 1);// Get color of first pixel at 0,0
-			clrBK = GetSysColor(COLOR_MENU);// Get the current background color of the menu
+			clrTP = GetPixel( hdcDst, 1, 1 );// Get color of first pixel at 0,0
+			clrBK = GetSysColor( COLOR_MENU );// Get the current background color of the menu
 
-			for (nRow = 0; nRow < bm.bmHeight; nRow++) {// work our way through all the pixels changing their color
-				for (nCol = 0; nCol < bm.bmWidth; nCol++) {// when we hit our set transparency color.
-					if (GetPixel(hdcDst, nCol, nRow) == clrTP) {
-						SetPixel(hdcDst, nCol, nRow, clrBK);
+			for( nRow = 0; nRow < bm.bmHeight; nRow++ ) {// work our way through all the pixels changing their color
+				for( nCol = 0; nCol < bm.bmWidth; nCol++ ) {// when we hit our set transparency color.
+					if( GetPixel( hdcDst, nCol, nRow ) == clrTP ) {
+						SetPixel( hdcDst, nCol, nRow, clrBK );
 					}
 				}
 			}
-			DeleteDC(hdcDst);
+			DeleteDC( hdcDst );
 		}
-		DeleteDC(hdcSrc);
+		DeleteDC( hdcSrc );
 	}
 	return hbmNew;// return our transformed bitmap.
 }
 
-HBITMAP CEditor::loadTransparentBitmap(HINSTANCE hInstance, int resource) {
-	return MakeBitMapTransparent(LoadBitmap(hInstance, MAKEINTRESOURCE(resource)));
+HBITMAP CEditor::loadTransparentBitmap( HINSTANCE hInstance, int resource )
+{
+	return MakeBitMapTransparent( LoadBitmap( hInstance, MAKEINTRESOURCE( resource ) ) );
 }
 
-void CEditor::createToolbar() {
+void CEditor::createToolbar()
+{
 
 	// Declare and initialize local constants.
-	const int bitmapSize = 16;
+	const int bitmapSize = 24;
 
-	HINSTANCE hInstance = ::GetModuleHandle(0);
+	HINSTANCE hInstance = ::GetModuleHandle( 0 );
 
-	handleToolbar = CreateToolbarEx(handle, WS_CHILD | WS_VISIBLE | CCS_TOP, 1,
-		0, HINST_COMMCTRL, IDB_STD_SMALL_COLOR, NULL, 0, 0, 0, 0, 0, sizeof(TBBUTTON));
+	handleToolbar = CreateToolbarEx( handle, WS_CHILD | WS_VISIBLE | CCS_TOP, 1,
+		0, HINST_COMMCTRL, IDB_STD_LARGE_COLOR, NULL, 0, 0, 0, 0, 0, sizeof( TBBUTTON ) );
 
 	//Enable multiple image lists
-	SendMessage(handleToolbar, CCM_SETVERSION, (WPARAM)5, 0);
+	SendMessage( handleToolbar, CCM_SETVERSION, (WPARAM)5, 0 );
 
 	//Add icons from default imagelist
 	TBBUTTON tbb_buildin[] = {
-		{ STD_FILENEW, ID_FILE_NEW, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
-		{ STD_FILEOPEN, ID_FILE_OPEN, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
-		{ STD_FILESAVE, ID_FILE_SAVE, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
+		{ STD_FILENEW, ID_FILE_NEW, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, (INT_PTR)L"New" },
+		{ STD_FILEOPEN, ID_FILE_OPEN, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, (INT_PTR)L"Open" },
+		{ STD_FILESAVE, ID_FILE_SAVE, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, (INT_PTR)L"Save" },
 	};
-	SendMessage(handleToolbar, (UINT)TB_ADDBUTTONS, _countof(tbb_buildin), (LPARAM)&tbb_buildin);
+	SendMessage( handleToolbar, (UINT)TB_ADDBUTTONS, _countof( tbb_buildin ), (LPARAM)&tbb_buildin );
 
 	//Create custom imagelist
-	HIMAGELIST hImageList = ImageList_Create(bitmapSize, bitmapSize, ILC_COLOR16 | ILC_MASK, 0, 0);
-	ImageList_Add(hImageList, loadTransparentBitmap(hInstance, IDB_RECTANGLE), NULL);
-	ImageList_Add(hImageList, loadTransparentBitmap(hInstance, IDB_ELLIPSE), NULL);
-	ImageList_Add(hImageList, loadTransparentBitmap(hInstance, IDB_TEXTBOX), NULL);
-	ImageList_Add(hImageList, loadTransparentBitmap(hInstance, IDB_PLAY), NULL);
-	ImageList_Add(hImageList, loadTransparentBitmap(hInstance, IDB_DELETE), NULL);
-	ImageList_Add(hImageList, loadTransparentBitmap( hInstance, IDB_EDIT ), NULL);
-	SendMessage(handleToolbar, TB_SETIMAGELIST, (WPARAM)1, (LPARAM)hImageList);
+	HIMAGELIST hImageList = ImageList_Create( bitmapSize, bitmapSize, ILC_COLOR16 | ILC_MASK, 0, 0 );
+	ImageList_Add( hImageList, loadTransparentBitmap( hInstance, IDB_RECTANGLE_24 ), NULL );
+	ImageList_Add( hImageList, loadTransparentBitmap( hInstance, IDB_ELLIPSE_24 ), NULL );
+	ImageList_Add( hImageList, loadTransparentBitmap( hInstance, IDB_TEXTBOX_24 ), NULL );
+	ImageList_Add( hImageList, loadTransparentBitmap( hInstance, IDB_PLAY_24 ), NULL );
+	ImageList_Add( hImageList, loadTransparentBitmap( hInstance, IDB_DELETE_24 ), NULL );
+	ImageList_Add( hImageList, loadTransparentBitmap( hInstance, IDB_EDIT_24 ), NULL );
+	SendMessage( handleToolbar, TB_SETIMAGELIST, (WPARAM)1, (LPARAM)hImageList );
 
 	TBBUTTON tbb[] =
 	{
-		{ MAKELONG(0, 1), ID_ADD_RECTANGLE, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
-		{ MAKELONG(1, 1), ID_ADD_ELLIPSE, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
-		{ MAKELONG(2, 1), ID_ADD_TEXT, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
-		{ MAKELONG(3, 1), ID_PLAY_LAUNCHPLAYER, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
-		{ MAKELONG(4, 1), ID_DELETE_OBJECT, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
-		{ MAKELONG(5, 1), ID_EDIT, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, 0 },
+		{ MAKELONG( 0, 1 ), ID_ADD_RECTANGLE, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, (INT_PTR)L"Rectangle" },
+		{ MAKELONG( 1, 1 ), ID_ADD_ELLIPSE, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, (INT_PTR)L"Ellipse" },
+		{ MAKELONG( 2, 1 ), ID_ADD_TEXT, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, (INT_PTR)L"Textbox" },
+		{ MAKELONG( 3, 1 ), ID_PLAY_LAUNCHPLAYER, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, (INT_PTR)L"Launch" },
+		{ MAKELONG( 4, 1 ), ID_DELETE_OBJECT, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, (INT_PTR)L"Delete" },
+		{ MAKELONG( 5, 1 ), ID_EDIT, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, (INT_PTR)L"Edit script" },
 	};
-	SendMessage(handleToolbar, (UINT)TB_ADDBUTTONS, _countof(tbb), (LPARAM)&tbb);
+	SendMessage( handleToolbar, (UINT)TB_ADDBUTTONS, _countof( tbb ), (LPARAM)&tbb );
 
-	SendMessage(handleToolbar, TB_AUTOSIZE, 0, 0);
-	ShowWindow(handleToolbar, TRUE);
+	SendMessage( handleToolbar, TB_AUTOSIZE, 0, 0 );
+	ShowWindow( handleToolbar, TRUE );
 }
 
 void CEditor::OnSize()
@@ -217,13 +225,13 @@ void CEditor::OnSize()
 	int middleX, nWidth, nHeight;
 	int RELATIVE_WIDTH = 3;
 	int RELATIVE_HEIGHT = 4;
-	int RELATIVE_TOOLBAR = 16;
+	int RELATIVE_TOOLBAR = 20;
 	::GetClientRect( handle, &rect );
 	middleX = (rect.left + rect.right) / RELATIVE_HEIGHT;
 	nWidth = (rect.right - rect.left) * RELATIVE_WIDTH / RELATIVE_HEIGHT;
 
 	RECT toolbarRect;
-	::GetClientRect(handleToolbar, &toolbarRect);
+	::GetClientRect( handleToolbar, &toolbarRect );
 	int currentTop = rect.top + (toolbarRect.bottom - toolbarRect.top);
 	nHeight = (rect.bottom - currentTop);
 
@@ -235,9 +243,10 @@ void CEditor::OnSize()
 	SetWindowPos( setFontButton, HWND_TOP, rect.left, currentTop + yOfButton, widthOfButton, cyOfButton, 0 );
 	SetWindowPos( saveTextButton, HWND_TOP, rect.left, currentTop + yOfButton + cyOfButton, widthOfButton, cyOfButton, 0 );
 	SetWindowPos( setColorButton, HWND_TOP, rect.left, currentTop + yOfButton + cyOfButton * 2, widthOfButton, cyOfButton, 0 );
-	SetWindowPos( addScriptButton, HWND_TOP, rect.left, currentTop + yOfButton + cyOfButton * 3, widthOfButton, cyOfButton, 0 );
+	SetWindowPos( deleteColorButton, HWND_TOP, rect.left, currentTop + yOfButton + cyOfButton * 3, widthOfButton, cyOfButton, 0 );
+	SetWindowPos( addScriptButton, HWND_TOP, rect.left, currentTop + yOfButton + cyOfButton * 4, widthOfButton, cyOfButton, 0 );
 
-	SendMessage(handleToolbar, TB_AUTOSIZE, 0, 0);
+	SendMessage( handleToolbar, TB_AUTOSIZE, 0, 0 );
 }
 
 void CEditor::GetText()
@@ -255,22 +264,22 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 	{
 		case ID_ADD_RECTANGLE:
 		{
-            addObject( std::make_shared<CRectangleObject>( defaultObjectColor, generateDefaultBox() ) );
+		addObject( std::make_shared<CRectangleObject>( defaultObjectColor, generateDefaultBox(), 0 ) );
 			break;
 		}
 		case ID_ADD_ELLIPSE:
 		{
-            addObject( std::make_shared<CEllipseObject>( defaultObjectColor, generateDefaultBox() ) );
+		addObject( std::make_shared<CEllipseObject>( defaultObjectColor, generateDefaultBox(), 0 ) );
 			break;
 		}
 		case ID_ADD_TEXT:
 		{
-            addObject( std::make_shared<CTextBoxObject>( defaultObjectColor, generateDefaultBox(), L"Text" ) );
+		addObject( std::make_shared<CTextBoxObject>( defaultObjectColor, generateDefaultBox(), 0, L"Text" ) );
 			break;
 		}
 		case ID_FILE_SAVE:
 		{
-			OnSave( );
+		OnSave();
 			break;
 		}
 		case ID_PLAY_LAUNCHPLAYER:
@@ -312,7 +321,7 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 		}
 		case ID_DELETE_OBJECT:
 		{
-			stage->GetObjects().erase(activeId);
+		stage->GetObjects().erase( activeId );
 			SetActiveId( CObjectIdGenerator::GetEmptyId() );
 			renderingWindow.ReDraw();
 			break;
@@ -323,10 +332,11 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
                 GetText();
             } else if( (HWND)lParam == setColorButton ) {
                 onColorSelect();
+		} else if( (HWND)lParam == deleteColorButton ) {
+			onColorDelete();
             } else if( (HWND)lParam == addScriptButton ) {
                 onFileSelect();
-			}
-			else if ((HWND)lParam == setFontButton) {
+		} else if( (HWND)lParam == setFontButton ) {
 				onFontSelect();
 			}
             break;
@@ -360,8 +370,8 @@ TBox CEditor::generateDefaultBox() const
 	TBox box;
 	RECT rect;
 	GetWindowRect( renderingWindow.GetHandle(), &rect );
-	box.right = 3 * ( box.left = ( rect.right - rect.left ) / defaultBoxMarginDividor);
-	box.bottom = 3 * ( box.top = ( rect.bottom - rect.top ) / defaultBoxMarginDividor);
+	box.right = 3 * (box.left = (rect.right - rect.left) / defaultBoxMarginDividor);
+	box.bottom = 3 * (box.top = (rect.bottom - rect.top) / defaultBoxMarginDividor);
 	return stage->GetViewPort().ConvertToModelCoordinates( box );
 }
 
@@ -381,27 +391,33 @@ void CEditor::onColorSelect()
 	}
 }
 
+void CEditor::onColorDelete()
+{
+	stage->GetObjectById( activeId )->SetColor( noColor );
+	renderingWindow.ReDraw();
+}
+
 void CEditor::onFontSelect()
 {
 	CHOOSEFONT chooseFont;
 	static LOGFONT logFont;
 	HFONT hFont;
 	static DWORD rgbCurrent;
-	ZeroMemory(&chooseFont, sizeof(chooseFont));
-	chooseFont.lStructSize = sizeof(chooseFont);
+	ZeroMemory( &chooseFont, sizeof( chooseFont ) );
+	chooseFont.lStructSize = sizeof( chooseFont );
 	chooseFont.hwndOwner = handle;
 	chooseFont.lpLogFont = &logFont;
 	chooseFont.rgbColors = rgbCurrent;
 	chooseFont.Flags = CF_SCREENFONTS | CF_EFFECTS;
-	if (::ChooseFont(&chooseFont)) {
+	if( ::ChooseFont( &chooseFont ) ) {
 		hFont = CreateFontIndirect( chooseFont.lpLogFont );
-		reinterpret_cast<CTextBoxObject*>( stage->GetObjectById(activeId).get() )->SetColor( chooseFont.rgbColors );
-		reinterpret_cast<CTextBoxObject*>( stage->GetObjectById(activeId).get() )->SetFont( hFont );
+		reinterpret_cast<CTextBoxObject*>(stage->GetObjectById( activeId ).get())->SetColor( chooseFont.rgbColors );
+		reinterpret_cast<CTextBoxObject*>(stage->GetObjectById( activeId ).get())->SetFont( hFont );
 		renderingWindow.ReDraw();
 	}
 }
 
-void CEditor::OnSave( ) const
+void CEditor::OnSave() const
 {
 	OPENFILENAMEW filename;
 	filename.lStructSize = sizeof( filename );
@@ -412,7 +428,7 @@ void CEditor::OnSave( ) const
 	filename.nFilterIndex = 1;
 	filename.nMaxFile = 1024;
 	std::unique_ptr<wchar_t[]> name( new wchar_t[filename.nMaxFile] );
-	filename.lpstrFile = name.get( );
+	filename.lpstrFile = name.get();
 	filename.lpstrFile[0] = 0;
 	filename.lpstrInitialDir = 0;
 	filename.lpstrTitle = L"Save project";
@@ -425,10 +441,10 @@ void CEditor::OnSave( ) const
 	filename.nFileExtension = 0;
 	filename.Flags = OFN_OVERWRITEPROMPT;
 
-	if ( ::GetSaveFileName( &filename ) ) {
+	if( ::GetSaveFileName( &filename ) ) {
 		std::wofstream saveStream( filename.lpstrFile, std::ofstream::out );
 		saveStream << stage->ToWString();
-		saveStream.close( );
+		saveStream.close();
 	}
 }
 
@@ -458,7 +474,7 @@ void CEditor::onFileSelect()
 
 	if( ::GetOpenFileName( &filename ) ) {
 		CScript script( filename.lpstrFile ); //Add choice of event type
-		stage->addScript(EventType::EventClick, activeId, script);
+		stage->addScript( EventType::EventClick, activeId, script );
         //stage->GetObjectById( activeId )->AddScript( EventType::EventClick, script );
 	}
 }
