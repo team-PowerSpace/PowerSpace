@@ -454,7 +454,12 @@ double CEditorRenderingWindow::getAngleBetweenPoints( const POINT& point_start, 
 	POINT vector_end = { point_end.x - point_centre.x, point_end.y - point_centre.y };
 	double cosinus = (vector_start.x * vector_end.x + vector_start.y * vector_end.y) /
 		(sqrt( pow( vector_start.x, 2.0 ) + pow( vector_start.y, 2.0 ) ) * sqrt( pow( vector_end.x, 2.0 ) + pow( vector_end.y, 2.0 ) ));
-	return acos( cosinus );
+	double point_against_line = vector_end.y * vector_start.x - vector_start.y * vector_end.x;
+	if( point_against_line > 0 ) {
+		return acos( cosinus );
+	} else {
+		return -acos( cosinus );
+	}
 }
 
 POINT CEditorRenderingWindow::getRectangleCentre( const RECT& rect ) const
