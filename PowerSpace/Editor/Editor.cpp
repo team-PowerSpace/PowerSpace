@@ -188,9 +188,9 @@ void CEditor::createToolbar()
 
 	//Add icons from default imagelist
 	TBBUTTON tbb_buildin[] = {
-		{ STD_FILENEW, ID_FILE_NEW, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, (INT_PTR)L"New" },
-		{ STD_FILEOPEN, ID_FILE_OPEN, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, (INT_PTR)L"Open" },
-		{ STD_FILESAVE, ID_FILE_SAVE, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, (INT_PTR)L"Save" },
+        { STD_FILENEW, ID_FILE_NEW, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, reinterpret_cast<INT_PTR>(L"New") },
+        { STD_FILEOPEN, ID_FILE_OPEN, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, reinterpret_cast<INT_PTR>(L"Open") },
+        { STD_FILESAVE, ID_FILE_SAVE, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, reinterpret_cast<INT_PTR>(L"Save") },
 	};
 	SendMessage( handleToolbar, (UINT)TB_ADDBUTTONS, _countof( tbb_buildin ), (LPARAM)&tbb_buildin );
 
@@ -206,12 +206,12 @@ void CEditor::createToolbar()
 
 	TBBUTTON tbb[] =
 	{
-		{ MAKELONG( 0, 1 ), ID_ADD_RECTANGLE, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, (INT_PTR)L"Rectangle" },
-		{ MAKELONG( 1, 1 ), ID_ADD_ELLIPSE, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, (INT_PTR)L"Ellipse" },
-		{ MAKELONG( 2, 1 ), ID_ADD_TEXT, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, (INT_PTR)L"Textbox" },
-		{ MAKELONG( 3, 1 ), ID_PLAY_LAUNCHPLAYER, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, (INT_PTR)L"Launch" },
-		{ MAKELONG( 4, 1 ), ID_DELETE_OBJECT, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, (INT_PTR)L"Delete" },
-		{ MAKELONG( 5, 1 ), ID_EDIT, TBSTATE_ENABLED, TBSTYLE_BUTTON, 0, 0, 0, (INT_PTR)L"Edit script" },
+        { MAKELONG( 0, 1 ), ID_ADD_RECTANGLE, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, reinterpret_cast<INT_PTR>(L"Rectangle") },
+        { MAKELONG( 1, 1 ), ID_ADD_ELLIPSE, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, reinterpret_cast<INT_PTR>(L"Ellipse") },
+        { MAKELONG( 2, 1 ), ID_ADD_TEXT, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, reinterpret_cast<INT_PTR>(L"Textbox") },
+        { MAKELONG( 3, 1 ), ID_PLAY_LAUNCHPLAYER, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, reinterpret_cast<INT_PTR>(L"Launch") },
+        { MAKELONG( 4, 1 ), ID_DELETE_OBJECT, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, reinterpret_cast<INT_PTR>(L"Delete") },
+        { MAKELONG( 5, 1 ), ID_EDIT, TBSTATE_ENABLED, TBSTYLE_BUTTON, {0}, 0, reinterpret_cast<INT_PTR>(L"Edit script") },
 	};
 	SendMessage( handleToolbar, (UINT)TB_ADDBUTTONS, _countof( tbb ), (LPARAM)&tbb );
 
