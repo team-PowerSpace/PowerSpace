@@ -28,6 +28,7 @@ bool CScriptHolder::addScript( const IdType& key, const TPath& path )
     } else {
         Scripts[key] = std::vector<IdType>();
         Scripts[key].push_back( scriptNameWithoutExtention );
+        return true;
     }
 }
 

@@ -176,7 +176,6 @@
     <ClInclude Include="ScriptEditor.h" />
     <ClInclude Include="ScriptEngine\CDrawableBuilder.h" />
     <ClInclude Include="ScriptEngine\CPyObjectManager.h" />
-    <ClInclude Include="ScriptEngine\PyScriptHolder.h" />
     <ClInclude Include="ScriptEngine\CViewPortWrap.h" />
     <ClInclude Include="ScriptEngine\PyObjectBuilder.h" />
     <ClInclude Include="ScriptEngine\ScriptEngine.h" />
@@ -222,7 +221,6 @@
     <ClCompile Include="PyRunner.cpp" />
     <ClCompile Include="ScriptEditor.cpp" />
     <ClCompile Include="ScriptEngine\CDrawableBuilder.cpp" />
-    <ClCompile Include="ScriptEngine\PyScriptHolder.cpp" />
     <ClCompile Include="ScriptEngine\CViewPortWrap.cpp" />
     <ClCompile Include="ScriptEngine\PyObjectBuilder.cpp" />
     <ClCompile Include="ScriptEngine\ScriptEngine.cpp">

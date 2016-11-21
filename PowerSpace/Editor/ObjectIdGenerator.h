@@ -13,9 +13,9 @@ enum class EventType;
 //hash function for map storage
 struct IdTypeHash
 {
-    std::size_t operator()( std::pair<IdType, EventType> k ) const
+    std::size_t operator()( IdType k ) const
     {
-        return (std::hash<std::wstring>()(k.first));
+        return (std::hash<std::wstring>()(k));
     }
 };
 

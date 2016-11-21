@@ -161,9 +161,6 @@
     <ClInclude Include="Common\CScriptHolder.h">
       <Filter>Editor\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ScriptEngine\PyScriptHolder.h">
-      <Filter>Editor\Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PowerSpace.cpp">
@@ -211,9 +208,6 @@
     <ClCompile Include="ScriptEngine\PyObjectBuilder.cpp">
       <Filter>ScriptEngine\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ScriptEngine\CDrawableBuilder.cpp">
-      <Filter>ScriptEngine\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Editor\ObjectIdGenerator.cpp">
       <Filter>Editor\Source Files</Filter>
     </ClCompile>
@@ -247,8 +241,8 @@
     <ClCompile Include="Common\CScriptHolder.cpp">
       <Filter>Editor\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ScriptEngine\PyScriptHolder.cpp">
-      <Filter>Editor\Source Files</Filter>
+    <ClCompile Include="ScriptEngine\CDrawableBuilder.cpp">
+      <Filter>ScriptEngine\Header Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

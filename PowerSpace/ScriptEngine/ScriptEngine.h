@@ -21,4 +21,5 @@ private:
     CStage& stage;
 	std::map<IdType, std::shared_ptr<CDrawableBuilder>> pyScene;
 	PyObject* globalDictionary;	
+    PyObject* localDictionary;
 };

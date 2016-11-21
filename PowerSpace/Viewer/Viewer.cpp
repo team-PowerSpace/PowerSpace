@@ -17,7 +17,6 @@ bool CViewer::Create()
 	if( isCreated ) {
 		viewerWindow.Show();
 	}
-	Py_Initialize(); //starting up Python right here
 	return isCreated;
 }
 
