@@ -35,7 +35,7 @@ IJsonPtr CJsonConverter::ToJsonObject( const CRectangleObject &rectangle )
 {
     auto jRectangle = std::make_shared<CJsonMap>( L"Rectangle" );
     jRectangle->objects[L"Id"] = std::make_shared<CJsonWString>( L"Id", std::wstring( rectangle.GetId() ) );
-    jRectangle->objects[L"Color"] = std::make_shared<CJsonWString>( std::to_wstring( rectangle.GetColor() ), L"Color" );
+    jRectangle->objects[L"Color"] = std::make_shared<CJsonWString>( L"Color", std::to_wstring( rectangle.GetColor() ) );
     jRectangle->objects[L"Box"] = ToJsonObject( rectangle.GetContainingBox() );
     jRectangle->objects[L"Scripts"] = ToJsonObject( rectangle.GetScripts( EventType::EventAll ) );
     return std::static_pointer_cast<IJsonObject>(jRectangle);
@@ -95,28 +95,34 @@ IJsonPtr CJsonConverter::ToJsonObject( const CScript &script )
     return std::static_pointer_cast<IJsonObject>(jScript);
 }
 
-template<> std::shared_ptr<CRectangleObject> CJsonConverter::fromJson( const IJsonObject& object )
+template<> std::shared_ptr<CStage> CJsonConverter::FromJson( const IJsonObject& object )
+{
+    std::wcout << object.name;
+    return std::make_shared<CStage>();
+}
+
+template<> std::shared_ptr<CRectangleObject> CJsonConverter::FromJson( const IJsonObject& object )
 {
     std::wcout << object.name;
     TBox temp = { 0, 0, 50, 50 };
     return std::make_shared<CRectangleObject>( RGB( 100, 90, 80 ), temp, 0 );
 }
 
-template<> std::shared_ptr<CEllipseObject> CJsonConverter::fromJson( const IJsonObject& object )
+template<> std::shared_ptr<CEllipseObject> CJsonConverter::FromJson( const IJsonObject& object )
 {
     std::wcout << object.name;
     TBox temp = { 0, 0, 50, 50 };
     return std::make_shared<CEllipseObject>( RGB( 100, 90, 80 ), temp, 0 );
 }
 
-template<> std::shared_ptr<CTextBoxObject> CJsonConverter::fromJson( const IJsonObject& object )
+template<> std::shared_ptr<CTextBoxObject> CJsonConverter::FromJson( const IJsonObject& object )
 {
     std::wcout << object.name;
     TBox temp = { 0, 0, 50, 50 };
     return std::make_shared<CTextBoxObject>( RGB( 100, 90, 80 ), temp, 0, L"Text" );
 }
 
-template<> std::shared_ptr<CViewport> CJsonConverter::fromJson( const IJsonObject& object )
+template<> std::shared_ptr<CViewport> CJsonConverter::FromJson( const IJsonObject& object )
 {
     std::wcout << object.name;
     return std::make_shared<CViewport>();

@@ -277,6 +277,11 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 		addObject( std::make_shared<CTextBoxObject>( defaultObjectColor, generateDefaultBox(), 0, L"Text" ) );
 		break;
 	}
+    case ID_FILE_OPEN:
+    {
+        ::MessageBox( NULL, L"Open not implemented yet", L"Oops", NULL );
+        break;
+    }
 	case ID_FILE_SAVE:
 	{
 		OnSave();
