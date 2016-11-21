@@ -142,12 +142,12 @@ std::shared_ptr<PyObject> CViewPortWrap::GetpObject() const
 	return pObject;
 }
 
-float CViewPortWrap::PythonViewport_get_scale(engine_PythonViewportObject *self, void *closure)
+double CViewPortWrap::PythonViewport_get_scale(engine_PythonViewportObject *self, void *closure)
 {
 	return self->scale;
 }
 
-float CViewPortWrap::PythonViewport_get_angle(engine_PythonViewportObject *self, void *closure)
+double CViewPortWrap::PythonViewport_get_angle(engine_PythonViewportObject *self, void *closure)
 {
 	return self->angle;
 }
@@ -163,13 +163,13 @@ int CViewPortWrap::PythonViewport_get_yPos(engine_PythonViewportObject *self, vo
 }
 
 /*setters for the object*/
-int CViewPortWrap::PythonViewport_set_scale(engine_PythonViewportObject *self, float value, void *closure)
+int CViewPortWrap::PythonViewport_set_scale(engine_PythonViewportObject *self, double value, void *closure)
 {
 	self->scale = value;
 	return 0;
 }
 
-int CViewPortWrap::PythonViewport_set_angle(engine_PythonViewportObject *self, float value, void *closure)
+int CViewPortWrap::PythonViewport_set_angle(engine_PythonViewportObject *self, double value, void *closure)
 {
 	self->angle = value;
 	return 0;

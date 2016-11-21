@@ -36,5 +36,5 @@ protected:
 private:
 	static const wchar_t* ClassName;
 	std::shared_ptr<CStage> stage;
-	static const float scalingFactor;
+	static const double scalingFactor;
 };

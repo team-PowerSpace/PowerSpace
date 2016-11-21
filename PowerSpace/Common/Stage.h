@@ -11,6 +11,9 @@
 class CStage
 {
 public:
+    CStage() = default;
+    CStage( const std::unordered_map<IdType, IDrawablePtr>& objects, const CViewport& viewport );
+
 	// getters of objects field
 	const std::unordered_map<IdType, IDrawablePtr>& CStage::GetObjects() const;
 	std::unordered_map<IdType, IDrawablePtr>& GetObjects();

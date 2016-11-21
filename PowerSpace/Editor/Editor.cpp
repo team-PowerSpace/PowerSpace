@@ -442,10 +442,10 @@ void CEditor::OnOpen()
         std::wifstream openStream( filename );
         std::wstring content( (std::istreambuf_iterator<wchar_t>( openStream )),
             (std::istreambuf_iterator<wchar_t>()) );
-        std::vector<IJsonPtr> jsonObjects = CJsonWorker::ReadObjects( content );
-        assert( jsonObjects.size() == 1 );
-        *stage = *CJsonConverter::FromJson<std::shared_ptr<CStage>>( *jsonObjects.front() );
-        renderingWindow.ReDraw();
+        JsonObjectDescription description =  CJsonWorker::GetNextObjectDescription( content );
+        assert( description.type == JsonObjectType::MAP );
+        CJsonMap stageNewJson( description.name, description.body );
+        //*stage = *CJsonConverter::FromJson<std::shared_ptr<CStage>>( stageNewJson );
     }
 }
 

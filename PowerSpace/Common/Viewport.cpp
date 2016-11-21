@@ -7,6 +7,10 @@ CViewport::CViewport() : scale( 1 ), angle( 0 ), zeroLocation()
 	zeroLocation.y = 0;
 }
 
+CViewport::CViewport( double _scale, double _angle, TPoint _zeroLocation )
+    : scale( _scale ), angle( _angle ), zeroLocation( _zeroLocation )
+{}
+
 std::vector<int> CViewport::ClipObjects( const std::vector<IDrawablePtrConst>& objects ) const
 {
 	// TODO: implement this method; now it returns all the objects
@@ -86,22 +90,22 @@ void CViewport::SetZeroLocation( const TPoint & value )
 	zeroLocation = value;
 }
 
-float CViewport::GetScale() const
+double CViewport::GetScale() const
 {
 	return scale;
 }
 
-void CViewport::SetScale( const float value )
+void CViewport::SetScale( const double value )
 {
 	scale = value;
 }
 
-float CViewport::GetAngle() const
+double CViewport::GetAngle() const
 {
 	return angle;
 }
 
-void CViewport::SetAngle( const float value )
+void CViewport::SetAngle( const double value )
 {
 	angle = value;
 }

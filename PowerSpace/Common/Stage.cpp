@@ -1,6 +1,10 @@
 #include <stdafx.h>
 #include "Stage.h"
 
+CStage::CStage( const std::unordered_map<IdType, IDrawablePtr>& _objects, const CViewport& _viewport )
+    : objects(_objects), viewport( _viewport )
+{}
+
 const std::unordered_map<IdType, IDrawablePtr>& CStage::GetObjects() const
 {
 	return objects;

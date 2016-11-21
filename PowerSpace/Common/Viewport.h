@@ -8,6 +8,7 @@ class CViewport
 public:
 	// default ctorm which set zero location to (0,0) and scale to 1
 	CViewport();
+    CViewport( double _scale, double _angle, TPoint _zeroLocation );
 
 	// checks if objects in "objects" are visible on the canvas with the current viewport;
 	// returns vector of indices of (fully or partially) visible objects
@@ -32,17 +33,17 @@ public:
 	const TPoint& GetZeroLocation() const;
 	void SetZeroLocation( const TPoint& );
 
-	float GetScale() const;
-	float GetAngle() const;
-	void SetScale( const float );
-	void SetAngle( const float );
+	double GetScale() const;
+	double GetAngle() const;
+	void SetScale( const double );
+	void SetAngle( const double );
 
 
 private:
 	// coeff of scaling
-	float scale;
+	double scale;
 	// angle of rotation
-	float angle;
+	double angle;
 	// location of model point (0, 0) in screen coordinates
 	TPoint zeroLocation;
 };

@@ -89,4 +89,4 @@ bool CEditorWindow::Create( HWND hWndParent )
 
 const wchar_t* CEditorWindow::ClassName = L"CEditorWindow";
 
-const float CEditorWindow::scalingFactor = 1.2f;
+const double CEditorWindow::scalingFactor = 1.2f;

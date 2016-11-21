@@ -46,9 +46,9 @@ int CJsonWorker::CloseTag( JSON& description, const std::wstring& tag, int depth
     return depth;
 }
 
-std::vector<std::shared_ptr<IJsonObject>> CJsonWorker::ReadObjects( const JSON& description )
+std::vector<IJsonPtr> CJsonWorker::ReadObjects( const JSON& description )
 {
-    std::vector<std::shared_ptr<IJsonObject>> objects;
+    std::vector<IJsonPtr> objects;
     int position = 0;
     JsonObjectDescription objectDescription = CJsonWorker::GetNextObjectDescription( description, position );
     while( objectDescription.name != EMPTY_NAME ) {

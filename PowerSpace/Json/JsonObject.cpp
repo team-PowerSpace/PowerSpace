@@ -1,11 +1,7 @@
 #include <stdafx.h>
 #include <JsonObject.h>
 #include <JsonWorker.h>
-
-//Temp include for cout
-#include <iostream>
-
-CJsonArray::~CJsonArray() {}
+#include <JsonTreeVisitor.h>
 
 CJsonArray::CJsonArray( const JsonName& _name )
 {
@@ -34,13 +30,16 @@ JSON CJsonArray::ToJson( int depth ) const
     return description;
 }
 
+void CJsonArray::Accept( IJsonTreeVisitor& visitor ) const
+{
+    visitor.Visit( this );
+}
+
 CJsonWString::CJsonWString( const JsonName& _name, const JsonObjectBody& _body )
 {
     name = _name;
     content = _body;
 }
-
-CJsonWString::~CJsonWString() {}
 
 JSON CJsonWString::ToJson( int depth ) const
 {
@@ -50,6 +49,10 @@ JSON CJsonWString::ToJson( int depth ) const
     return description;
 }
 
+void CJsonWString::Accept( IJsonTreeVisitor& visitor ) const
+{
+    visitor.Visit( this );
+}
 
 CJsonMap::CJsonMap( const JsonName& _name )
 {
@@ -65,9 +68,6 @@ CJsonMap::CJsonMap( const JsonName& _name, const JsonObjectBody& _body )
     }
 }
 
-CJsonMap::~CJsonMap() {}
-
-
 JSON CJsonMap::ToJson( int depth ) const
 {
     JSON description = L"\"" + name + L"\" : ";
@@ -82,4 +82,9 @@ JSON CJsonMap::ToJson( int depth ) const
     description.pop_back();
     depth = CJsonWorker::CloseTag( description, L"}", depth );
     return description;
+}
+
+void CJsonMap::Accept( IJsonTreeVisitor& visitor ) const
+{
+    visitor.Visit( this );
 }
