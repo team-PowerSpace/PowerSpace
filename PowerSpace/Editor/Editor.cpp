@@ -279,7 +279,7 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 	}
     case ID_FILE_OPEN:
     {
-        ::MessageBox( NULL, L"Open not implemented yet", L"Oops", NULL );
+        OnOpen();
         break;
     }
 	case ID_FILE_SAVE:
@@ -422,9 +422,36 @@ void CEditor::onFontSelect()
 	}
 }
 
+void CEditor::OnOpen()
+{
+    OPENFILENAME openInfo;
+    memset( &openInfo, 0, sizeof( openInfo ) );
+    openInfo.lStructSize = sizeof( OPENFILENAME );
+    openInfo.hwndOwner = handle;
+    openInfo.lpstrFilter = L"PS project (*.ps)\0*.ps\0All Files (*.*)\0*.*\0\0";
+    openInfo.nFilterIndex = 1;
+    openInfo.nMaxFile = 1024;
+    std::unique_ptr<WCHAR[]> filenamePtr( new WCHAR[openInfo.nMaxFile] );
+    memset( filenamePtr.get(), 0, openInfo.nMaxFile );
+    openInfo.lpstrFile = filenamePtr.get();
+    openInfo.lpstrTitle = L"Open project";
+    openInfo.lpstrDefExt = L".ps";
+    openInfo.Flags = OFN_PATHMUSTEXIST | OFN_EXPLORER;
+    if( ::GetOpenFileName( &openInfo ) ) {
+        std::wstring filename( openInfo.lpstrFile );
+        std::wifstream openStream( filename );
+        std::wstring content( (std::istreambuf_iterator<wchar_t>( openStream )),
+            (std::istreambuf_iterator<wchar_t>()) );
+        std::vector<IJsonPtr> jsonObjects = CJsonWorker::ReadObjects( content );
+        assert( jsonObjects.size() == 1 );
+        *stage = *CJsonConverter::FromJson<std::shared_ptr<CStage>>( *jsonObjects.front() );
+        renderingWindow.ReDraw();
+    }
+}
+
 void CEditor::OnSave() const
 {
-	OPENFILENAMEW filename;
+	OPENFILENAME filename;
 	filename.lStructSize = sizeof( filename );
 	filename.hwndOwner = handle;
 	filename.hInstance = GetModuleHandleW( nullptr );
@@ -455,7 +482,7 @@ void CEditor::OnSave() const
 
 void CEditor::onFileSelect()
 {
-	OPENFILENAMEW filename;
+	OPENFILENAME filename;
 	filename.lStructSize = sizeof( filename );
 	filename.hwndOwner = handle;
 	filename.hInstance = GetModuleHandleW( nullptr );
