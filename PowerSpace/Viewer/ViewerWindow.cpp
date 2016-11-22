@@ -191,11 +191,7 @@ void CViewerWindow::onTimer()
 
 	RECT rect;
 	::GetClientRect( handle, &rect );
-	rect.top -= rect.bottom;
-	rect.bottom *= 2;
-	rect.left -= rect.right;
-	rect.right *= 2;
-	::InvalidateRect( handle, &rect, true );
+	::InvalidateRect( handle, &rect, false );
 }
 
 //
@@ -213,23 +209,21 @@ void CViewerWindow::onPaint()
 	float cosine = (float)cos( viewport.GetAngle() );
 	float sine = (float)sin( viewport.GetAngle() );
 
-	int oldWinWidth = rect.right - rect.left;
-	int oldWinHeight = rect.bottom + rect.left;
-/*
-	int x1 = (int)(oldWinHeight * sine);
-	int y1 = (int)(oldWinHeight * cosine);
-	int x2 = (int)(oldWinWidth * cosine + oldWinHeight * sine);
-	int y2 = (int)(oldWinHeight * cosine - oldWinWidth * sine);
-	int x3 = (int)(oldWinWidth * cosine);
-	int y3 = (int)(-oldWinWidth * sine);
-	*/
-	int winWidth = oldWinWidth * 3;
-	int winHeight = oldWinHeight * 3;
+	int viewportHeight = rect.bottom - rect.top;
+	int viewportWidth = rect.right - rect.left;
+
+	int radius = static_cast<int>(sqrt( pow( viewportHeight, 2 ) + pow( viewportWidth, 2 ) ));
 
 	HDC Memhdc = ::CreateCompatibleDC( hdc );
-	HBITMAP Membitmap = ::CreateCompatibleBitmap( hdc, winWidth, winHeight );
+	HBITMAP Membitmap = ::CreateCompatibleBitmap( hdc, 2*radius, 2 * radius );
 	::SelectObject( Memhdc, Membitmap );
 
+	paintStruct.rcPaint.top = viewportHeight / 2 - radius;
+	paintStruct.rcPaint.bottom = viewportHeight / 2 + radius;
+
+	paintStruct.rcPaint.left = viewportWidth / 2 - radius;
+	paintStruct.rcPaint.right = viewportWidth / 2 + radius;
+	
 	HBRUSH canvasBrush = ::CreateHatchBrush( HS_CROSS, BLUE_FOR_CANVAS_CROSS );
 
 	::FillRect( Memhdc, &paintStruct.rcPaint, canvasBrush );
@@ -244,17 +238,21 @@ void CViewerWindow::onPaint()
 	xForm.eDy = (FLOAT)0.0;
 	::SetWorldTransform( hdc, &xForm );
 
-	stage.ClipAndDrawObjects( Memhdc );
-
 	POINT oldZero = viewport.GetZeroLocation();
 	POINT zero;
 
-	zero.x = static_cast<LONG>(oldZero.x * cosine + oldZero.y * sine + oldWinWidth);
-	zero.y = static_cast<LONG>(-oldZero.x * sine + oldZero.y * cosine + oldWinHeight);
+	oldZero.x += paintStruct.rcPaint.left;
+	oldZero.y += paintStruct.rcPaint.top;
+
+	zero.x = static_cast<LONG>(oldZero.x * cosine + oldZero.y * sine -paintStruct.rcPaint.left);
+	zero.y = static_cast<LONG>(-oldZero.x * sine + oldZero.y * cosine -paintStruct.rcPaint.top);
 
 	viewport.SetZeroLocation( zero );
 
-	BOOL result = ::BitBlt( hdc, -oldWinWidth, -oldWinHeight, winWidth, winHeight, Memhdc, -zero.x, -zero.y, SRCCOPY );
+	stage.ClipAndDrawObjects( Memhdc );
+
+	//BOOL result = ::BitBlt( hdc, paintStruct.rcPaint.left, paintStruct.rcPaint.top, 2*radius, 2*radius, Memhdc, paintStruct.rcPaint.left, paintStruct.rcPaint.top, SRCCOPY );
+	BOOL result = ::BitBlt( hdc, paintStruct.rcPaint.left + zero.x, paintStruct.rcPaint.top + zero.y, 2*radius, 2*radius, Memhdc, paintStruct.rcPaint.left, paintStruct.rcPaint.top, SRCCOPY );
 	if( !result ) {
 		::MessageBox( handle, L"BitBlt : onPaint() : CViewerWindow", L"Error", MB_ICONERROR );
 		::PostQuitMessage( NULL );
@@ -326,8 +324,14 @@ void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 		return;
 
 	case TMovingState_Viewer::MSV_MovingCanvas:
-		canvasPoint.x += dPoint.x;
-		canvasPoint.y += dPoint.y;
+		canvasPoint = viewport.GetZeroLocation();
+
+		float cosine = (float)cos( viewport.GetAngle() );
+		float sine = (float)sin( viewport.GetAngle() );
+
+		canvasPoint.x += static_cast<LONG>(dPoint.x * cosine + dPoint.y * sine);
+		canvasPoint.y += static_cast<LONG>(-dPoint.x * sine + dPoint.y * cosine);
+
 		viewport.SetZeroLocation( canvasPoint );
 		::SetCursor( ::LoadCursor( 0, IDC_SIZEALL ) );
 		break;
@@ -335,11 +339,7 @@ void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 	
 	RECT rect;
 	::GetClientRect( handle, &rect );
-	rect.top -= rect.bottom;
-	rect.bottom *= 2;
-	rect.left -= rect.right;
-	rect.right *= 2;
-	::InvalidateRect( handle, &rect, true );
+	::InvalidateRect( handle, &rect, false );
 
 	/*
 	in this case we can somehow mark the object, but it looks terrible
@@ -422,11 +422,7 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 
 	RECT rect;
 	::GetClientRect( handle, &rect );
-	rect.top -= rect.bottom;
-	rect.bottom *= 2;
-	rect.left -= rect.right;
-	rect.right *= 2;
-	::InvalidateRect( handle, &rect, true );
+	::InvalidateRect( handle, &rect, false );
 }
 
 void CViewerWindow::onCommand( WPARAM wParam, LPARAM lParam )
