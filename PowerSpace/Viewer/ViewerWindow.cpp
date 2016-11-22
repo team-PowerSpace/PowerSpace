@@ -54,7 +54,7 @@ bool CViewerWindow::Create()
 
 	handle = ::CreateWindowEx( 0, ClassName, ViewerApplicationName,
 		WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
-		windowHeight, windowWidth, nullptr, nullptr,
+		CW_USEDEFAULT, CW_USEDEFAULT, nullptr, nullptr,
 		hInstance, this );
 	if ( handle != 0 ) {
 		enableTimer( SPEED );
@@ -65,7 +65,7 @@ bool CViewerWindow::Create()
 
 void CViewerWindow::Show() const
 {
-	::ShowWindow( handle, SW_MAXIMIZE );
+	::ShowWindow( handle, SW_SHOW );
 
 	::UpdateWindow( handle );
 }
@@ -254,7 +254,7 @@ void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 		currentMovingState = TMovingState_Viewer::MSV_None;
 	}
 
-	POINT point = getMouseCoords( lParam );
+	POINT point = getMouseCoords( lParam ); // it's okay to use screen coords as we count only delta values
 
 	IdType topId = CObjectIdGenerator::GetEmptyId();
 
@@ -295,24 +295,6 @@ void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 	RECT rect;
 	::GetClientRect( handle, &rect );
 	::InvalidateRect( handle, &rect, false );
-
-	/*
-	in this case we can somehow mark the object, but it looks terrible
-
-	IDrawablePtr topObj = stage.GetObjectById( topId );
-
-	COLORREF color = topObj->GetColor();
-	topObj->SetColor( RGB( 0, 0, 0 ) );
-
-	RECT rect;
-	GetClientRect( handle, &rect );
-	InvalidateRect( handle, &rect, false );
-
-	topObj->SetColor( color );
-
-	GetClientRect( handle, &rect );
-	InvalidateRect( handle, &rect, false );
-	*/
 }
 
 //
@@ -342,7 +324,7 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 	for( auto pair : stage.GetObjects() ) {
 		TBox curBox = pair.second->GetContainingBox();
 
-		if( isPointInBox( curBox, mouseCoords ) ) {
+		if( isPointInBox( curBox, viewport.ConvertToModelCoordinates( mouseCoords ) ) ) {
 			activeId = pair.second->GetId();
 			changed = true;
 		}
@@ -363,14 +345,11 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 	// if( activeId == prevActiveId )
 	//	 return;
 
-
-
 	// clicked on new object => have to process it
 	updateColorWithBuffer( prevActiveId, ColorBufferActionType::RestoreColor );
 	if( activeId != CObjectIdGenerator::GetEmptyId() ) {
 
-
-		stage.GetObjectById( activeId )->SetColor( static_cast<COLORREF> (colorBuf * 0.8) );
+		updateColorWithBuffer( activeId, ColorBufferActionType::SetColor );
 
 		//auto scripts = stage.GetObjectById( activeId )->GetScripts( EventType::EventClick );
 		auto scripts = stage.getScripts( activeId, EventType::EventClick );
@@ -378,7 +357,6 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 			scriptEngine.RunScripts( activeId, EventType::EventClick, scripts );
 		}
 	}
-	updateColorWithBuffer( prevActiveId, ColorBufferActionType::SetColor );
 
 	RECT rect;
 	::GetClientRect( handle, &rect );
