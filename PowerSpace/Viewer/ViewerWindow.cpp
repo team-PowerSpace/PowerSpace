@@ -68,16 +68,6 @@ void CViewerWindow::Show() const
 	::ShowWindow( handle, SW_MAXIMIZE );
 
 	::UpdateWindow( handle );
-
-	MSG msg = {};
-	BOOL getMessageResult = 0;
-
-	while( (getMessageResult = ::GetMessage( &msg, NULL, 0, 0 )) != 0 ) {
-		if( !::TranslateAccelerator( handle, haccel, &msg ) ) {
-			::TranslateMessage( &msg );
-			::DispatchMessage( &msg );
-		}
-	}
 }
 
 HWND CViewerWindow::GetHandle() const
