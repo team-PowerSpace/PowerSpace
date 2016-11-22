@@ -1,12 +1,14 @@
 #pragma once
-#include "Drawable.h"
+#include <Drawable.h>
 
 // contains all the information about the viewport (zoom, drag), 
 // makes different transformations connected with the viewport
-class CViewport {
+class CViewport
+{
 public:
 	// default ctorm which set zero location to (0,0) and scale to 1
 	CViewport();
+    CViewport( double _scale, double _angle, TPoint _zeroLocation );
 
 	// checks if objects in "objects" are visible on the canvas with the current viewport;
 	// returns vector of indices of (fully or partially) visible objects
@@ -31,17 +33,16 @@ public:
 	const TPoint& GetZeroLocation() const;
 	void SetZeroLocation( const TPoint& );
 
-	float GetScale() const;
-	void SetScale( const float );
-
-	float GetAngle() const;
-	void SetAngle( const float );
+	double GetScale() const;
+	double GetAngle() const;
+	void SetScale( const double );
+	void SetAngle( const double );
 
 private:
 	// coeff of scaling
-	float scale;
-	// rotation angle
-	float angle;
+	double scale;
+	// angle of rotation
+	double angle;
 	// location of model point (0, 0) in screen coordinates
 	TPoint zeroLocation;
 };

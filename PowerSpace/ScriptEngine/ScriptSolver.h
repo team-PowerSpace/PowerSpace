@@ -3,24 +3,25 @@
 #include <string>
 #include <memory>
 #include <map>
-#include "CScriptHolder.h"
-#include "Drawable.h"
-#include "CDrawableBuilder.h"
-#include "CScriptHolder.h"
+#include <CScriptHolder.h>
+#include <Drawable.h>
+#include <CDrawableBuilder.h>
+#include <CScriptHolder.h>
 
 class CScriptSolver
 {
 public:
-	CScriptSolver( std::shared_ptr<IDrawable> object_, std::wstring path_, EventType eventType_, std::shared_ptr<ScriptHolder> holder );
+	CScriptSolver( std::shared_ptr<IDrawable> object_,/* PyObject* sceneObject,*/ PyObject* module_, std::string func_);
+	
 	std::shared_ptr<IDrawable> Run();
 
 	std::shared_ptr<ScriptHolder> holder;
 private:
-	std::wstring scriptName;
-	EventType  eventType;
+	PyObject* module;
+	std::string  func;
 	std::shared_ptr<IDrawable> object;
 	std::shared_ptr<CDrawableBuilder> pObject;
-
-	PyObject *GetPyFunction( PyObject *pModule ) const;
+	/*PyObject* pObject;*/
+	PyObject *GetPyFunction(PyObject *pModule) const;
 	void UpdateObject();
 };

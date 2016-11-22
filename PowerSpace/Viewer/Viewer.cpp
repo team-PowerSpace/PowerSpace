@@ -7,7 +7,9 @@ CViewer::CViewer( CStage _stage, CViewport _viewport )
 {}
 
 CViewer::~CViewer()
-{}
+{
+	Py_Finalize(); //shutting down Python here
+}
 
 bool CViewer::Create()
 {
@@ -15,6 +17,7 @@ bool CViewer::Create()
 	if( isCreated ) {
 		viewerWindow.Show();
 	}
+	Py_Initialize(); //starting up Python right here
 	return isCreated;
 }
 

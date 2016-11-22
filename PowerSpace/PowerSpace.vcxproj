@@ -89,13 +89,14 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
       <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
-      <AdditionalIncludeDirectories>$(Python_Include);$(ProjectDir);$(ProjectDir)Viewer;$(ProjectDir)Editor;$(ProjectDir)Common;$(ProjectDir)ScriptEngine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(PythonHome)\include;$(Python_Include);$(ProjectDir);$(ProjectDir)Viewer;$(ProjectDir)Editor;$(ProjectDir)Common;$(ProjectDir)ScriptEngine;$(ProjectDir)Json;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(Python_Libs);</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(PythonHome)\libs;$(Python_Libs);</AdditionalLibraryDirectories>
+      <ManifestFile>$(IntDir)$(TargetName)$(TargetExt).manifest</ManifestFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -104,13 +105,13 @@
       <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(Python_Include);$(ProjectDir);$(ProjectDir)Viewer;$(ProjectDir)Editor;$(ProjectDir)Common;$(ProjectDir)ScriptEngine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(PythonHome)\include;$(Python_Include);$(ProjectDir);$(ProjectDir)Viewer;$(ProjectDir)Editor;$(ProjectDir)Common;$(ProjectDir)ScriptEngine;$(ProjectDir)Json;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(Python_Libs);</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(PythonHome)\libs;$(Python_Libs);</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -122,14 +123,14 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <TreatWarningAsError>true</TreatWarningAsError>
-      <AdditionalIncludeDirectories>$(Python_Include);$(ProjectDir);$(ProjectDir)Viewer;$(ProjectDir)Editor;$(ProjectDir)Common;$(ProjectDir)ScriptEngine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(PythonHome)\include;$(Python_Include);$(ProjectDir);$(ProjectDir)Viewer;$(ProjectDir)Editor;$(ProjectDir)Common;$(ProjectDir)ScriptEngine;$(ProjectDir)Json;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(Python_Libs);</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(PythonHome)\libs;$(Python_Libs);</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -140,7 +141,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(Python_Include);$(ProjectDir);$(ProjectDir)Viewer;$(ProjectDir)Editor;$(ProjectDir)Common;$(ProjectDir)ScriptEngine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(PythonHome)\include;$(Python_Include);$(ProjectDir);$(ProjectDir)Viewer;$(ProjectDir)Editor;$(ProjectDir)Common;$(ProjectDir)ScriptEngine;$(ProjectDir)Json;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
@@ -148,7 +149,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(Python_Libs);</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(PythonHome)\libs;$(Python_Libs);</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -156,20 +157,25 @@
     <ClInclude Include="Common\Drawable.h" />
     <ClInclude Include="Common\StageObjects.h" />
     <ClInclude Include="Common\Viewport.h" />
-    <ClInclude Include="EditControlWindow.h" />
+    <ClInclude Include="CTextBoxBuilder.h" />
+    <ClInclude Include="Editor\EditControlWindow.h" />
     <ClInclude Include="Editor\Editor.h" />
     <ClInclude Include="Editor\EditorWindow.h" />
     <ClInclude Include="Editor\EditorRenderingWindow.h" />
-    <ClInclude Include="JsonConverter.h" />
-    <ClInclude Include="JsonObject.h" />
-    <ClInclude Include="JsonWorker.h" />
+    <ClInclude Include="Json\JsonTreeVisitor.h" />
+    <ClInclude Include="Json\JsonConverter.h" />
+    <ClInclude Include="Json\JsonObject.h" />
+    <ClInclude Include="Json\JsonWorker.h" />
+    <ClInclude Include="Editor\ObjectIdGenerator.h" />
     <ClInclude Include="PowerSpace.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Common\Script.h" />
     <ClInclude Include="Common\Stage.h" />
+    <ClInclude Include="ScriptEditor.h" />
     <ClInclude Include="ScriptEngine\CDrawableBuilder.h" />
     <ClInclude Include="ScriptEngine\CPyObjectManager.h" />
     <ClInclude Include="ScriptEngine\CScriptHolder.h" />
+    <ClInclude Include="ScriptEngine\CViewPortWrap.h" />
     <ClInclude Include="ScriptEngine\PyObjectBuilder.h" />
     <ClInclude Include="ScriptEngine\ScriptEngine.h" />
     <ClInclude Include="ScriptEngine\ScriptSolver.h" />
@@ -189,16 +195,19 @@
     </ClCompile>
     <ClCompile Include="Common\StageObjects.cpp" />
     <ClCompile Include="Common\Viewport.cpp" />
-    <ClCompile Include="EditControlWindow.cpp" />
+    <ClCompile Include="CTextBoxBuilder.cpp" />
+    <ClCompile Include="Editor\EditControlWindow.cpp" />
     <ClCompile Include="Editor\Editor.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
     <ClCompile Include="Editor\EditorWindow.cpp" />
     <ClCompile Include="Editor\EditorRenderingWindow.cpp" />
-    <ClCompile Include="JsonConverter.cpp" />
-    <ClCompile Include="JsonObject.cpp" />
-    <ClCompile Include="JsonWorker.cpp" />
+    <ClCompile Include="Json\JsonTreeVisitor.cpp" />
+    <ClCompile Include="Json\JsonConverter.cpp" />
+    <ClCompile Include="Json\JsonObject.cpp" />
+    <ClCompile Include="Json\JsonWorker.cpp" />
+    <ClCompile Include="Editor\ObjectIdGenerator.cpp" />
     <ClCompile Include="PowerSpace.cpp" />
     <ClCompile Include="Common\Script.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
@@ -208,8 +217,10 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="ScriptEditor.cpp" />
     <ClCompile Include="ScriptEngine\CDrawableBuilder.cpp" />
     <ClCompile Include="ScriptEngine\CScriptHolder.cpp" />
+    <ClCompile Include="ScriptEngine\CViewPortWrap.cpp" />
     <ClCompile Include="ScriptEngine\PyObjectBuilder.cpp" />
     <ClCompile Include="ScriptEngine\ScriptEngine.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">stdafx.h</PrecompiledHeaderFile>
@@ -232,10 +243,25 @@
     <ResourceCompile Include="PowerSpace.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="bitmaps\bitmap1.bmp" />
+    <Image Include="bitmaps\delete2.bmp" />
+    <Image Include="bitmaps\delete24.bmp" />
+    <Image Include="bitmaps\edit.bmp" />
+    <Image Include="bitmaps\delete.bmp" />
+    <Image Include="bitmaps\edit2.bmp" />
+    <Image Include="bitmaps\edit24.bmp" />
     <Image Include="bitmaps\ellipse.bmp" />
+    <Image Include="bitmaps\ellipse2.bmp" />
+    <Image Include="bitmaps\ellipse24.bmp" />
     <Image Include="bitmaps\play.bmp" />
+    <Image Include="bitmaps\play2.bmp" />
+    <Image Include="bitmaps\play24.bmp" />
     <Image Include="bitmaps\rectangle.bmp" />
+    <Image Include="bitmaps\rectangle2.bmp" />
+    <Image Include="bitmaps\rectangle24.bmp" />
     <Image Include="bitmaps\textbox.bmp" />
+    <Image Include="bitmaps\textbox2.bmp" />
+    <Image Include="bitmaps\textbox24.bmp" />
     <Image Include="PowerSpace.ico" />
     <Image Include="small.ico" />
   </ItemGroup>

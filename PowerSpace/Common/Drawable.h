@@ -1,8 +1,9 @@
 #pragma once
-#include "Script.h"
+#include <Script.h>
 #include <memory>
 #include <unordered_map>
-#include "JsonObject.h"
+#include <JsonObject.h>
+#include <ObjectIdGenerator.h>
 
 class CCanvas;
 class CViewport;
@@ -21,7 +22,7 @@ public:
 	virtual ~IDrawable() {}
 
 	// returns a unique identifier linked to the object
-	virtual int GetId() const = 0;
+	virtual const IdType& GetId() const = 0;
 
 	// getter and setter for containingBox field
 	virtual TBox GetContainingBox() const = 0;
@@ -30,6 +31,10 @@ public:
 	// getter and setter for color field
 	virtual COLORREF GetColor() const = 0;
 	virtual void SetColor( COLORREF color ) = 0;
+
+	// getter and setter for color field
+	virtual double GetAngle() const = 0;
+	virtual void SetAngle( double angle ) = 0;
 
 	// draws object on canvas
 	virtual void Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const = 0;
@@ -52,16 +57,20 @@ public:
 class CDrawable : public IDrawable
 {
 public:
-	CDrawable( COLORREF _color, TBox _box );
+    CDrawable( COLORREF _color, TBox _box, double _angle, bool needGenerateId );
+    CDrawable( COLORREF _color, TBox _box, double _angle, const std::unordered_map<EventType, std::vector<CScript>>& _scripts, bool needGenerateId );
 	virtual ~CDrawable() {}
 
-	int GetId() const;
+	const IdType& GetId() const;
 
 	TBox GetContainingBox() const;
 	void SetContainingBox( TBox newPosition );
 
 	COLORREF GetColor() const;
 	void SetColor( COLORREF newColor );
+
+	double GetAngle() const;
+	void SetAngle( double angle );
 
 	virtual void Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const = 0;
 
@@ -74,7 +83,7 @@ public:
 	virtual DrawableType GetType() const;
 protected:
 	// a unique identifier linked to the object
-	int id;
+	IdType id;
 
 	// color of the object
 	COLORREF color;
@@ -82,13 +91,10 @@ protected:
 	// the rectangle (position and size) that contains the object on stage
 	TBox containingBox;
 
+	// rotation of the object
+	double angle;
+
 	// maps event type to a list of scripts that are linked to the object;
 	// this map supports the idea that an object can have multiple scripts attached to an event type
 	std::unordered_map<EventType, std::vector<CScript>> scripts;
-private:
-	// generates a new unique identifier for the object
-	int generateNewId();
-
-	// counter of objects that have already been created; is used to generate new ids
-	static int maxId;
 };

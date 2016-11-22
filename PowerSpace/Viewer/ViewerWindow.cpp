@@ -1,6 +1,4 @@
 #include <stdafx.h>
-#include "resource.h"
-#include "Resource.h"
 #include "ViewerWindow.h"
 
 const wchar_t* CViewerWindow::ClassName = L"CViewerWindow";
@@ -10,12 +8,10 @@ const double SPEED_MULTIPLIER = 1.1;
 UINT SPEED = TICK_LENGTH;
 
 CViewerWindow::CViewerWindow( CStage& _stage, CViewport& _viewport, CCanvas& _canvas ) :
-	windowHeight( 1376 ), windowWidth( 768 ), viewport( _viewport ), canvas( _canvas ),
-	handle( nullptr ), stage( _stage ), scriptEngine( stage ), activeId( 0 ), colorBuf( -1 ),
+	windowHeight( 600 ), windowWidth( 800 ), viewport( _viewport ), canvas( _canvas ),
+	handle( nullptr ), stage( _stage ), scriptEngine( stage ), activeId( CObjectIdGenerator::GetEmptyId() ), colorBuf( -1 ),
 	viewerIsRunning( true ), currentMovingState( MSV_None )
-{
-	canvasPoint = _viewport.GetZeroLocation();
-}
+{}
 
 CViewerWindow::~CViewerWindow()
 {}
@@ -58,7 +54,7 @@ bool CViewerWindow::Create()
 
 	handle = ::CreateWindowEx( 0, ClassName, ViewerApplicationName,
 		WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
-		windowHeight, windowWidth, nullptr, nullptr, 
+		windowHeight, windowWidth, nullptr, nullptr,
 		hInstance, this );
 	if ( handle != 0 ) {
 		enableTimer( SPEED );
@@ -179,12 +175,11 @@ void CViewerWindow::onTimer()
 		return;
 
 	for( auto pair : stage.GetObjects() ) {
-		//Event All should be carefully changed with Tick, when the model of scripts will be defined
-		auto scripts = pair.second->GetScripts( EventType::EventAll );
-		
+		//auto scripts = pair.second->GetScripts( EventType::EventTick );
+		auto scripts = stage.getScripts( activeId, EventType::EventTick );
 		updateColorWithBuffer( activeId, ColorBufferActionType::RestoreColor );
 		if( !scripts.empty() ) {
-			scriptEngine.RunScripts( pair.first, scripts, EventType::EventTick );
+			scriptEngine.RunScripts( activeId, EventType::EventTick, scripts );
 		}
 		updateColorWithBuffer( activeId, ColorBufferActionType::SetColor );
 	}
@@ -206,53 +201,23 @@ void CViewerWindow::onPaint()
 	RECT rect;
 	::GetClientRect( handle, &rect );
 
-	float cosine = (float)cos( viewport.GetAngle() );
-	float sine = (float)sin( viewport.GetAngle() );
-
 	int viewportHeight = rect.bottom - rect.top;
 	int viewportWidth = rect.right - rect.left;
 
-	int radius = static_cast<int>(sqrt( pow( viewportHeight, 2 ) + pow( viewportWidth, 2 ) ));
-
 	HDC Memhdc = ::CreateCompatibleDC( hdc );
-	HBITMAP Membitmap = ::CreateCompatibleBitmap( hdc, 2*radius, 2 * radius );
+	HBITMAP Membitmap = ::CreateCompatibleBitmap( hdc, viewportWidth, viewportHeight );
 	::SelectObject( Memhdc, Membitmap );
-
-	paintStruct.rcPaint.top = viewportHeight / 2 - radius;
-	paintStruct.rcPaint.bottom = viewportHeight / 2 + radius;
-
-	paintStruct.rcPaint.left = viewportWidth / 2 - radius;
-	paintStruct.rcPaint.right = viewportWidth / 2 + radius;
 	
 	HBRUSH canvasBrush = ::CreateHatchBrush( HS_CROSS, BLUE_FOR_CANVAS_CROSS );
 
 	::FillRect( Memhdc, &paintStruct.rcPaint, canvasBrush );
 
-	SetGraphicsMode( hdc, GM_ADVANCED );
-	XFORM xForm;
-	xForm.eM11 = (FLOAT)cosine;
-	xForm.eM12 = (FLOAT)sine;
-	xForm.eM21 = (FLOAT)-sine;
-	xForm.eM22 = (FLOAT)cosine;
-	xForm.eDx = (FLOAT)0.0;
-	xForm.eDy = (FLOAT)0.0;
-	::SetWorldTransform( hdc, &xForm );
-
-	POINT oldZero = viewport.GetZeroLocation();
-	POINT zero;
-
-	oldZero.x += paintStruct.rcPaint.left;
-	oldZero.y += paintStruct.rcPaint.top;
-
-	zero.x = static_cast<LONG>(oldZero.x * cosine + oldZero.y * sine -paintStruct.rcPaint.left);
-	zero.y = static_cast<LONG>(-oldZero.x * sine + oldZero.y * cosine -paintStruct.rcPaint.top);
-
-	viewport.SetZeroLocation( zero );
-
 	stage.ClipAndDrawObjects( Memhdc );
 
+	POINT zero = viewport.GetZeroLocation();
+
 	//BOOL result = ::BitBlt( hdc, paintStruct.rcPaint.left, paintStruct.rcPaint.top, 2*radius, 2*radius, Memhdc, paintStruct.rcPaint.left, paintStruct.rcPaint.top, SRCCOPY );
-	BOOL result = ::BitBlt( hdc, paintStruct.rcPaint.left + zero.x, paintStruct.rcPaint.top + zero.y, 2*radius, 2*radius, Memhdc, paintStruct.rcPaint.left, paintStruct.rcPaint.top, SRCCOPY );
+	BOOL result = ::BitBlt( hdc, zero.x, zero.y, viewportWidth, viewportHeight, Memhdc, 0, 0, SRCCOPY );
 	if( !result ) {
 		::MessageBox( handle, L"BitBlt : onPaint() : CViewerWindow", L"Error", MB_ICONERROR );
 		::PostQuitMessage( NULL );
@@ -301,7 +266,7 @@ void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 
 	POINT point = getMouseCoords( lParam );
 
-	int topId = -1;
+	IdType topId = CObjectIdGenerator::GetEmptyId();
 
 	for( auto pair : stage.GetObjects() ) {
 		TBox curBox = pair.second->GetContainingBox();
@@ -378,21 +343,22 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 	UNREFERENCED_PARAMETER( msg );
 
 	POINT mouseCoords = getMouseCoords( lParam );
-
 	prevPoint = mouseCoords;
-
-	int prevActiveId = activeId;
-	activeId = 0;
+	// storage space for usual color of currently active object
+	IdType prevActiveId = activeId;
+	activeId = CObjectIdGenerator::GetEmptyId();
+	bool changed = false;
 
 	for( auto pair : stage.GetObjects() ) {
 		TBox curBox = pair.second->GetContainingBox();
 
 		if( isPointInBox( curBox, mouseCoords ) ) {
 			activeId = pair.second->GetId();
+			changed = true;
 		}
 	}
 
-	if( activeId == 0 &&
+	if( !changed &&
 		wParam & MK_LBUTTON ) {
 		currentMovingState = TMovingState_Viewer::MSV_MovingCanvas;
 	}
@@ -406,16 +372,20 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 	// // Following code will be commented until the discussion.
 	// if( activeId == prevActiveId )
 	//	 return;
-	
-	
+
+
 
 	// clicked on new object => have to process it
 	updateColorWithBuffer( prevActiveId, ColorBufferActionType::RestoreColor );
-	if( activeId != 0 ) {
-		//Event All should be carefully changed with click, when the model of scripts will be defined
-		auto scripts = stage.GetObjectById( activeId )->GetScripts( EventType::EventAll );
-		if (!scripts.empty()) {
-			scriptEngine.RunScripts( activeId, scripts, EventType::EventClick );
+	if( activeId != CObjectIdGenerator::GetEmptyId() ) {
+
+
+		stage.GetObjectById( activeId )->SetColor( static_cast<COLORREF> (colorBuf * 0.8) );
+
+		//auto scripts = stage.GetObjectById( activeId )->GetScripts( EventType::EventClick );
+		auto scripts = stage.getScripts( activeId, EventType::EventClick );
+		if( !scripts.empty() ) {
+			scriptEngine.RunScripts( activeId, EventType::EventClick, scripts );
 		}
 	}
 	updateColorWithBuffer( prevActiveId, ColorBufferActionType::SetColor );
@@ -489,34 +459,33 @@ bool CViewerWindow::isPointInBox( TBox box, POINT point )
 		return false;
 }
 
-void CViewerWindow::enableTimer( int timeDelay, int timerId)
+void CViewerWindow::enableTimer( int timeDelay, int timerId )
 {
 	::SetTimer( handle, timerId, timeDelay, 0 );
 }
 
-void CViewerWindow::disableTimer( int timerId)
+void CViewerWindow::disableTimer( int timerId )
 {
 	::KillTimer( handle, timerId );
 }
 
-void CViewerWindow::updateColorWithBuffer( int prevActiveId, ColorBufferActionType actionType )
+void CViewerWindow::updateColorWithBuffer( IdType prevActiveId, ColorBufferActionType actionType )
 {
-	switch ( actionType )
+	switch( actionType ) {
+	case ColorBufferActionType::RestoreColor:
 	{
-		case ColorBufferActionType::RestoreColor:
-		{
-			if ( prevActiveId != 0 ) {
-				stage.GetObjectById( prevActiveId )->SetColor( colorBuf );
-			}
-			break;
+		if( prevActiveId != CObjectIdGenerator::GetEmptyId() ) {
+			stage.GetObjectById( prevActiveId )->SetColor( colorBuf );
 		}
-		case ColorBufferActionType::SetColor:
-		{
-			if ( activeId != 0 ) {
-				colorBuf = stage.GetObjectById( activeId )->GetColor( );
-				stage.GetObjectById( activeId )->SetColor( static_cast<COLORREF> (colorBuf * 0.9) );
-			}
-			break;
+		break;
+	}
+	case ColorBufferActionType::SetColor:
+	{
+		if( activeId != CObjectIdGenerator::GetEmptyId() ) {
+			colorBuf = stage.GetObjectById( activeId )->GetColor();
+			stage.GetObjectById( activeId )->SetColor( static_cast<COLORREF> (colorBuf * 0.9) );
 		}
+		break;
+	}
 	}
 }

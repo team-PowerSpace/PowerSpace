@@ -1,60 +1,71 @@
 ﻿#include <stdafx.h>
 
 #include "ScriptEngine.h"
-#include "ScriptSolver.h"
-#include "PyObjectBuilder.h"
-#include "CDrawableBuilder.h"
+#include <ScriptSolver.h>
+#include <PyObjectBuilder.h>
+#include <CDrawableBuilder.h>
 
-#include <codecvt>
-#include <Exception>
-#include <iostream>
-#include <fstream>
+
 
 CScriptEngine::CScriptEngine( CStage& _stage )
 	: stage( _stage ), isPythonRunning( false )
-{}
-
-
-std::vector<int> CScriptEngine::RunScripts( const int objectId, const std::vector<CScript>& scripts, EventType eventType )
 {
-	if (!isPythonRunning)
-	{
-		Py_Initialize(); //starting up Python if first run
-		holder = std::make_shared<ScriptHolder>(ScriptHolder());
-		isPythonRunning = true;
-	}
-	else if (objectId == -1) 
-	{
-		Py_Finalize(); //finlazing Python before turning the programm off
-		holder->decAllRefsAndClearObjects();
-		return std::vector<int>();
-	}
-	std::shared_ptr<IDrawable> workingObject = stage.GetObjectById(objectId);
-	
-	// Here was process of creation of PyObject,
-	// but for now we decided to use Dirs due to simplicity
+	//LoadScene();
+}
 
+void CScriptEngine::LoadScene()
+{
+	std::unordered_map<IdType, IDrawablePtr>& objects = stage.GetObjects();
+	PyObject* mainModule = PyImport_AddModule( "__main__" );
+	globalDictionary = PyModule_GetDict( mainModule );
+	for( std::pair<IdType, IDrawablePtr> object : objects ) {		
+		AddPyObject(object.first, object.second);
+	}
+}
 
+void CScriptEngine::AddPyObject( IdType name, IDrawablePtr description )
+{
+	std::string constructorScript( name.begin(), name.end() );
+	PyObject* pyObjName = PyUnicode_FromString( constructorScript.c_str() );
+	constructorScript.append( "=Engine.CDrawable()" );
+	PyObject* localDictionary = PyDict_New();
+	PyObject* result = PyRun_String( constructorScript.c_str(), Py_file_input, globalDictionary, localDictionary );
+	if( !result ) {
+		throw "Error: invalid input";		
+	}
+	PyDict_Update( globalDictionary, localDictionary );
+	if( PyDict_Contains( localDictionary, pyObjName ) ) {
+		PyObject* pyVal = PyDict_GetItem( localDictionary, pyObjName );
+		pyScene.insert( std::pair<IdType, PyObject*>( name, pyVal ));
+	} else {
+		throw "Error: failed get object";
+	}
+}
+
+std::vector<int> CScriptEngine::RunScripts( IdType objectId, EventType type, std::vector<PyObject*> scripts )
+{
+	std::shared_ptr<IDrawable> workingObject = stage.GetObjectById( objectId );
+	/*auto it = pyScene.find( objectId );
+	if( it == pyScene.end() ) {
+		throw "Can't find object in scene";
+	}
+	PyObject* sceneObject = it->second;*/
 	for( auto currentScript = scripts.begin(); currentScript != scripts.end(); currentScript++ ) {
-		TPath wstrPath( currentScript->GetPath() );
-		std::ifstream stream( wstrPath.data(), std::ifstream::in ); //The best way to check path validity is trying to open it
-		if( !stream.good() ) {
-			stream.close();
-			std::cout << "The file doesn't exist" << std::endl;
-			assert( false );
+		std::string eventName = "";
+		switch (type) //last_for_size handled in default
+		{
+		case EventType::EventClick :
+			eventName = "OnClick";
+			break;
+		case EventType::EventTick :
+			eventName = "OnTimer";
+			break;
+		default:
+			assert(false); //In case we will add more functions
 		}
-		stream.close();
-
-		//Deleteing the path and saving only script's filename (with extention)
-		std::wstring scriptName = wstrPath.substr( wstrPath.find_last_of( L"\\/" ) + 1 );
-
-		//Deleting the extention of script
-		std::wstring scriptNameWithoutExtention = scriptName.substr( 0, scriptName.find( L"." ) );
-
-
 		//Empty string left for ability to call different functions located in single script
-		CScriptSolver solver( workingObject, scriptNameWithoutExtention, eventType, holder );
-
+		CScriptSolver solver(workingObject, /*sceneObject,*/ *currentScript, eventName);
+		
         std::shared_ptr<IDrawable> changedObject = solver.Run();   //Returns shared_ptr to changed object, but values already set in the scene
 		assert( changedObject == workingObject );
 	}

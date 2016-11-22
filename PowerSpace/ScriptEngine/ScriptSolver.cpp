@@ -3,26 +3,21 @@
 #include <iostream>
 #include <exception>
 
-CScriptSolver::CScriptSolver( std::shared_ptr<IDrawable> obj, std::wstring scriptName_,
-	EventType eventType_, std::shared_ptr<ScriptHolder> holder_ ) : scriptName( scriptName_ ), eventType( eventType_ ), object( obj ), holder( holder_ )
+CScriptSolver::CScriptSolver( std::shared_ptr<IDrawable> obj, PyObject* module_, /*PyObject* sceneObject,*/
+	std::string func_) : module( module_ ), func( func_ ), object( obj ) /*pObject(sceneObject)*/
 {
-	pObject = std::make_shared<CDrawableBuilder>(obj);
+	pObject = std::make_shared<CDrawableBuilder>(obj);	
 }
+
 
 std::shared_ptr<IDrawable> CScriptSolver::Run()
 {
-	PyObject *pName, *pModule, *pFunc;
+	PyObject *pModule, *pFunc;
 	PyObject *pArgs, *pValue;
 
-	if( !holder->isScriptIn( scriptName ) ) {
-		pName = PyUnicode_FromUnicode( scriptName.c_str(), scriptName.size() );
-		pModule = PyImport_Import( pName );
-		holder->addScript( scriptName, pModule );
-		//Because the pyimport creates 2 ref for unrealiesd reason
-		Py_XDECREF( pModule );
-		Py_XDECREF( pName );
-	}
-	pModule = holder->getScript(scriptName);
+	pModule = PyImport_Import(module);
+	//Because the pyimport creates 2 ref for unrealiesd reason
+	Py_XDECREF(pModule);
 
 	if( pModule != nullptr ) {
 		pFunc = GetPyFunction( pModule );
@@ -30,6 +25,7 @@ std::shared_ptr<IDrawable> CScriptSolver::Run()
 		if( pFunc && PyCallable_Check( pFunc ) ) {
 			pArgs = PyTuple_New( 1 );
 			PyTuple_SetItem( pArgs, 0, pObject->GetRawpObjectRef() );
+			//PyTuple_SetItem( pArgs, 0, pObject );
 			pValue = PyObject_CallObject( pFunc, pArgs );
 			Py_XDECREF( pValue );
 			Py_CLEAR( pFunc );
@@ -54,21 +50,7 @@ PyObject *CScriptSolver::GetPyFunction( PyObject *pModule ) const
 {
 	//Strings will be added to enum (need to discuss location)
 	PyObject *pFunc = NULL;
-	switch ( eventType )
-	{
-		case EventType::EventClick:
-		{
-			pFunc = SafeGetFunc( pModule, "OnClick" );
-			break;
-		}
-		case EventType::EventTick:
-		{
-			pFunc = SafeGetFunc( pModule, "OnTimer" );
-			break;
-		}
-		default:
-			assert( false );
-	}
+	pFunc = PyObject_GetAttrString( pModule, func.data() );
 	return pFunc;
 }
 
