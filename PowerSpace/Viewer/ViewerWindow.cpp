@@ -281,8 +281,8 @@ void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 	case TMovingState_Viewer::MSV_MovingCanvas:
 		canvasPoint = viewport.GetZeroLocation();
 
-		float cosine = (float)cos( viewport.GetAngle() );
-		float sine = (float)sin( viewport.GetAngle() );
+		float cosine = static_cast<float>(cos( viewport.GetAngle() ));
+		float sine = static_cast<float>(sin( viewport.GetAngle() ));
 
 		canvasPoint.x += static_cast<LONG>(dPoint.x * cosine + dPoint.y * sine);
 		canvasPoint.y += static_cast<LONG>(-dPoint.x * sine + dPoint.y * cosine);
