@@ -277,6 +277,13 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 		addObject( std::make_shared<CTextBoxObject>( defaultObjectColor, generateDefaultBox(), 0, L"Text" ) );
 		break;
 	}
+    case ID_FILE_NEW:
+    {
+        activeId = CObjectIdGenerator::GetEmptyId();
+        *stage = CStage();
+        renderingWindow.Redraw();
+        break;
+    }
     case ID_FILE_OPEN:
     {
         OnOpen();
@@ -328,7 +335,7 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 	{
 		stage->GetObjects().erase( activeId );
 		SetActiveId( CObjectIdGenerator::GetEmptyId() );
-		renderingWindow.ReDraw();
+		renderingWindow.Redraw();
 		break;
 	}
 	case IDC_MAIN_BUTTON:
@@ -367,7 +374,7 @@ void CEditor::addObject( std::shared_ptr<ObjectClass> object )
 	if( isAdded ) {
 		SetActiveId( object->GetId() );
 	}
-	renderingWindow.ReDraw();
+	renderingWindow.Redraw();
 }
 
 TBox CEditor::generateDefaultBox() const
@@ -392,14 +399,14 @@ void CEditor::onColorSelect()
 	chooseColor.rgbResult = stage->GetObjectById( activeId )->GetColor();
 	if( ::ChooseColor( &chooseColor ) ) {
 		stage->GetObjectById( activeId )->SetColor( chooseColor.rgbResult );
-		renderingWindow.ReDraw();
+		renderingWindow.Redraw();
 	}
 }
 
 void CEditor::onColorDelete()
 {
 	stage->GetObjectById( activeId )->SetColor( noColor );
-	renderingWindow.ReDraw();
+	renderingWindow.Redraw();
 }
 
 void CEditor::onFontSelect()
@@ -418,7 +425,7 @@ void CEditor::onFontSelect()
 		hFont = CreateFontIndirect( chooseFont.lpLogFont );
 		reinterpret_cast<CTextBoxObject*>(stage->GetObjectById( activeId ).get())->SetColor( chooseFont.rgbColors );
 		reinterpret_cast<CTextBoxObject*>(stage->GetObjectById( activeId ).get())->SetFont( hFont );
-		renderingWindow.ReDraw();
+		renderingWindow.Redraw();
 	}
 }
 
@@ -446,7 +453,7 @@ void CEditor::OnOpen()
         assert( description.type == JsonObjectType::MAP );
         CJsonMap stageNewJson( description.name, description.body );
         *stage = *CJsonConverter::FromJson( stageNewJson );
-        renderingWindow.ReDraw();
+        renderingWindow.Redraw();
     }
 }
 

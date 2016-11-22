@@ -39,7 +39,7 @@ public:
 	bool Create( HWND hWndParent, const wchar_t* classname );
 	void Show( int cmdShow ) const;
 	HWND GetHandle() const;
-	void ReDraw() const;
+	void Redraw() const;
 
 protected:
 	void OnDestroy();

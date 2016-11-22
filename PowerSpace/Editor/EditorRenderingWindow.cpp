@@ -91,7 +91,7 @@ HWND CEditorRenderingWindow::GetHandle() const
 	return handle;
 }
 
-void CEditorRenderingWindow::ReDraw() const
+void CEditorRenderingWindow::Redraw() const
 {
 	RECT rect;
 	GetClientRect( handle, &rect );
@@ -274,13 +274,13 @@ void CEditorRenderingWindow::onMouseMove( const LPARAM lParam )
 		break;
 	}
 	lastPoint = point;
-	ReDraw();
+	Redraw();
 }
 
 void CEditorRenderingWindow::onMouseWheel( WPARAM wParam )
 {
 	Scaling( static_cast<signed short>(HIWORD( wParam )) / WHEEL_DELTA );
-	ReDraw();
+	Redraw();
 }
 
 void CEditorRenderingWindow::onMouseDown( const LPARAM lparam )
@@ -304,7 +304,7 @@ void CEditorRenderingWindow::onMouseDown( const LPARAM lparam )
 				lastSize = startSize;
 				selectedId = rectanglesIds[index];
 			}
-			ReDraw();
+			Redraw();
 			return;
 		}
 	}
@@ -315,7 +315,7 @@ void CEditorRenderingWindow::onMouseDown( const LPARAM lparam )
 			lastSize = startSize;
 			SelectDrawableObject( rectanglesIds[i] );
 			selectedId = rectanglesIds[i];
-			ReDraw();
+			Redraw();
 			return;
 		}
 	}
