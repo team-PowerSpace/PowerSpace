@@ -9,6 +9,7 @@ class CRectangleObject : public CDrawable
 {
 public:
 	explicit CRectangleObject( COLORREF _color, TBox _box, double _angle );
+    CRectangleObject( COLORREF _color, TBox _box, double _angle, const std::unordered_map<EventType, std::vector<CScript>>& _scripts );
 	void Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const;
 	std::wstring ToWString() const;
 	IJsonPtr ToJson() const;
@@ -19,6 +20,7 @@ class CEllipseObject : public CDrawable
 {
 public:
 	explicit CEllipseObject( COLORREF _color, TBox _box, double _angle );
+    CEllipseObject( COLORREF _color, TBox _box, double _angle, const std::unordered_map<EventType, std::vector<CScript>>& _scripts );
 	void Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const;
 	std::wstring ToWString() const;
 	IJsonPtr ToJson() const;
@@ -30,6 +32,7 @@ class CTextBoxObject : public CDrawable
 {
 public:
 	explicit CTextBoxObject( COLORREF _color, TBox _box, double _angle, const std::wstring& _contents );
+    CTextBoxObject( COLORREF _color, TBox _box, double _angle, const std::wstring& _contents, const std::unordered_map<EventType, std::vector<CScript>>& _scripts );
 	void Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const;
 	std::wstring ToWString() const;
 	IJsonPtr ToJson() const;

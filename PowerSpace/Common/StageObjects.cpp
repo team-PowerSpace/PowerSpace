@@ -11,6 +11,12 @@ CRectangleObject::CRectangleObject( COLORREF _color, TBox _box, double _angle )
 	id = CObjectIdGenerator::GenerateNewId<CRectangleObject>();
 }
 
+CRectangleObject::CRectangleObject( COLORREF _color, TBox _box, double _angle, const std::unordered_map<EventType, std::vector<CScript>>& _scripts )
+    : CDrawable( _color, _box, _angle, _scripts, false )
+{
+    id = CObjectIdGenerator::GenerateNewId<CRectangleObject>();
+}
+
 void CRectangleObject::Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const
 {
 	canvas.DrawRectangle( hdc, viewport.ConvertToScreenCoordinates( containingBox ), color, angle );
@@ -35,6 +41,12 @@ CEllipseObject::CEllipseObject( COLORREF _color, TBox _box, double _angle )
 	: CDrawable( _color, _box, _angle, false )
 {
 	id = CObjectIdGenerator::GenerateNewId<CEllipseObject>();
+}
+
+CEllipseObject::CEllipseObject( COLORREF _color, TBox _box, double _angle, const std::unordered_map<EventType, std::vector<CScript>>& _scripts )
+    : CDrawable( _color, _box, _angle, _scripts, false )
+{
+    id = CObjectIdGenerator::GenerateNewId<CEllipseObject>();
 }
 
 void CEllipseObject::Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const
@@ -63,6 +75,13 @@ CTextBoxObject::CTextBoxObject( COLORREF _color, TBox _box, double _angle, const
 {
 	id = CObjectIdGenerator::GenerateNewId<CTextBoxObject>();
 }
+
+CTextBoxObject::CTextBoxObject( COLORREF _color, TBox _box, double _angle, const std::wstring& _contents, const std::unordered_map<EventType, std::vector<CScript>>& _scripts )
+    : CDrawable( _color, _box, _angle, _scripts, false ), contents( _contents ), fontColor( 0 ), fontSize( 12 )
+{
+    id = CObjectIdGenerator::GenerateNewId<CEllipseObject>();
+}
+
 
 void CTextBoxObject::Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const
 {

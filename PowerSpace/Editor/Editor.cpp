@@ -445,7 +445,8 @@ void CEditor::OnOpen()
         JsonObjectDescription description =  CJsonWorker::GetNextObjectDescription( content );
         assert( description.type == JsonObjectType::MAP );
         CJsonMap stageNewJson( description.name, description.body );
-        //*stage = *CJsonConverter::FromJson<std::shared_ptr<CStage>>( stageNewJson );
+        *stage = *CJsonConverter::FromJson( stageNewJson );
+        renderingWindow.ReDraw();
     }
 }
 

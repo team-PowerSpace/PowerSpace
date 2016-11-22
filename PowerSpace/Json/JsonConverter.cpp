@@ -5,6 +5,8 @@
 #include <JsonWorker.h>
 #include <Stage.h>
 
+#include <JsonTreeVisitor.h>
+
 const std::wstring CJsonConverter::JSON_OBJECT_NAME_ANGLE = L"Angle";
 const std::wstring CJsonConverter::JSON_OBJECT_NAME_BOTTOM = L"Bottom";
 const std::wstring CJsonConverter::JSON_OBJECT_NAME_BOX = L"Box";
@@ -21,13 +23,19 @@ const std::wstring CJsonConverter::JSON_OBJECT_NAME_RIGHT = L"Right";
 const std::wstring CJsonConverter::JSON_OBJECT_NAME_SCALE = L"Scale";
 const std::wstring CJsonConverter::JSON_OBJECT_NAME_SCRIPTS = L"Scripts";
 const std::wstring CJsonConverter::JSON_OBJECT_NAME_STAGE = L"Stage";
-const std::wstring CJsonConverter::JSON_OBJECT_NAME_TEXT = L"Text";
 const std::wstring CJsonConverter::JSON_OBJECT_NAME_TEXTBOX = L"TextBox";
 const std::wstring CJsonConverter::JSON_OBJECT_NAME_TOP = L"Top";
 const std::wstring CJsonConverter::JSON_OBJECT_NAME_VIEWPORT = L"ViewPort";
 const std::wstring CJsonConverter::JSON_OBJECT_NAME_X = L"X";
 const std::wstring CJsonConverter::JSON_OBJECT_NAME_Y = L"Y";
 const std::wstring CJsonConverter::JSON_OBJECT_NAME_ZERO_LOCATION = L"Zero Location";
+
+std::shared_ptr<CStage> CJsonConverter::FromJson( const CJsonMap& object )
+{
+    CStageBuildVisitor visitor;
+    visitor.Visit( &object );
+    return visitor.GetStage();
+}
 
 IJsonPtr CJsonConverter::ToJsonObject( const CStage &stage )
 {
@@ -118,45 +126,3 @@ IJsonPtr CJsonConverter::ToJsonObject( const CScript &script )
     auto jScript = std::make_shared<CJsonWString>( JSON_OBJECT_NAME_PATH, script.GetPath() );
     return jScript;
 }
-
-//template<> std::shared_ptr<CStage> CJsonConverter::FromJson( const JSON& sceneJSON )
-//{
-//    assert( sceneObject.objects.size == 2 );
-//    assert( sceneObject.name == JSON_OBJECT_NAME_STAGE );
-//    for( auto it = sceneObject.objects.begin(); it != sceneObject.objects.end(); ++it ) {
-//        if( it->first == JSON_OBJECT_NAME_OBJECTS ) {
-//            
-//        } else if( it->first == JSON_OBJECT_NAME_VIEWPORT ) {
-//
-//        }
-//    }
-//    CStage stage;
-//    return std::make_shared<CStage>( stage );
-//}
-//
-//template<> std::shared_ptr<CRectangleObject> CJsonConverter::FromJson( const JSON& object )
-//{
-//    std::wcout << object.name;
-//    TBox temp = { 0, 0, 50, 50 };
-//    return std::make_shared<CRectangleObject>( RGB( 100, 90, 80 ), temp, 0 );
-//}
-//
-//template<> std::shared_ptr<CEllipseObject> CJsonConverter::FromJson( const CJsonMap& object )
-//{
-//    std::wcout << object.name;
-//    TBox temp = { 0, 0, 50, 50 };
-//    return std::make_shared<CEllipseObject>( RGB( 100, 90, 80 ), temp, 0 );
-//}
-//
-//template<> std::shared_ptr<CTextBoxObject> CJsonConverter::FromJson( const CJsonMap& object )
-//{
-//    std::wcout << object.name;
-//    TBox temp = { 0, 0, 50, 50 };
-//    return std::make_shared<CTextBoxObject>( RGB( 100, 90, 80 ), temp, 0, JSON_OBJECT_NAME_TEXT );
-//}
-//
-//template<> std::shared_ptr<CViewport> CJsonConverter::FromJson( const CJsonMap& object )
-//{
-//
-//    return std::make_shared<CViewport>();
-//}

@@ -11,8 +11,7 @@ class CJsonConverter
 {
 public:
 
-	//template<typename T>
-	//static T FromJson( const CJsonMap& object);
+	static std::shared_ptr<CStage> FromJson( const CJsonMap& object);
 
 	static IJsonPtr ToJsonObject( const CStage& stage );
 
@@ -38,7 +37,7 @@ public:
     static const std::wstring JSON_OBJECT_NAME_BOTTOM;
     static const std::wstring JSON_OBJECT_NAME_BOX;
     static const std::wstring JSON_OBJECT_NAME_COLOR;
-    static const std::wstring JSON_OBJECT_NAME_CONTAINING_BOX;
+    static const std::wstring JSON_OBJECT_NAME_CONTAINING_BOX;//
     static const std::wstring JSON_OBJECT_NAME_CONTENT;
     static const std::wstring JSON_OBJECT_NAME_ELLIPSE;
     static const std::wstring JSON_OBJECT_NAME_ID;
@@ -50,7 +49,6 @@ public:
     static const std::wstring JSON_OBJECT_NAME_SCALE;
     static const std::wstring JSON_OBJECT_NAME_SCRIPTS;
     static const std::wstring JSON_OBJECT_NAME_STAGE;
-    static const std::wstring JSON_OBJECT_NAME_TEXT;
     static const std::wstring JSON_OBJECT_NAME_TEXTBOX;
     static const std::wstring JSON_OBJECT_NAME_TOP;
     static const std::wstring JSON_OBJECT_NAME_VIEWPORT;

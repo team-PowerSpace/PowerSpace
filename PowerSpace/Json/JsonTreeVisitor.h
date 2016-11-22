@@ -20,7 +20,6 @@ public:
 class CStageBuildVisitor : IJsonTreeVisitor
 {
 public:
-    //CStageBuildVisitor() : jsonNameStack( 1, CJsonConverter::JSON_OBJECT_NAME_STAGE ) {}
     ~CStageBuildVisitor() {};
     void Visit( const CJsonArray* jsonArray ) override;
     void Visit( const CJsonWString* jsonWstring ) override;
@@ -28,11 +27,20 @@ public:
 
     std::shared_ptr<CStage> GetStage();
 private:
-    std::unordered_map<IdType, IDrawablePtr> objects;
-    CViewport viewport;
-    double scale;
-    double angle;
-    TPoint zeroLocation;
     std::shared_ptr<CStage> stage;
+    
+    std::unordered_map<IdType, IDrawablePtr> objects;
+
+    CViewport viewport;
+
+    double viewportScale, viewportAngle;
+    TPoint viewportZeroLocation;
+
+    COLORREF objColor;
+    TBox objBox;
+    double objAngle = 0; // doesn't appear in Json, must be added later
+    std::wstring objContents;
+    IdType objId;
+    std::unordered_map<EventType, std::vector<CScript>> objScripts;
 };
 

@@ -11,6 +11,14 @@ CDrawable::CDrawable( COLORREF _color, TBox _box, double _angle, bool needGenera
 	}
 }
 
+CDrawable::CDrawable( COLORREF _color, TBox _box, double _angle, const std::unordered_map<EventType, std::vector<CScript>>& _scripts, bool needGenerateId = true )
+    : color( _color ), containingBox( _box ), angle( _angle ), scripts( _scripts )
+{
+    if( needGenerateId ) {
+        id = CObjectIdGenerator::GenerateNewId<CDrawable>();
+    }
+}
+
 const IdType& CDrawable::GetId() const
 {
 	return id;

@@ -57,7 +57,8 @@ public:
 class CDrawable : public IDrawable
 {
 public:
-	CDrawable( COLORREF _color, TBox _box, double _angle, bool needGenerateId );
+    CDrawable( COLORREF _color, TBox _box, double _angle, bool needGenerateId );
+    CDrawable( COLORREF _color, TBox _box, double _angle, const std::unordered_map<EventType, std::vector<CScript>>& _scripts, bool needGenerateId );
 	virtual ~CDrawable() {}
 
 	const IdType& GetId() const;
