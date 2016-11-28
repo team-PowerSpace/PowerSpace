@@ -33,8 +33,13 @@ void CScriptEngine::LoadScene()
 	}
 
 	std::unordered_map<IdType, IDrawablePtr>& objects = stage.GetObjects();
-	for( std::pair<IdType, IDrawablePtr> object : objects ) {		
-		AddPyObject(object.first, object.second);
+	try {
+		for( std::pair<IdType, IDrawablePtr> object : objects ) {
+			AddPyObject( object.first, object.second );
+		}
+	}
+	catch( std::string& e ) {
+		MessageBoxA( NULL, e.c_str(), "Error", NULL );
 	}
 }
 
@@ -77,7 +82,7 @@ void CScriptEngine::AddPyScripts()
 			constructorScript.append( script.GetName() );
 			constructorScript.append( L" = " );
             constructorScript.append( script.GetName() );
-            constructorScript.append( L"p()" );
+            constructorScript.append( L"()" );
 			std::string constructorScriptASCII = std::string( constructorScript.begin(), constructorScript.end() );
 
 			PyObject* result = PyRun_String( constructorScriptASCII.c_str(), Py_file_input, globalDictionary, localDictionary );
@@ -91,20 +96,20 @@ void CScriptEngine::AddPyScripts()
 void CScriptEngine::AddPyObject( IdType name, IDrawablePtr description )
 {
 	std::string constructorScript( name.begin(), name.end() );
-	PyObject* pyObjName = PyUnicode_FromString( constructorScript.c_str() );
-	constructorScript.append( "=Engine.CDrawable()" );
+	//PyObject* pyObjName = PyUnicode_FromString( constructorScript.c_str() );
+	constructorScript.append( "=Drawable()" );
 	PyObject* result = PyRun_String( constructorScript.c_str(), Py_file_input, globalDictionary, localDictionary );
 	if( !result ) {
-		throw "Error: invalid input";		
+		throw "Invalid input: " + constructorScript;
 	}
-	PyDict_Update( globalDictionary, localDictionary );
+	/*PyDict_Update( globalDictionary, localDictionary );
 	if( PyDict_Contains( localDictionary, pyObjName ) ) {		
 		PyObject* pyVal = PyDict_GetItem( localDictionary, pyObjName );		
 		pyScene.insert( std::pair<IdType, std::shared_ptr<CDrawableBuilder>>( name, 
 			std::make_shared<CDrawableBuilder>( pyVal, description ) ));
 	} else {
 		throw "Error: failed get object";
-	}
+	}*/
 }
 
  void CScriptEngine::RunScripts( const IdType& objectId, EventType type, const std::vector<IdType>& scripts )
