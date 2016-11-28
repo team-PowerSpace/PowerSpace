@@ -6,13 +6,16 @@
 void PyRunner::run( IdType object, EventType type, std::vector<IdType> scripts )
 {
 	for( IdType script : scripts ) {
-		std::string buffer = std::string(script.begin(), script.end() );
+		std::string buffer = std::string( object.begin(), object.end() );
+		buffer.append( "_" );
+		buffer.append( std::string( script.begin(), script.end() ));
 		buffer.append( "." );
 		IdType event = CScript::Events.at( type );
 		buffer.append( std::string( event.begin(), event.end() ) );
 		buffer.append( "(" );
 		buffer.append( std::string( object.begin(), object.end() ) );
 		buffer.append( ")" );		
+		MessageBoxA( NULL, buffer.c_str(), "Error", NULL );
 		int result = PyRun_SimpleString( buffer.c_str() ); 
 		if( result == -1 ) {
 			throw "Error: failed to run script";

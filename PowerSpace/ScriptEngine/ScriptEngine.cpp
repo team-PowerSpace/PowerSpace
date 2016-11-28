@@ -41,6 +41,7 @@ void CScriptEngine::LoadScene()
 	catch( std::string& e ) {
 		MessageBoxA( NULL, e.c_str(), "Error", NULL );
 	}
+	MessageBoxA( NULL, "LoadScene succeded" , "OK", NULL );
 }
 
 void CScriptEngine::ImportModules()
@@ -84,7 +85,7 @@ void CScriptEngine::AddPyScripts()
             constructorScript.append( script.GetName() );
             constructorScript.append( L"()" );
 			std::string constructorScriptASCII = std::string( constructorScript.begin(), constructorScript.end() );
-
+			
 			PyObject* result = PyRun_String( constructorScriptASCII.c_str(), Py_file_input, globalDictionary, localDictionary );
 			if( !result ) {
 				throw "Invalid input: " + constructorScriptASCII;
@@ -96,25 +97,39 @@ void CScriptEngine::AddPyScripts()
 void CScriptEngine::AddPyObject( IdType name, IDrawablePtr description )
 {
 	std::string constructorScript( name.begin(), name.end() );
-	//PyObject* pyObjName = PyUnicode_FromString( constructorScript.c_str() );
+	PyObject* pyObjName = PyUnicode_FromString( constructorScript.c_str() );
 	constructorScript.append( "=Drawable()" );
 	PyObject* result = PyRun_String( constructorScript.c_str(), Py_file_input, globalDictionary, localDictionary );
 	if( !result ) {
 		throw "Invalid input: " + constructorScript;
 	}
-	/*PyDict_Update( globalDictionary, localDictionary );
+	PyDict_Update( globalDictionary, localDictionary );
 	if( PyDict_Contains( localDictionary, pyObjName ) ) {		
-		PyObject* pyVal = PyDict_GetItem( localDictionary, pyObjName );		
-		pyScene.insert( std::pair<IdType, std::shared_ptr<CDrawableBuilder>>( name, 
-			std::make_shared<CDrawableBuilder>( pyVal, description ) ));
-	} else {
-		throw "Error: failed get object";
-	}*/
+		PyObject* pyVal = PyDict_GetItem( localDictionary, pyObjName );	
+		if( !pyVal ) {
+			throw "Failed get object from dictianary: " + std::string( name.begin(), name.end() );
+		}
+		try {
+			pyScene.insert( std::pair<IdType, std::shared_ptr<CDrawableBuilder>>( name,
+				std::make_shared<CDrawableBuilder>( pyVal, description ) ) );
+		}
+		catch( ... ) {		
+			throw "Failed inset object to scene: " + std::string( name.begin(), name.end() );
+		}
+	}		else {
+		throw "Failed get object: " + std::string( name.begin(), name.end());
+	}
 }
 
  void CScriptEngine::RunScripts( const IdType& objectId, EventType type, const std::vector<IdType>& scripts )
 {
-	PyRunner::run(objectId, type, scripts);
+	MessageBoxW( NULL, objectId.c_str(), L"Error", NULL );
+	try {
+		PyRunner::run( objectId, type, scripts );
+	}
+	catch( std::string& e ) {
+		MessageBoxA( NULL, e.c_str(), "Error", NULL );
+	}
 	std::shared_ptr<CDrawableBuilder> pObject = pyScene.at( objectId );
     std::shared_ptr<IDrawable> object = stage.GetObjectById( objectId );
     PyRunner::update( pObject, object );

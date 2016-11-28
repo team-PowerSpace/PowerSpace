@@ -156,6 +156,7 @@ void CViewerWindow::onTimer()
         }
 		updateColorWithBuffer( activeId, ColorBufferActionType::RestoreColor );
 		if( !scripts.empty() ) {
+			MessageBoxW( NULL, activeId.c_str(), L"Viewer", NULL );
 			scriptEngine.RunScripts( activeId, EventType::EventTick, names );
 		}
 		updateColorWithBuffer( activeId, ColorBufferActionType::SetColor );

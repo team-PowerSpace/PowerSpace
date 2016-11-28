@@ -4,8 +4,8 @@
 #include <fstream>
 
 std::unordered_map<EventType, IdType> CScript::Events = {
-    { EventType::EventClick, L"onClick" },
-    { EventType::EventTick, L"onTick" }
+    { EventType::EventClick, L"OnClick" },
+    { EventType::EventTick, L"OnTick" }
 };
 
 CScript::CScript( TPath _path )
