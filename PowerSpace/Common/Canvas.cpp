@@ -30,33 +30,51 @@ TBox CCanvas::MakeBoxCentreCoordinatesOrigin( HDC hdc, TBox box ) const
 	return box_transformed;
 }
 
-void CCanvas::DrawRectangle( HDC hdc, TBox box, COLORREF color, double angle ) const
+void CCanvas::DrawRectangle( HDC hdc, TBox box, COLORREF color, COLORREF borderColor, double angle ) const
 {
 	Rotate( hdc, angle );
 	TBox box_transformed = MakeBoxCentreCoordinatesOrigin( hdc, box );
 
-	HBRUSH brush = ::CreateSolidBrush( color );
-	if( color != noColor) {
-		::FillRect( hdc, &box_transformed, brush );
-	}
-	::DeleteObject( brush );
+    HPEN pen = ::CreatePen( PS_SOLID, 1, borderColor );
+    HBRUSH brush = 0;
+    HBRUSH brushOld = 0;
+    if( color != noColor ) {
+        brush = ::CreateSolidBrush( color );
+        brushOld = static_cast<HBRUSH>(::SelectObject( hdc, brush ));
+    }
+    HPEN penOld = static_cast<HPEN>(::SelectObject( hdc, pen ));
+    ::Rectangle( hdc, box_transformed.left, box_transformed.top, box_transformed.right, box_transformed.bottom );
+    ::SelectObject( hdc, penOld );
+    ::DeleteObject( pen );
+    if( color != noColor ) {
+        ::SelectObject( hdc, brushOld );
+        ::DeleteObject( brush );
+    }
 
 	Rotate( hdc, 0 );
 	SetViewportOrgEx( hdc, 0, 0, NULL );
 }
 
-void CCanvas::DrawEllipse( HDC hdc, TBox box, COLORREF color, double angle ) const
+void CCanvas::DrawEllipse( HDC hdc, TBox box, COLORREF color, COLORREF borderColor, double angle ) const
 {
 	Rotate( hdc, angle );
 	TBox box_transformed = MakeBoxCentreCoordinatesOrigin( hdc, box );
 
-	HBRUSH brush = ::CreateSolidBrush( color );
-	HBRUSH brushOld = static_cast<HBRUSH>(::SelectObject( hdc, brush ));
-	if( color != noColor ) {
-		::Ellipse( hdc, box_transformed.left, box_transformed.top, box_transformed.right, box_transformed.bottom );
-	}
-	::SelectObject( hdc, brushOld );
-	::DeleteObject( brush );
+    HPEN pen = ::CreatePen( PS_SOLID, 1, borderColor );
+    HBRUSH brush = 0;
+    HBRUSH brushOld = 0;
+    if( color != noColor ) {
+        brush = ::CreateSolidBrush( color );
+        brushOld = static_cast<HBRUSH>(::SelectObject( hdc, brush ));
+    }
+    HPEN penOld = static_cast<HPEN>(::SelectObject( hdc, pen ));
+    ::Ellipse( hdc, box_transformed.left, box_transformed.top, box_transformed.right, box_transformed.bottom );
+    ::SelectObject( hdc, penOld );
+    ::DeleteObject( pen );
+    if( color != noColor ) {
+        ::SelectObject( hdc, brushOld );
+        ::DeleteObject( brush );
+    }
 
 	Rotate( hdc, 0 );
 	SetViewportOrgEx( hdc, 0, 0, NULL );

@@ -8,10 +8,10 @@ class CCanvas
 public:
 	// draws rectangle on canvas
 	// TODO: replace IDrawable with the class that implements IDrawable
-	void DrawRectangle( HDC hdc, TBox box, COLORREF color, double angle ) const;
+	void DrawRectangle( HDC hdc, TBox box, COLORREF color, COLORREF borderColor, double angle ) const;
 
 	// draws circle on canvas
-	void DrawEllipse( HDC hdc, TBox box, COLORREF color, double angle ) const;
+	void DrawEllipse( HDC hdc, TBox box, COLORREF color, COLORREF borderColor, double angle ) const;
 
 	// draws text on canvas
 	void DrawTextBox( HDC hdc, TBox box, COLORREF color, double angle, const std::wstring& text, HFONT hFont, 

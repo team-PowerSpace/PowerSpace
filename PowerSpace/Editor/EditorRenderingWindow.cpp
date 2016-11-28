@@ -5,13 +5,13 @@
 
 #define MAX_RESOURCE_LENGTH 100
 
-const int CEditorRenderingWindow::DefaultHeight = 600;
-const int CEditorRenderingWindow::DefaultWidth = 1000;
-const int CEditorRenderingWindow::MarkerHalfSize = 5;
-const int CEditorRenderingWindow::RotateMarkerShift = 20;
-const COLORREF CEditorRenderingWindow::BackgroundColor = RGB( 255, 255, 255 );
-const COLORREF CEditorRenderingWindow::MarkerColor = RGB( 0, 0, 255 );
-const COLORREF CEditorRenderingWindow::AccentMarkerColor = RGB( 0, 255, 0 );
+const int CEditorRenderingWindow::defaultHeight = 600;
+const int CEditorRenderingWindow::defaultWidth = 1000;
+const int CEditorRenderingWindow::markerHalfSize = 5;
+const int CEditorRenderingWindow::rotateMarkerShift = 20;
+const COLORREF CEditorRenderingWindow::backgroundColor = RGB( 255, 255, 255 );
+const COLORREF CEditorRenderingWindow::markerColor = RGB( 0, 0, 255 );
+const COLORREF CEditorRenderingWindow::borderColor = RGB( 0, 0, 0 );
 
 Marker::Marker( const RECT& location, const TMarkerType type, const int id ) :
 	location( location ), type( type ), index( id )
@@ -56,8 +56,7 @@ LPCTSTR Marker::GetCursor() const
 }
 
 CEditorRenderingWindow::CEditorRenderingWindow() :
-	bitmap( 0 ), bitmapContext( 0 ), bitmapHeight( 1 ), bitmapWidth( 1 ), backgroundBrush( 0 ),
-	markerBrush( 0 ), markerPen( 0 ), currentMovingState( MS_None )
+	bitmap( 0 ), bitmapContext( 0 ), bitmapHeight( 1 ), bitmapWidth( 1 ), backgroundBrush( 0 ), currentMovingState( MS_None )
 {
 	canvasPoint.x = 0;
 	canvasPoint.y = 0;
@@ -72,11 +71,10 @@ bool CEditorRenderingWindow::Create( HWND hWndParent, const wchar_t * classname 
 		CW_USEDEFAULT, CW_USEDEFAULT, hWndParent, 0, instance, this );
 
 	// Will be destroyed in OnDestroy
-	markerPen = CreatePen( PS_DASH, 1, MarkerColor );
-	markerBrush = CreateSolidBrush( MarkerColor );
-	accentMarkerPen = CreatePen( PS_DASH, 1, AccentMarkerColor );
-	accentMarkerBrush = CreateSolidBrush( AccentMarkerColor );
-	backgroundBrush = CreateSolidBrush( BackgroundColor );
+	markerPen = CreatePen( PS_SOLID, 1, markerColor );
+	markerBrush = CreateSolidBrush( markerColor );
+	backgroundBrush = CreateSolidBrush( backgroundColor );
+    borderPen = CreatePen( PS_SOLID, 1, borderColor );
 
 	return (handle != 0);
 }
@@ -101,31 +99,31 @@ void CEditorRenderingWindow::Redraw() const
 void CEditorRenderingWindow::OnDestroy()
 {
 	destroyDoubleBuffer();
-	::DeleteObject( backgroundBrush );
-	::DeleteObject( markerBrush );
-	::DeleteObject( markerPen );
-	::DeleteObject( accentMarkerBrush );
-	::DeleteObject( accentMarkerPen );
+	DeleteObject( backgroundBrush );
+	DeleteObject( markerBrush );
+	DeleteObject( markerPen );
+    DeleteObject( borderPen );
 
-	::PostQuitMessage( 0 );
+	PostQuitMessage( 0 );
 }
 
 void CEditorRenderingWindow::DrawSizeableRectangle( HDC paintDC, const RECT & rectangle, const IdType& id, const double angle )
 {
 	SelectObject( paintDC, GetStockObject( NULL_BRUSH ) );
 	if( id == selectedId ) {
-		SelectObject( paintDC, accentMarkerPen );
-	} else {
 		SelectObject( paintDC, markerPen );
+	    Rectangle( paintDC, rectangle.left, rectangle.top, rectangle.right, rectangle.bottom );
 	}
-	Rectangle( paintDC, rectangle.left, rectangle.top, rectangle.right, rectangle.bottom );
 
 	rectangles.push_back( rectangle );
 	rectanglesIds.push_back( id );
 	angles.push_back( angle );
 
-	addMarkersForRectangle( paintDC, rectangle.left, rectangle.top, rectangle.right - rectangle.left,
-		rectangle.bottom - rectangle.top, id, static_cast<int>(rectangles.size() - 1) );
+    if( id == selectedId ) {
+        addMarkersForRectangle( paintDC, rectangle.left, rectangle.top, rectangle.right - rectangle.left,
+            rectangle.bottom - rectangle.top, id, static_cast<int>(rectangles.size() - 1) );
+    }
+    SelectObject( paintDC, borderPen );
 }
 
 LRESULT CEditorRenderingWindow::WindowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam )
@@ -366,18 +364,19 @@ void CEditorRenderingWindow::addMarkersForRectangle( HDC paintDC, const int x, c
 	addMarker( paintDC, x + width / 2, y + height, TMarkerType::MT_Bottom, id, index );
 	addMarker( paintDC, x, y + height, TMarkerType::MT_LeftBottom, id, index );
 	addMarker( paintDC, x, y + height / 2, TMarkerType::MT_Left, id, index );
-	addMarker( paintDC, x + width / 2, y - RotateMarkerShift, TMarkerType::MT_Rotate, id, index );
+	addMarker( paintDC, x + width / 2, y - rotateMarkerShift, TMarkerType::MT_Rotate, id, index );
 }
 
 void  CEditorRenderingWindow::addMarker( HDC paintDC, const int x, const int y, const TMarkerType type, const IdType& id, const int index )
 {
 	RECT location;
-	location.left = x - MarkerHalfSize;
-	location.top = y - MarkerHalfSize;
-	location.right = x + MarkerHalfSize;
-	location.bottom = y + MarkerHalfSize;
-	::FillRect( paintDC, &location, ((id == selectedId) ? accentMarkerBrush : markerBrush) );
+	location.left = x - markerHalfSize;
+	location.top = y - markerHalfSize;
+	location.right = x + markerHalfSize;
+	location.bottom = y + markerHalfSize;
+	FillRect( paintDC, &location, markerBrush );
 	markers.emplace_back( location, type, index );
+    UNREFERENCED_PARAMETER( id );
 }
 
 void CEditorRenderingWindow::destroyDoubleBuffer()

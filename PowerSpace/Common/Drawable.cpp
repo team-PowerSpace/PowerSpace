@@ -2,17 +2,17 @@
 #include "Drawable.h"
 
 //Event All should be carefully changed with click, when the model of scripts will be defined
-CDrawable::CDrawable( COLORREF _color, TBox _box, double _angle, bool needGenerateId = true )
+CDrawable::CDrawable( COLORREF _color, TBox _box, double _angle, bool needGenerateId = true, COLORREF _borderColor )
 	: color( _color ), containingBox( _box ), angle( _angle ),  scripts( { {EventType::EventAll/*Should be EventClick*/, std::vector<CScript>()},
-	{EventType::EventAll/*Should be EventTick*/, std::vector<CScript>()} } )
+	{EventType::EventAll/*Should be EventTick*/, std::vector<CScript>()} } ), borderColor( _borderColor )
 {
 	if( needGenerateId ) {
 		id = CObjectIdGenerator::GenerateNewId<CDrawable>();
 	}
 }
 
-CDrawable::CDrawable( COLORREF _color, TBox _box, double _angle, const std::unordered_map<EventType, std::vector<CScript>>& _scripts, bool needGenerateId = true )
-    : color( _color ), containingBox( _box ), angle( _angle ), scripts( _scripts )
+CDrawable::CDrawable( COLORREF _color, TBox _box, double _angle, const std::unordered_map<EventType, std::vector<CScript>>& _scripts, bool needGenerateId = true, COLORREF _borderColor)
+    : color( _color ), containingBox( _box ), angle( _angle ), scripts( _scripts ), borderColor( _borderColor )
 {
     if( needGenerateId ) {
         id = CObjectIdGenerator::GenerateNewId<CDrawable>();

@@ -62,23 +62,22 @@ protected:
 	static LRESULT __stdcall WindowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
 
 private:
-	static const int DefaultWidth;
-	static const int DefaultHeight;
-	static const int MarkerHalfSize;
-	static const int RotateMarkerShift;
-	static const COLORREF BackgroundColor;
-	static const COLORREF MarkerColor;
-	static const COLORREF AccentMarkerColor;
+	static const int defaultWidth;
+	static const int defaultHeight;
+	static const int markerHalfSize;
+	static const int rotateMarkerShift;
+	static const COLORREF backgroundColor;
+	static const COLORREF markerColor;
+    static const COLORREF borderColor;
 
 	HWND handle;
 	HWND dialog;
 	HBITMAP bitmap;
 	HDC bitmapContext;
 	HBRUSH backgroundBrush;
+    HPEN borderPen;
 	HBRUSH markerBrush;
 	HPEN markerPen;
-	HBRUSH accentMarkerBrush;
-	HPEN accentMarkerPen;
 
 	int bitmapWidth;
 	int bitmapHeight;

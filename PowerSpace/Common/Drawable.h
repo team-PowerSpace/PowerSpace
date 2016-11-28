@@ -57,8 +57,10 @@ public:
 class CDrawable : public IDrawable
 {
 public:
-    CDrawable( COLORREF _color, TBox _box, double _angle, bool needGenerateId );
-    CDrawable( COLORREF _color, TBox _box, double _angle, const std::unordered_map<EventType, std::vector<CScript>>& _scripts, bool needGenerateId );
+    CDrawable( COLORREF _color, TBox _box, double _angle, bool needGenerateId, COLORREF _borderColor = RGB(0, 0, 0) );
+    CDrawable( COLORREF _color, TBox _box, double _angle, const std::unordered_map<EventType, std::vector<CScript>>& _scripts,
+        bool needGenerateId, COLORREF _borderColor = RGB( 0, 0, 0 ) );
+
 	virtual ~CDrawable() {}
 
 	const IdType& GetId() const;
@@ -85,8 +87,11 @@ protected:
 	// a unique identifier linked to the object
 	IdType id;
 
-	// color of the object
+	// color of the object (default color of the object)
 	COLORREF color;
+
+    // color of the border of the object (if it has any)
+    COLORREF borderColor;
 
 	// the rectangle (position and size) that contains the object on stage
 	TBox containingBox;

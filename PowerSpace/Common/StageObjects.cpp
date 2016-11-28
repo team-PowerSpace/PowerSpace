@@ -19,7 +19,7 @@ CRectangleObject::CRectangleObject( COLORREF _color, TBox _box, double _angle, c
 
 void CRectangleObject::Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const
 {
-	canvas.DrawRectangle( hdc, viewport.ConvertToScreenCoordinates( containingBox ), color, angle );
+	canvas.DrawRectangle( hdc, viewport.ConvertToScreenCoordinates( containingBox ), color, borderColor, angle );
 }
 
 std::wstring CRectangleObject::ToWString() const
@@ -51,7 +51,7 @@ CEllipseObject::CEllipseObject( COLORREF _color, TBox _box, double _angle, const
 
 void CEllipseObject::Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const
 {
-	canvas.DrawEllipse( hdc, viewport.ConvertToScreenCoordinates( containingBox ), color, angle );
+	canvas.DrawEllipse( hdc, viewport.ConvertToScreenCoordinates( containingBox ), color, borderColor, angle );
 }
 
 std::wstring CEllipseObject::ToWString() const
