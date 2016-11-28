@@ -23,9 +23,16 @@ void CScriptEngine::LoadScene()
 	catch( std::string& e ) {
 		MessageBoxA( NULL, e.c_str(), "Error", NULL );
 	}
+	localDictionary = PyDict_New();
 	globalDictionary = PyModule_GetDict( mainModule );
+	try {
+		AddPyScripts();
+	}
+	catch( std::string& e ) {
+		MessageBoxA( NULL, e.c_str(), "Error", NULL );
+	}
+
 	std::unordered_map<IdType, IDrawablePtr>& objects = stage.GetObjects();
-	AddPyScripts();
 	for( std::pair<IdType, IDrawablePtr> object : objects ) {		
 		AddPyObject(object.first, object.second);
 	}
@@ -70,14 +77,12 @@ void CScriptEngine::AddPyScripts()
 			constructorScript.append( script.GetName() );
 			constructorScript.append( L" = " );
             constructorScript.append( script.GetName() );
-            constructorScript.append( L"." );
-            constructorScript.append( script.GetName() );
-            constructorScript.append( L"()" );
+            constructorScript.append( L"p()" );
 			std::string constructorScriptASCII = std::string( constructorScript.begin(), constructorScript.end() );
 
 			PyObject* result = PyRun_String( constructorScriptASCII.c_str(), Py_file_input, globalDictionary, localDictionary );
 			if( !result ) {
-				throw "Error: invalid input";
+				throw "Invalid input: " + constructorScriptASCII;
 			}
 		}
 	}
