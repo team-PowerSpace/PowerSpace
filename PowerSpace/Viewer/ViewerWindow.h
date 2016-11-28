@@ -3,8 +3,6 @@
 #include "resource.h"
 #include <ScriptEngine.h>
 
-#define BLUE_FOR_CANVAS_CROSS RGB(0, 128, 255)
-#define GREEN_FOR_CANVAS_CROSS RGB(0, 255, 128)
 enum ColorBufferActionType { RestoreColor, SetColor };
 
 enum TMovingState_Viewer
@@ -43,6 +41,7 @@ private:
 
 	static const wchar_t* ClassName; // win32 features
 	static const wchar_t* ViewerApplicationName;
+	static const COLORREF backgroundColor;
 
 	const int windowHeight; // window params
 	const int windowWidth;
@@ -83,4 +82,8 @@ private:
 	bool isPointInBox( TBox box, POINT point );
 
 	void updateColorWithBuffer( IdType prevActiveId, ColorBufferActionType actionType );
+
+	void redraw() const;
+
+	void fillBackground( HDC paintDC, const int width, const int height ) const;
 };

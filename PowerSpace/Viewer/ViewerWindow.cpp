@@ -3,6 +3,7 @@
 
 const wchar_t* CViewerWindow::ClassName = L"CViewerWindow";
 const wchar_t* CViewerWindow::ViewerApplicationName = L"Powerspace Viewer";
+const COLORREF CViewerWindow::backgroundColor = RGB( 255, 255, 255 );
 const UINT TICK_LENGTH = 1000;
 const double SPEED_MULTIPLIER = 1.1;
 UINT SPEED = TICK_LENGTH;
@@ -23,7 +24,7 @@ CViewerWindow::~CViewerWindow()
 //
 bool CViewerWindow::RegisterClass()
 {
-	HBRUSH backgroundBrush = ::CreateHatchBrush( HS_CROSS, GREEN_FOR_CANVAS_CROSS );
+	HBRUSH backgroundBrush = ::CreateSolidBrush( backgroundColor );
 	HMODULE instance = ::GetModuleHandleW( nullptr );
 
 	WNDCLASSEX windowClassInformation;
@@ -59,6 +60,21 @@ bool CViewerWindow::Create()
 	if ( handle != 0 ) {
 		enableTimer( SPEED );
 	}
+
+	//RECT rect;
+	//::GetClientRect( handle, &rect );
+
+	//int viewportHeight = rect.bottom - rect.top;
+	//int viewportWidth = rect.right - rect.left;
+
+	//int radius = static_cast<int>(sqrt( pow( viewportHeight, 2 ) + pow( viewportWidth, 2 ) ));
+
+	//POINT zero = viewport.GetZeroLocation();
+
+	//zero.x = viewportWidth / 2 - radius;
+	//zero.y = viewportHeight / 2 - radius;
+
+	//viewport.SetZeroLocation( zero );
 
 	return (handle != 0);
 }
@@ -174,9 +190,7 @@ void CViewerWindow::onTimer()
 		updateColorWithBuffer( activeId, ColorBufferActionType::SetColor );
 	}
 
-	RECT rect;
-	::GetClientRect( handle, &rect );
-	::InvalidateRect( handle, &rect, false );
+	redraw();
 }
 
 //
@@ -191,30 +205,33 @@ void CViewerWindow::onPaint()
 	RECT rect;
 	::GetClientRect( handle, &rect );
 
-	int viewportHeight = rect.bottom - rect.top;
 	int viewportWidth = rect.right - rect.left;
+	int viewportHeight = rect.bottom - rect.top;
 
-	HDC Memhdc = ::CreateCompatibleDC( hdc );
-	HBITMAP Membitmap = ::CreateCompatibleBitmap( hdc, viewportWidth, viewportHeight );
-	::SelectObject( Memhdc, Membitmap );
-	
-	HBRUSH canvasBrush = ::CreateHatchBrush( HS_CROSS, BLUE_FOR_CANVAS_CROSS );
+	fillBackground( bitmapContext, viewportWidth, viewportHeight );
 
-	::FillRect( Memhdc, &paintStruct.rcPaint, canvasBrush );
+	//int radius = static_cast<int>(sqrt( pow( viewportHeight, 2 ) + pow( viewportWidth, 2 ) ));
 
-	stage.ClipAndDrawObjects( Memhdc );
+	//int renderSize = 2 * radius;
 
-	POINT zero = viewport.GetZeroLocation();
+	//HDC Memhdc = ::CreateCompatibleDC( hdc );
+	//HBITMAP Membitmap = ::CreateCompatibleBitmap( hdc, viewportWidth, viewportHeight );
+	//::SelectObject( Memhdc, Membitmap );
+	//
+	//HBRUSH canvasBrush = ::CreateHatchBrush( HS_CROSS, BLUE_FOR_CANVAS_CROSS );
 
-	//BOOL result = ::BitBlt( hdc, paintStruct.rcPaint.left, paintStruct.rcPaint.top, 2*radius, 2*radius, Memhdc, paintStruct.rcPaint.left, paintStruct.rcPaint.top, SRCCOPY );
-	BOOL result = ::BitBlt( hdc, zero.x, zero.y, viewportWidth, viewportHeight, Memhdc, 0, 0, SRCCOPY );
+	//::FillRect( Memhdc, &paintStruct.rcPaint, canvasBrush );
+
+	stage.ClipAndDrawObjects( bitmapContext, viewport );
+
+	BOOL result = ::BitBlt( hdc, 0, 0, viewportWidth, viewportHeight, bitmapContext, 0, 0, SRCCOPY );
 	if( !result ) {
 		::MessageBox( handle, L"BitBlt : onPaint() : CViewerWindow", L"Error", MB_ICONERROR );
 		::PostQuitMessage( NULL );
 	}
 
-	::DeleteObject( Membitmap );
-	::DeleteDC( Memhdc );
+	//::DeleteObject( Membitmap );
+	//::DeleteDC( Memhdc );
 	::EndPaint( handle, &paintStruct );
 }
 
@@ -250,7 +267,7 @@ void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 	// TODO: handle mouse moving
 	// E.g. mouse is on the object => change the color
 
-	if( !wParam & MK_LBUTTON ) 		{
+	if( !wParam & MK_LBUTTON ) {
 		currentMovingState = TMovingState_Viewer::MSV_None;
 	}
 
@@ -287,14 +304,12 @@ void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
 		canvasPoint.x += static_cast<LONG>(dPoint.x * cosine + dPoint.y * sine);
 		canvasPoint.y += static_cast<LONG>(-dPoint.x * sine + dPoint.y * cosine);
 
-		viewport.SetZeroLocation( canvasPoint );
+		viewport.SetZeroLocation ( canvasPoint );
 		::SetCursor( ::LoadCursor( 0, IDC_SIZEALL ) );
 		break;
 	}
 	
-	RECT rect;
-	::GetClientRect( handle, &rect );
-	::InvalidateRect( handle, &rect, false );
+	redraw();
 }
 
 //
@@ -358,9 +373,7 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 		}
 	}
 
-	RECT rect;
-	::GetClientRect( handle, &rect );
-	::InvalidateRect( handle, &rect, false );
+	redraw();
 }
 
 void CViewerWindow::onCommand( WPARAM wParam, LPARAM lParam )
@@ -456,4 +469,21 @@ void CViewerWindow::updateColorWithBuffer( IdType prevActiveId, ColorBufferActio
 		break;
 	}
 	}
+}
+
+void CViewerWindow::redraw() const
+{
+	RECT rect;
+	GetClientRect( handle, &rect );
+	InvalidateRect( handle, &rect, true );
+}
+
+void CViewerWindow::fillBackground( HDC hdc, const int width, const int height ) const
+{
+	RECT clientContext;
+	clientContext.bottom = height;
+	clientContext.right = width;
+	clientContext.left = 0;
+	clientContext.top = 0;
+	FillRect( hdc, &clientContext, backgroundBrush );
 }

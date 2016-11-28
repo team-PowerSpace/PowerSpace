@@ -31,11 +31,17 @@ public:
 	void DrawObjects( HDC hdc, const std::vector<IDrawablePtrConst>& objectList ) const;
 	// draws all objects in "objects" on canvas
 	void DrawObjects( HDC hdc ) const;
+	// draw all objects in specified viewport
+	void DrawObjects( HDC hdc, const std::vector<IDrawablePtrConst>& objectList, const CViewport& thisViewport ) const;
 
 	// draws only visible objects from "objectList" on canvas
 	void ClipAndDrawObjects( HDC hdc, const std::vector<IDrawablePtrConst>& objectList ) const;
+	// draws only visible objects from "objectList" on canvas (in viewport)
+	void ClipAndDrawObjects( HDC hdc, const std::vector<IDrawablePtrConst>& objectList, const CViewport& thisViewport ) const;
 	// draws only visible objects from "objects" on canvas
 	void ClipAndDrawObjects( HDC hdc ) const;
+	// draw all objects in specified viewport
+	void ClipAndDrawObjects( HDC hdc, const CViewport& thisViewport ) const;
 
 	// not-const getter of viewport
 	CViewport& GetViewPort();
