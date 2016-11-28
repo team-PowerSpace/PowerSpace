@@ -187,7 +187,9 @@ LRESULT CEditorRenderingWindow::WindowProc( HWND handle, UINT message, WPARAM wP
     }
     case WM_LBUTTONDBLCLK:
     {
-        wndPtr->onMouseDown( lParam );
+		MessageBox(NULL, (LPCTSTR)"Двойной клик", (LPCWSTR)"Inform",
+			MB_OK | MB_ICONINFORMATION);
+        wndPtr->onDoubleClick( lParam );
         break;
     }
     case WM_MOUSELEAVE:
@@ -465,4 +467,87 @@ POINT CEditorRenderingWindow::getRectangleCentre( const RECT& rect ) const
 {
     POINT centre = { (rect.left + rect.right) / 2, (rect.bottom + rect.top) / 2 };
     return centre;
+}
+
+void CEditorRenderingWindow::onDoubleClick(const LPARAM lparam)
+{
+	POINT point = getPointByLParam(lparam);
+	for (int i = static_cast<int>(markers.size()) - 1; i >= 0; i--) {
+		if (contains(markers[i].GetLocation(), point)) {
+			int index = markers[i].GetIndex();
+			sizingMarkerType = markers[i].GetType();
+			if (sizingMarkerType == TMarkerType::MT_Rotate) {
+				currentMovingState = TMovingState::MS_Rotating;
+				SelectDrawableObject(rectanglesIds[index]);
+				startAngle = angles[index];
+				lastAngle = startAngle;
+				rectCentre = getRectangleCentre(rectangles[index]);
+				selectedId = rectanglesIds[index];
+			}
+			else {
+				currentMovingState = TMovingState::MS_Sizing;
+				SelectDrawableObject(rectanglesIds[index]);
+				startSize = rectangles[index];
+				lastSize = startSize;
+				selectedId = rectanglesIds[index];
+			}
+			Redraw();
+			return;
+		}
+	}
+	for (int i = static_cast<int>(rectangles.size()) - 1; i >= 0; i--) {
+		if (contains(rectangles[i], point)) {
+			currentMovingState = TMovingState::MS_Moving;
+			startSize = rectangles[i];
+			lastSize = startSize;
+			SelectDrawableObject(rectanglesIds[i]);
+			selectedId = rectanglesIds[i];
+			Redraw();
+			return;
+		}
+	}
+	lastPoint = point;
+	selectedId = CObjectIdGenerator::GetEmptyId();
+	SelectDrawableObject(CObjectIdGenerator::GetEmptyId());
+	currentMovingState = TMovingState::MS_MovingCanvas;
+	wchar_t firstLetter = selectedId[0];
+	if (firstLetter == L't') {
+		DialogBox( GetModuleHandle(0), MAKEINTRESOURCE(IDD_DIALOG1), NULL, (DLGPROC)dialogProc );
+		ShowWindow(handle, SW_SHOW);
+	}
+}
+
+INT_PTR CEditorRenderingWindow::dialogProc(HWND hwnd, UINT msg, WPARAM wParam)
+{
+	switch (msg)
+	{
+		case WM_INITDIALOG:
+		{
+			return FALSE;
+		}
+		case WM_COMMAND:
+		{
+			switch (LOWORD(wParam))
+			{
+			case IDOK:
+			{
+				char buf[250];
+				GetDlgItemText(hwnd, IDC_EDIT1, (LPWSTR)buf, sizeof(buf));
+
+				return FALSE;
+			}
+			case IDCANCEL:
+			{
+				EndDialog(hwnd, 0);
+				return FALSE;
+			}
+			}
+		}
+		case WM_CLOSE:
+		{
+			EndDialog(hwnd, 0);
+			return FALSE;
+		}
+	}
+	return FALSE;
 }
