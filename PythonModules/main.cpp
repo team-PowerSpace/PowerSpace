@@ -137,7 +137,7 @@ static PyGetSetDef PythonDrawable_getseters[] = {
 
 static PyTypeObject engine_PythonDrawableType = {
 	PyVarObject_HEAD_INIT( NULL, 0 )
-	"Engine.CDrawable",             /* tp_name */
+	"Drawable",             /* tp_name */
 	sizeof( engine_PythonDrawableObject ), /* tp_basicsize */
 	0,                         /* tp_itemsize */
 	(destructor)PythonDrawable_dealloc,      /* tp_dealloc */

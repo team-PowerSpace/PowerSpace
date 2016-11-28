@@ -10,6 +10,7 @@ public:
     explicit CScriptEngine( CStage& _stage );
 
 	void LoadScene();
+	void ImportModules();
 	void AddPyObject( IdType name, IDrawablePtr description );
 	void AddPyScripts();
     // evaluates python scripts from "scripts", modifying the stage;

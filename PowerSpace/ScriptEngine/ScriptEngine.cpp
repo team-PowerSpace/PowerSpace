@@ -4,7 +4,7 @@
 #include <PyObjectBuilder.h>
 #include <CDrawableBuilder.h>
 #include "PyRunner.h"
-
+#include <Windows.h>
 
 CScriptEngine::CScriptEngine( CStage& _stage )
 	: stage( _stage ), isPythonRunning( false )
@@ -17,44 +17,45 @@ CScriptEngine::CScriptEngine( CStage& _stage )
 void CScriptEngine::LoadScene()
 {
 	PyObject* mainModule = PyImport_AddModule( "__main__" );
+	try {
+		ImportModules();
+	}
+	catch( std::string& e ) {
+		MessageBoxA( NULL, e.c_str(), "Error", NULL );
+	}
 	globalDictionary = PyModule_GetDict( mainModule );
-    localDictionary = PyDict_New();
-    auto fromList = PyList_New( 0 );
-    PyList_Append( fromList, PyUnicode_FromString( "*" ) );
-    PyImport_ImportModuleEx( "Engine", globalDictionary, localDictionary, fromList );
+	std::unordered_map<IdType, IDrawablePtr>& objects = stage.GetObjects();
+	AddPyScripts();
+	for( std::pair<IdType, IDrawablePtr> object : objects ) {		
+		AddPyObject(object.first, object.second);
+	}
+}
 
-    std::set<ScriptName> ScriptsToImport;
+void CScriptEngine::ImportModules()
+{
+	int result = 0;
+	result = PyRun_SimpleString( "from PythonDrawable import Drawable" );
+	if( result != 0 ) {
+		throw "Can't import PythonDrawable module";
+	}
+	std::set<ScriptName> ScriptsToImport;
 	std::unordered_map<IdType, IDrawablePtr>& objects = stage.GetObjects();
 
 	for( auto obj : objects ) {
 		auto scripts = obj.second->GetScripts();
 		for( auto script : scripts ) {
-			ScriptsToImport.insert(script.GetName());
-		}			
+			ScriptsToImport.insert( script.GetName() );
+		}
 	}
 	for( auto script : ScriptsToImport ) {		
-        //PyObject* module = PyUnicode_FromUnicode( script.c_str(), script.size() );
-        //PyObject* module = PyUnicode_FromString( std::string(script.begin(), script.end()).c_str() );
+		std::string scriptName = std::string( script.begin(), script.end() );
+		std::string importCommand = std::string( "from " ) + scriptName + std::string( " import " ) + scriptName;
+		result =  PyRun_SimpleString( importCommand.c_str() );
+		if( result != 0 ) {
+			throw "Can't import " + scriptName + " module";
+		}		
+	}
 
-        auto tmp = std::wstring( L"import " ) + script;
-        std::string constructorScriptASCII = std::string( tmp.begin(), tmp.end() );
-        //PyObject* localDictionary = PyDict_New();
-        //PyObject* result = PyRun_String( constructorScriptASCII.c_str(), Py_file_input, globalDictionary, localDictionary );
-        //assert( result != 0 );
-		//auto pModule = PyImport_Import( module );
-        PyRun_SimpleString(constructorScriptASCII.c_str());
-        
-        auto moduleName = std::string( script.begin(), script.end() ).c_str();
-        PyImport_ImportModuleEx( moduleName, globalDictionary, localDictionary, fromList);
-        /*auto res1 = PyObject_HasAttrString( pModule, "class_lights" );
-        assert( res1 != 0 );
-        assert( pModule != 0 );*/
-	}
-	
-	AddPyScripts();
-	for( std::pair<IdType, IDrawablePtr> object : objects ) {		
-		AddPyObject(object.first, object.second);
-	}
 }
 
 void CScriptEngine::AddPyScripts()
