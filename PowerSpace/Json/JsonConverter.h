@@ -11,27 +11,27 @@ class CJsonConverter
 {
 public:
 
-	static std::shared_ptr<CStage> FromJson( const CJsonMap& object);
+    static std::shared_ptr<CStage> FromJson( const CJsonMap& object);
 
-	static IJsonPtr ToJsonObject( const CStage& stage );
+    static IJsonPtr ToJsonObject( const CStage& stage );
 
-	static IJsonPtr ToJsonObject( const CViewport& viewPort );
+    static IJsonPtr ToJsonObject( const CViewport& viewPort );
 
-	static IJsonPtr ToJsonObject( const CRectangleObject& rectangle );
+    static IJsonPtr ToJsonObject( const CRectangleObject& rectangle );
 
-	static IJsonPtr ToJsonObject( const CTextBoxObject& text );
+    static IJsonPtr ToJsonObject( const CTextBoxObject& text );
 
-	static IJsonPtr ToJsonObject( const CEllipseObject& ellipse );
+    static IJsonPtr ToJsonObject( const CEllipseObject& ellipse );
 
-	static IJsonPtr ToJsonObject( const std::vector<IDrawablePtrConst>& objects );
+    static IJsonPtr ToJsonObject( const std::vector<IDrawablePtrConst>& objects );
 
-	static IJsonPtr ToJsonObject( const CScript& script );
+    static IJsonPtr ToJsonObject( const CScript& script );
 
-	static IJsonPtr ToJsonObject( const std::vector<CScript>& objects );
+    static IJsonPtr ToJsonObject( const std::vector<CScript>& objects );
 
-	static IJsonPtr ToJsonObject( const TBox& box );
+    static IJsonPtr ToJsonObject( const TBox& box );
 
-	static IJsonPtr ToJsonObject( const TPoint& point );
+    static IJsonPtr ToJsonObject( const TPoint& point );
 
     static const std::wstring JSON_OBJECT_NAME_ANGLE;
     static const std::wstring JSON_OBJECT_NAME_BOTTOM;

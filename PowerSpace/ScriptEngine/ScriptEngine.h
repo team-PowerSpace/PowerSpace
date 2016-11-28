@@ -8,15 +8,15 @@ class CScriptEngine
 public:
     explicit CScriptEngine( CStage& _stage );
 
-	void LoadScene();
-	void AddPyObject( IdType name, IDrawablePtr description );
+    void LoadScene();
+    void AddPyObject( IdType name, IDrawablePtr description );
     // evaluates python scripts from "scripts", modifying the stage;
     // objectId - id of the object, which caused the event
     // returns the vector of objects that were modified during the evaluation of the scripts
     std::vector<int> RunScripts(IdType objectId, EventType type, std::vector<PyObject*> scripts);
 private:
-	bool isPythonRunning; // boolean parameter to set when we start the python running
+    bool isPythonRunning; // boolean parameter to set when we start the python running
     CStage& stage;
-	std::map<IdType, PyObject*> pyScene;
-	PyObject* globalDictionary;	
+    std::map<IdType, PyObject*> pyScene;
+    PyObject* globalDictionary;    
 };

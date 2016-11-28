@@ -9,7 +9,7 @@ enum ColorBufferActionType { RestoreColor, SetColor };
 
 enum TMovingState_Viewer
 {
-	MSV_None, MSV_MovingCanvas
+    MSV_None, MSV_MovingCanvas
 };
 
 // win32 window of the viewer module
@@ -17,70 +17,70 @@ enum TMovingState_Viewer
 class CViewerWindow
 {
 public:
-	CViewerWindow( CStage& stage, CViewport& _viewport, CCanvas& _canvas );
-	~CViewerWindow();
+    CViewerWindow( CStage& stage, CViewport& _viewport, CCanvas& _canvas );
+    ~CViewerWindow();
 
-	// all the WinAPI stuff
-	static bool RegisterClass();
+    // all the WinAPI stuff
+    static bool RegisterClass();
 
-	bool Create();
+    bool Create();
 
-	void Show() const;
+    void Show() const;
 
-	HWND GetHandle() const;
+    HWND GetHandle() const;
 
 private:
-	HWND handle;
-	HBITMAP bitmap;
-	HDC bitmapContext;
-	HBRUSH backgroundBrush;
-	HACCEL haccel;
+    HWND handle;
+    HBITMAP bitmap;
+    HDC bitmapContext;
+    HBRUSH backgroundBrush;
+    HACCEL haccel;
 
-	CViewport& viewport;
-	const CCanvas& canvas;
-	CStage& stage;
-	CScriptEngine scriptEngine;
+    CViewport& viewport;
+    const CCanvas& canvas;
+    CStage& stage;
+    CScriptEngine scriptEngine;
 
-	static const wchar_t* ClassName; // win32 features
-	static const wchar_t* ViewerApplicationName;
+    static const wchar_t* ClassName; // win32 features
+    static const wchar_t* ViewerApplicationName;
 
-	const int windowHeight; // window params
-	const int windowWidth;
-	int bitmapWidth; // canvas params
-	int bitmapHeight;
-	TMovingState_Viewer currentMovingState; // for drag'n'drop on canvas
-	POINT prevPoint, canvasPoint;
+    const int windowHeight; // window params
+    const int windowWidth;
+    int bitmapWidth; // canvas params
+    int bitmapHeight;
+    TMovingState_Viewer currentMovingState; // for drag'n'drop on canvas
+    POINT prevPoint, canvasPoint;
 
-	IdType activeId; // id of currently active object
-	int colorBuf; // Bufferized color of object for clever selection
+    IdType activeId; // id of currently active object
+    int colorBuf; // Bufferized color of object for clever selection
 
-	bool viewerIsRunning; // Pause/Play indicator
+    bool viewerIsRunning; // Pause/Play indicator
 
-	static LRESULT __stdcall WindowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
+    static LRESULT __stdcall WindowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
 
-	void onCreate();
+    void onCreate();
 
-	void onClose();
+    void onClose();
 
-	void onTimer();
+    void onTimer();
 
-	void onPaint();
+    void onPaint();
 
-	void onSize();
+    void onSize();
 
-	void onMouseMove( const WPARAM wParam, const LPARAM lParam );
+    void onMouseMove( const WPARAM wParam, const LPARAM lParam );
 
-	void onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lParam );
+    void onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lParam );
 
-	void onCommand( WPARAM wParam, LPARAM lParam );
+    void onCommand( WPARAM wParam, LPARAM lParam );
 
-	void enableTimer( int timeDelay, int timerId = 0 );
+    void enableTimer( int timeDelay, int timerId = 0 );
 
-	void disableTimer( int timerId = 0 );
+    void disableTimer( int timerId = 0 );
 
-	POINT getMouseCoords( LPARAM lParam );
+    POINT getMouseCoords( LPARAM lParam );
 
-	bool isPointInBox( TBox box, POINT point );
+    bool isPointInBox( TBox box, POINT point );
 
-	void updateColorWithBuffer( IdType prevActiveId, ColorBufferActionType actionType );
+    void updateColorWithBuffer( IdType prevActiveId, ColorBufferActionType actionType );
 };
