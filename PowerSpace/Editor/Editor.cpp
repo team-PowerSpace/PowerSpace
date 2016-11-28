@@ -358,12 +358,11 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 
 void CEditor::OnCommand( WPARAM wParam, LPARAM lParam )
 {
-    switch( HIWORD( wParam ) ) {
-    case 0:
-    {
+    if( HIWORD( wParam ) == 0 ) {
         OnCommandMenu( wParam, lParam );
-        break;
-    }
+        // return focus to the rendering window
+        // now it can process mouse wheel again
+        ::SetFocus( renderingWindow.GetHandle() );
     }
 }
 

@@ -168,6 +168,7 @@ LRESULT CEditorRenderingWindow::WindowProc( HWND handle, UINT message, WPARAM wP
         RECT area;
         ::GetClientRect( handle, &area );
         wndPtr->onResize( &area );
+        ::SetFocus( handle );
         return result;
     }
     case WM_MOUSEMOVE:
