@@ -4,7 +4,7 @@
 const wchar_t* CViewerWindow::ClassName = L"CViewerWindow";
 const wchar_t* CViewerWindow::ViewerApplicationName = L"Powerspace Viewer";
 const COLORREF CViewerWindow::backgroundColor = RGB( 255, 255, 255 );
-const UINT TICK_LENGTH = 1000;
+const UINT TICK_LENGTH = 100;
 const double SPEED_MULTIPLIER = 1.1;
 UINT SPEED = TICK_LENGTH;
 
@@ -180,6 +180,9 @@ void CViewerWindow::onTimer()
 	if( !viewerIsRunning )
 		return;
 
+	// testing the on-tick rotation
+	viewport.SetAngle( viewport.GetAngle() + 0.1 );
+
 	for( auto pair : stage.GetObjects() ) {
 		//auto scripts = pair.second->GetScripts( EventType::EventTick );
 		auto scripts = stage.getScripts( activeId, EventType::EventTick );
@@ -208,23 +211,21 @@ void CViewerWindow::onPaint()
 	int viewportWidth = rect.right - rect.left;
 	int viewportHeight = rect.bottom - rect.top;
 
-	fillBackground( bitmapContext, viewportWidth, viewportHeight );
+	int radius = static_cast<int>(sqrt( pow( viewportHeight, 2 ) + pow( viewportWidth, 2 ) ));
 
-	//int radius = static_cast<int>(sqrt( pow( viewportHeight, 2 ) + pow( viewportWidth, 2 ) ));
+	int renderSize = 2 * radius;
 
-	//int renderSize = 2 * radius;
+	fillBackground( bitmapContext, renderSize, renderSize );
 
 	//HDC Memhdc = ::CreateCompatibleDC( hdc );
 	//HBITMAP Membitmap = ::CreateCompatibleBitmap( hdc, viewportWidth, viewportHeight );
 	//::SelectObject( Memhdc, Membitmap );
-	//
-	//HBRUSH canvasBrush = ::CreateHatchBrush( HS_CROSS, BLUE_FOR_CANVAS_CROSS );
-
-	//::FillRect( Memhdc, &paintStruct.rcPaint, canvasBrush );
 
 	stage.ClipAndDrawObjects( bitmapContext, viewport );
 
-	BOOL result = ::BitBlt( hdc, 0, 0, viewportWidth, viewportHeight, bitmapContext, 0, 0, SRCCOPY );
+	rotateWorld( hdc );
+
+	BOOL result = ::BitBlt( hdc, 0, 0, renderSize, renderSize, bitmapContext, 0, 0, SRCCOPY );
 	if( !result ) {
 		::MessageBox( handle, L"BitBlt : onPaint() : CViewerWindow", L"Error", MB_ICONERROR );
 		::PostQuitMessage( NULL );
@@ -260,6 +261,8 @@ void CViewerWindow::onSize()
 
 	::ReleaseDC( handle, tmp );
 	::DeleteDC( tmp );
+
+	redraw();
 }
 
 void CViewerWindow::onMouseMove( const WPARAM wParam, const LPARAM lParam )
@@ -486,4 +489,20 @@ void CViewerWindow::fillBackground( HDC hdc, const int width, const int height )
 	clientContext.left = 0;
 	clientContext.top = 0;
 	FillRect( hdc, &clientContext, backgroundBrush );
+}
+
+void CViewerWindow::rotateWorld( HDC thisBitmapContext )
+{
+	float cosine = static_cast<float>(cos( viewport.GetAngle() ));
+	float sine = static_cast<float>(sin( viewport.GetAngle() ));
+
+	SetGraphicsMode( thisBitmapContext, GM_ADVANCED );
+	XFORM xForm;
+	xForm.eM11 = static_cast<float>( cosine );
+	xForm.eM12 = static_cast<float>( sine );
+	xForm.eM21 = static_cast<float>( -sine );
+	xForm.eM22 = static_cast<float>( cosine );
+	xForm.eDx = static_cast<float>( 0.0 );
+	xForm.eDy = static_cast<float>( 0.0 );
+	::SetWorldTransform( thisBitmapContext, &xForm );
 }

@@ -86,4 +86,6 @@ private:
 	void redraw() const;
 
 	void fillBackground( HDC paintDC, const int width, const int height ) const;
+
+	void rotateWorld( HDC thisBitmapContext );
 };
