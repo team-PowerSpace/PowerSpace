@@ -2,8 +2,17 @@
 #include "Drawable.h"
 
 //Event All should be carefully changed with click, when the model of scripts will be defined
-CDrawable::CDrawable( COLORREF _color, TBox _box, double _angle, bool needGenerateId = true )
-	: color( _color ), containingBox( _box ), angle( _angle ),  scripts( )
+CDrawable::CDrawable( COLORREF _color, TBox _box, double _angle, bool needGenerateId, COLORREF _borderColor) :
+    color( _color ), containingBox( _box ), angle( _angle ), borderColor( _borderColor )
+{
+    if( needGenerateId ) {
+        id = CObjectIdGenerator::GenerateNewId<CDrawable>();
+    }
+}
+
+CDrawable::CDrawable( COLORREF _color, TBox _box, double _angle, const std::vector<CScript>& _scripts,
+    bool needGenerateId, COLORREF _borderColor ) :
+    color( _color ), containingBox( _box ), angle( _angle ), scripts(_scripts), borderColor( _borderColor )
 {
     if( needGenerateId ) {
         id = CObjectIdGenerator::GenerateNewId<CDrawable>();

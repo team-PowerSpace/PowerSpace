@@ -7,7 +7,7 @@ class CViewer
 public:
     // construct viewer object on the base of stage;
     // viewer must have its own copy of the stage since it can modify objects while running scripts.
-    CViewer( CStage _stage, CViewport _viewport, CScriptHolder _holder );
+    CViewer( CStage _stage);
     ~CViewer();
 
     // create win32 window

@@ -20,9 +20,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     }
 
     std::shared_ptr<CStage> stage = std::make_shared<CStage>();
-    std::shared_ptr<CScriptHolder> holder = std::make_shared<CScriptHolder>();
     window.SetStage( stage );
-    window.SetHolder( holder );
     window.Show( nCmdShow );
 
     MSG message;

@@ -114,19 +114,3 @@ IJsonPtr CStage::ToJson() const
 {
     return CJsonConverter::ToJsonObject( *this );
 }
-
-void CStage::addScript( EventType type, IdType objectId, CScript script )
-{
-    scripts.addScript( std::pair<IdType, EventType>( objectId, type ), script );
-}
-
-std::vector<PyObject*> CStage::getScripts( IdType objId, EventType eventType )
-{
-    return scripts.getScript( std::pair<IdType, EventType>( objId, eventType ) );
-}
-
-void CStage::decScriptRefs()
-{
-    scripts.decAllRefs();
-}
-

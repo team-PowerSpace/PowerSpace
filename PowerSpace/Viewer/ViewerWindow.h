@@ -15,7 +15,7 @@ enum TMovingState_Viewer
 class CViewerWindow
 {
 public:
-    CViewerWindow( CStage& stage, CViewport& _viewport, CCanvas& _canvas, CScriptHolder& );
+    CViewerWindow( CStage& stage, CCanvas& _canvas );
     ~CViewerWindow();
 
     // all the WinAPI stuff
@@ -36,10 +36,9 @@ private:
     HBRUSH backgroundBrush;
     HACCEL haccel;
 
-    const CViewport& viewport;
+    CViewport& viewport;
     const CCanvas& canvas;
     CStage& stage;
-    CScriptHolder& holder;
     CScriptEngine scriptEngine;
 
     static const wchar_t* ClassName; // win32 features
@@ -89,8 +88,6 @@ private:
     POINT getMouseCoords( LPARAM lParam );
 
     bool isPointInBox( TBox box, POINT point );
-
-    void updateColorWithBuffer( IdType prevActiveId, ColorBufferActionType actionType );
 
     void redraw() const;
 

@@ -8,10 +8,10 @@ const UINT TICK_LENGTH = 100;
 const double SPEED_MULTIPLIER = 1.1;
 UINT SPEED = TICK_LENGTH;
 
-CViewerWindow::CViewerWindow( CStage& _stage, CViewport& _viewport, CCanvas& _canvas, CScriptHolder& _holder ) :
-	windowHeight( 600 ), windowWidth( 800 ), viewport( _viewport ), canvas( _canvas ), holder(_holder),
-	handle( nullptr ), stage( _stage ), scriptEngine( stage ), activeId( CObjectIdGenerator::GetEmptyId() ), colorBuf( -1 ),
-	viewerIsRunning( true )
+CViewerWindow::CViewerWindow( CStage& _stage, CCanvas& _canvas ) :
+    windowHeight( 600 ), windowWidth( 800 ), viewport( _stage.GetViewPort() ), canvas( _canvas ),
+    handle( nullptr ), stage( _stage ), scriptEngine( stage ), activeId( CObjectIdGenerator::GetEmptyId() ), colorBuf( -1 ),
+    viewerIsRunning( true ), currentMovingState( MSV_None )
 {}
 
 CViewerWindow::~CViewerWindow()
@@ -186,15 +186,12 @@ void CViewerWindow::onTimer()
         for( auto script : scripts ) {
             names.push_back( script.GetName() );
         }
-		updateColorWithBuffer( activeId, ColorBufferActionType::RestoreColor );
 		if( !scripts.empty() ) {
 			MessageBoxW( NULL, activeId.c_str(), L"Viewer", NULL );
 			scriptEngine.RunScripts( activeId, EventType::EventTick, names );
 		}
-		updateColorWithBuffer( activeId, ColorBufferActionType::SetColor );
 	}
-
-	redraw();
+	Redraw();
 }
 
 //
@@ -371,18 +368,8 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
         currentMovingState = TMovingState_Viewer::MSV_None;
     }
 
-    // same active object as before => no action needed
-    // // Strange behaviour. May be I want to change cycled colors,
-    // // this way, I have to change focus every time. 
-    // // Following code will be commented until the discussion.
-    // if( activeId == prevActiveId )
-    //     return;
-
     // clicked on new object => have to process it
-    updateColorWithBuffer( prevActiveId, ColorBufferActionType::RestoreColor );
     if( activeId != CObjectIdGenerator::GetEmptyId() ) {
-
-        updateColorWithBuffer( activeId, ColorBufferActionType::SetColor );
 
         auto scripts = stage.GetObjectById( activeId )->GetScripts();
         auto names = std::vector<IdType>();
@@ -393,8 +380,7 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
             scriptEngine.RunScripts( activeId, EventType::EventClick, names );
         }
     }
-    updateColorWithBuffer( prevActiveId, ColorBufferActionType::SetColor );
-    redraw();
+    Redraw();
 }
 
 void CViewerWindow::onMouseWheel( WPARAM wParam )
@@ -475,27 +461,6 @@ void CViewerWindow::enableTimer( int timeDelay, int timerId )
 void CViewerWindow::disableTimer( int timerId )
 {
     ::KillTimer( handle, timerId );
-}
-
-void CViewerWindow::updateColorWithBuffer( IdType prevActiveId, ColorBufferActionType actionType )
-{
-	switch( actionType ) {
-	case ColorBufferActionType::RestoreColor:
-	{
-		if( prevActiveId != CObjectIdGenerator::GetEmptyId() ) {
-			stage.GetObjectById( prevActiveId )->SetColor( colorBuf );
-		}
-		break;
-	}
-	case ColorBufferActionType::SetColor:
-	{
-		if( activeId != CObjectIdGenerator::GetEmptyId() ) {
-			colorBuf = stage.GetObjectById( activeId )->GetColor();
-			stage.GetObjectById( activeId )->SetColor( static_cast<COLORREF> (colorBuf * 0.5) );
-		}
-		break;
-	}
-	}
 }
 
 void CViewerWindow::redraw() const

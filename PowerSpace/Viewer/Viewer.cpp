@@ -1,14 +1,17 @@
 #include <stdafx.h>
 #include "Viewer.h"
 
-CViewer::CViewer( CStage _stage, CViewport _viewport, CScriptHolder _holder )
-    : stage( _stage ), canvas(), viewport( _viewport ), holder( _holder ), \
-    viewerWindow( stage, viewport, canvas, holder )
+CViewer::CViewer( CStage _stage )
+    : stage( _stage ), canvas(), viewerWindow( stage, canvas )
 {}
 
 CViewer::~CViewer()
 {
-    Py_Finalize(); //shutting down Python here
+    try {
+        Py_Finalize(); //shutting down Python here
+    } catch( ... ) {
+        ::MessageBox(0, L"Python finalization crashed", L"Crash", MB_OK);
+    }
 }
 
 bool CViewer::Create()

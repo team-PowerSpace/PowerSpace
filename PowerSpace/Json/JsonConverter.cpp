@@ -69,7 +69,7 @@ IJsonPtr CJsonConverter::ToJsonObject( const CRectangleObject &rectangle )
     jRectangle->objects[JSON_OBJECT_NAME_ID] = std::make_shared<CJsonWString>( JSON_OBJECT_NAME_ID, std::wstring( rectangle.GetId() ) );
     jRectangle->objects[JSON_OBJECT_NAME_COLOR] = std::make_shared<CJsonWString>( JSON_OBJECT_NAME_COLOR, std::to_wstring( rectangle.GetColor() ) );
     jRectangle->objects[JSON_OBJECT_NAME_BOX] = ToJsonObject( rectangle.GetContainingBox() );
-    jRectangle->objects[JSON_OBJECT_NAME_SCRIPTS] = ToJsonObject( rectangle.GetScripts( EventType::EventAll ) );
+    jRectangle->objects[JSON_OBJECT_NAME_SCRIPTS] = ToJsonObject( rectangle.GetScripts() );
     return jRectangle;
 }
 
@@ -79,7 +79,7 @@ IJsonPtr CJsonConverter::ToJsonObject( const CTextBoxObject &text )
     jText->objects[JSON_OBJECT_NAME_ID] = std::make_shared<CJsonWString>( JSON_OBJECT_NAME_ID, std::wstring( text.GetId() ) );
     jText->objects[JSON_OBJECT_NAME_COLOR] = std::make_shared<CJsonWString>( JSON_OBJECT_NAME_COLOR, std::to_wstring( text.GetColor() ) );
     jText->objects[JSON_OBJECT_NAME_BOX] = ToJsonObject( text.GetContainingBox() );
-    jText->objects[JSON_OBJECT_NAME_SCRIPTS] = ToJsonObject( text.GetScripts( EventType::EventAll ) );
+    jText->objects[JSON_OBJECT_NAME_SCRIPTS] = ToJsonObject( text.GetScripts() );
     jText->objects[JSON_OBJECT_NAME_CONTENT] = std::make_shared<CJsonWString>( JSON_OBJECT_NAME_CONTENT, text.GetContents() );
     return jText;
 }
@@ -90,7 +90,7 @@ IJsonPtr CJsonConverter::ToJsonObject( const CEllipseObject &ellipse )
     jEllipse->objects[JSON_OBJECT_NAME_ID] = std::make_shared<CJsonWString>( JSON_OBJECT_NAME_ID, std::wstring( ellipse.GetId() ) );
     jEllipse->objects[JSON_OBJECT_NAME_COLOR] = std::make_shared<CJsonWString>( JSON_OBJECT_NAME_COLOR, std::to_wstring( ellipse.GetColor() ) );
     jEllipse->objects[JSON_OBJECT_NAME_BOX] = ToJsonObject( ellipse.GetContainingBox() );
-    jEllipse->objects[JSON_OBJECT_NAME_SCRIPTS] = ToJsonObject( ellipse.GetScripts( EventType::EventAll ) );
+    jEllipse->objects[JSON_OBJECT_NAME_SCRIPTS] = ToJsonObject( ellipse.GetScripts() );
     return jEllipse;
 }
 

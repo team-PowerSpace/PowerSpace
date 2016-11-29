@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PowerSpace", "PowerSpace\PowerSpace.vcxproj", "{D53004EC-D910-474B-9216-469A4A765DB8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PythonModules", "PythonModules\PythonModules.vcxproj", "{5A01AC7A-EAC5-43B2-8DD4-1CAF9CD9EDD3}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PythonDrawable", "PythonModules\PythonModules.vcxproj", "{5A01AC7A-EAC5-43B2-8DD4-1CAF9CD9EDD3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

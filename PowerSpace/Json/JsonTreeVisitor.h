@@ -41,6 +41,6 @@ private:
     double objAngle = 0; // doesn't appear in Json, must be added later
     std::wstring objContents;
     IdType objId;
-    std::unordered_map<EventType, std::vector<CScript>> objScripts;
+    std::vector<CScript> objScripts;
 };
 
