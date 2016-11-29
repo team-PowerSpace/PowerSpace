@@ -27,7 +27,7 @@ bool CEditorWindow::RegisterClass()
 
     WNDCLASSEX windowClassInforamtion;
     windowClassInforamtion.cbSize = sizeof( WNDCLASSEX );
-    windowClassInforamtion.style = CS_HREDRAW | CS_VREDRAW;
+    windowClassInforamtion.style = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
     windowClassInforamtion.lpfnWndProc = WindowProc;
     windowClassInforamtion.cbClsExtra = 0;
     windowClassInforamtion.cbWndExtra = 2 * sizeof( LONG_PTR );

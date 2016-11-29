@@ -180,17 +180,15 @@ LRESULT CEditorRenderingWindow::WindowProc( HWND handle, UINT message, WPARAM wP
     {
         wndPtr->onMouseWheel( wParam );
         break;
-    }
+    } 
+	case WM_LBUTTONDBLCLK:
+	{
+		wndPtr->onDoubleClick( lParam );
+		break;
+	}
     case WM_LBUTTONDOWN:
     {
         wndPtr->onMouseDown( lParam );
-        break;
-    }
-    case WM_LBUTTONDBLCLK:
-    {
-        MessageBox(NULL, (LPCTSTR)"Двойной клик", (LPCWSTR)"Inform",
-            MB_OK | MB_ICONINFORMATION);
-        wndPtr->onDoubleClick( lParam );
         break;
     }
     case WM_MOUSELEAVE:
@@ -473,48 +471,17 @@ POINT CEditorRenderingWindow::getRectangleCentre( const RECT& rect ) const
 void CEditorRenderingWindow::onDoubleClick(const LPARAM lparam)
 {
     POINT point = getPointByLParam(lparam);
-    for (int i = static_cast<int>(markers.size()) - 1; i >= 0; i--) {
-        if (contains(markers[i].GetLocation(), point)) {
-            int index = markers[i].GetIndex();
-            sizingMarkerType = markers[i].GetType();
-            if (sizingMarkerType == TMarkerType::MT_Rotate) {
-                currentMovingState = TMovingState::MS_Rotating;
-                SelectDrawableObject(rectanglesIds[index]);
-                startAngle = angles[index];
-                lastAngle = startAngle;
-                rectCentre = getRectangleCentre(rectangles[index]);
-                selectedId = rectanglesIds[index];
-            }
-            else {
-                currentMovingState = TMovingState::MS_Sizing;
-                SelectDrawableObject(rectanglesIds[index]);
-                startSize = rectangles[index];
-                lastSize = startSize;
-                selectedId = rectanglesIds[index];
-            }
-            Redraw();
-            return;
-        }
-    }
     for (int i = static_cast<int>(rectangles.size()) - 1; i >= 0; i--) {
         if (contains(rectangles[i], point)) {
-            currentMovingState = TMovingState::MS_Moving;
-            startSize = rectangles[i];
-            lastSize = startSize;
             SelectDrawableObject(rectanglesIds[i]);
             selectedId = rectanglesIds[i];
-            Redraw();
-            return;
+			wchar_t firstLetter = selectedId[0];
+			if( firstLetter == L't' ) {
+				DialogBox( GetModuleHandle( 0 ), MAKEINTRESOURCE( IDD_DIALOG1 ), NULL, (DLGPROC)dialogProc );
+				ShowWindow( handle, SW_SHOW );
+			}
+			return;
         }
-    }
-    lastPoint = point;
-    selectedId = CObjectIdGenerator::GetEmptyId();
-    SelectDrawableObject(CObjectIdGenerator::GetEmptyId());
-    currentMovingState = TMovingState::MS_MovingCanvas;
-    wchar_t firstLetter = selectedId[0];
-    if (firstLetter == L't') {
-        DialogBox( GetModuleHandle(0), MAKEINTRESOURCE(IDD_DIALOG1), NULL, (DLGPROC)dialogProc );
-        ShowWindow(handle, SW_SHOW);
     }
 }
 
