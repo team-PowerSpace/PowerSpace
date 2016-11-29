@@ -82,10 +82,12 @@ private:
 	HWND saveTextButton;
 	HWND setColorButton;
 	HWND addScriptButton;
-	HWND setFontButtonText;
-	HWND saveTextButtonText;
-	HWND setColorButtonText;
-	HWND addScriptButtonText;
+	HWND editControlFont;
+	HWND editControlText;
+	HWND editControlColor;
+	HWND editControlScript;
+	HWND editControlNoFont;
+	HWND editControlNoText;
 
     COLORREF defaultObjectColor;
     std::shared_ptr<CStage> stage;

@@ -50,10 +50,12 @@ void CEditor::Show( int cmdShow )
 	ShowWindow( saveTextButton, SW_HIDE );
 	ShowWindow( setColorButton, SW_HIDE );
 	ShowWindow( addScriptButton, SW_HIDE );
-	ShowWindow( setFontButtonText, cmdShow );
-	ShowWindow( saveTextButtonText, cmdShow );
-	ShowWindow( setColorButtonText, cmdShow );
-	ShowWindow( addScriptButtonText, cmdShow );
+	ShowWindow( editControlFont, cmdShow );
+	ShowWindow( editControlText, cmdShow );
+	ShowWindow( editControlNoFont, SW_SHOW );
+	ShowWindow( editControlNoText, SW_SHOW );
+	ShowWindow( editControlColor, cmdShow );
+	ShowWindow( editControlScript, cmdShow );
 }
 
 std::shared_ptr<CStage>& CEditor::GetStage()
@@ -97,13 +99,17 @@ void CEditor::OnCreate()
 		10, 10, 100, 100, handle, (HMENU)IDC_MAIN_BUTTON,
 		*(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
 
-	setFontButtonText = CreateWindow( L"EDIT", L"Current Text", WS_VISIBLE | WS_CHILD,
+	editControlFont = CreateWindow( L"EDIT", L"Current Font", WS_VISIBLE | WS_CHILD,
 		110, 110, 100, 100, handle, NULL, *(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
-	saveTextButtonText = CreateWindow( L"EDIT", L"Save Text Text", WS_VISIBLE | WS_CHILD,
+	editControlText = CreateWindow( L"EDIT", L"Current Text", WS_VISIBLE | WS_CHILD,
 		110, 110, 100, 100, handle, NULL, *(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
-	setColorButtonText = CreateWindow( L"EDIT", L"Current Color", WS_VISIBLE | WS_CHILD,
+	editControlNoFont = CreateWindow( L"EDIT", L"None", WS_VISIBLE | WS_CHILD,
 		110, 110, 100, 100, handle, NULL, *(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
-	addScriptButtonText = CreateWindow( L"EDIT", L"Current Script", WS_VISIBLE | WS_CHILD,
+	editControlNoText = CreateWindow( L"EDIT", L"None", WS_VISIBLE | WS_CHILD,
+		110, 110, 100, 100, handle, NULL, *(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
+	editControlColor = CreateWindow( L"EDIT", L"Current Color", WS_VISIBLE | WS_CHILD,
+		110, 110, 100, 100, handle, NULL, *(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
+	editControlScript = CreateWindow( L"EDIT", L"Current Script", WS_VISIBLE | WS_CHILD,
 		110, 110, 100, 100, handle, NULL, *(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
 
 	//EnableWindow( editControl.GetHandle(), false );
@@ -111,10 +117,12 @@ void CEditor::OnCreate()
 	EnableWindow( saveTextButton, false );
 	EnableWindow( setColorButton, false );
 	EnableWindow( addScriptButton, false );
-	Edit_Enable( setFontButtonText, FALSE );
-	Edit_Enable( saveTextButtonText, FALSE );
-	Edit_Enable( setColorButtonText, FALSE );
-	Edit_Enable( addScriptButtonText, FALSE );
+	Edit_Enable( editControlFont, FALSE );
+	Edit_Enable( editControlText, FALSE );
+	Edit_Enable( editControlNoFont, FALSE );
+	Edit_Enable( editControlNoText, FALSE );
+	Edit_Enable( editControlColor, FALSE );
+	Edit_Enable( editControlScript, FALSE );
 }
 
 CEditor* CEditor::GetWindowByHandle( HWND handle )
@@ -134,6 +142,8 @@ void CEditor::SetActiveId( const IdType& id )
 		EnableWindow( saveTextButton, true );
 		ShowWindow( setFontButton, SW_SHOW );
 		ShowWindow( setColorButton, SW_SHOW );
+		ShowWindow( editControlNoFont, SW_HIDE );
+		ShowWindow( editControlNoText, SW_HIDE );
 		ShowWindow( addScriptButton, SW_SHOW );
 		ShowWindow( saveTextButton, SW_SHOW );
 	} else {
@@ -144,6 +154,8 @@ void CEditor::SetActiveId( const IdType& id )
 			EnableWindow( saveTextButton, false );
 			ShowWindow( setFontButton, SW_HIDE );
 			ShowWindow( setColorButton, SW_HIDE );
+			ShowWindow( editControlNoFont, SW_SHOW );
+			ShowWindow( editControlNoText, SW_SHOW );
 			ShowWindow( addScriptButton, SW_HIDE );
 			ShowWindow( saveTextButton, SW_HIDE );
 		} else {
@@ -153,6 +165,8 @@ void CEditor::SetActiveId( const IdType& id )
 			EnableWindow( saveTextButton, false );
 			ShowWindow( setFontButton, SW_HIDE );
 			ShowWindow( setColorButton, SW_SHOW );
+			ShowWindow( editControlNoFont, SW_SHOW );
+			ShowWindow( editControlNoText, SW_SHOW );
 			ShowWindow( addScriptButton, SW_SHOW );
 			ShowWindow( saveTextButton, SW_HIDE );
 		}
@@ -262,16 +276,18 @@ void CEditor::OnSize()
 	int widthOfButton = nWidth / RELATIVE_WIDTH / 2;
 	int yOfButton = nHeight * RELATIVE_WIDTH / RELATIVE_HEIGHT;
 	int cyOfButton = nHeight / RELATIVE_TOOLBAR;
-	SetWindowPos( editControl.GetHandle(), HWND_TOP, rect.left, currentTop, widthOfButton, yOfButton, 0 );
+	//SetWindowPos( editControl.GetHandle(), HWND_TOP, rect.left, currentTop, widthOfButton, yOfButton, 0 );
 	SetWindowPos( setFontButton, HWND_TOP, rect.left + widthOfButton, toolbarRect.bottom, widthOfButton, cyOfButton, 0 );
+	SetWindowPos( editControlNoFont, HWND_TOP, rect.left + widthOfButton + 1, toolbarRect.bottom + 1, widthOfButton - 2, cyOfButton, 0 );
 	SetWindowPos( saveTextButton, HWND_TOP, rect.left + widthOfButton, toolbarRect.bottom + cyOfButton, widthOfButton, cyOfButton, 0 );
+	SetWindowPos( editControlNoText, HWND_TOP, rect.left + widthOfButton + 1, toolbarRect.bottom + 1 + cyOfButton, widthOfButton - 2, cyOfButton, 0 );
 	SetWindowPos( setColorButton, HWND_TOP, rect.left + widthOfButton, toolbarRect.bottom + cyOfButton * 2, widthOfButton, cyOfButton, 0 );
 	SetWindowPos( addScriptButton, HWND_TOP, rect.left + widthOfButton, toolbarRect.bottom + cyOfButton * 3, widthOfButton, cyOfButton, 0 );
 
-	SetWindowPos( setFontButtonText, HWND_TOP, rect.left + 1, toolbarRect.bottom + 1, widthOfButton - 2, cyOfButton - 2, 0 );
-	SetWindowPos( saveTextButtonText, HWND_TOP, rect.left + 1, toolbarRect.bottom + 1 + cyOfButton, widthOfButton - 2, cyOfButton - 2, 0 );
-	SetWindowPos( setColorButtonText, HWND_TOP, rect.left + 1, toolbarRect.bottom + 1 + cyOfButton * 2, widthOfButton - 2, cyOfButton - 2, 0 );
-	SetWindowPos( addScriptButtonText, HWND_TOP, rect.left + 1, toolbarRect.bottom + 1 + cyOfButton * 3, widthOfButton - 2, cyOfButton - 2, 0 );
+	SetWindowPos( editControlFont, HWND_TOP, rect.left + 1, toolbarRect.bottom + 1, widthOfButton - 2, cyOfButton - 2, 0 );
+	SetWindowPos( editControlText, HWND_TOP, rect.left + 1, toolbarRect.bottom + 1 + cyOfButton, widthOfButton - 2, cyOfButton - 2, 0 );
+	SetWindowPos( editControlColor, HWND_TOP, rect.left + 1, toolbarRect.bottom + 1 + cyOfButton * 2, widthOfButton - 2, cyOfButton - 2, 0 );
+	SetWindowPos( editControlScript, HWND_TOP, rect.left + 1, toolbarRect.bottom + 1 + cyOfButton * 3, widthOfButton - 2, cyOfButton - 2, 0 );
 
 	SendMessage(handleToolbar, TB_AUTOSIZE, 0, 0);
 }
