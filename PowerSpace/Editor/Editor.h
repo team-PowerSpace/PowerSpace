@@ -79,9 +79,13 @@ private:
     CEditorWindow renderingWindow;
     CEditControlWindow editControl;
 	HWND setFontButton;
-    HWND saveTextButton;
-    HWND setColorButton;
-    HWND addScriptButton;
+	HWND saveTextButton;
+	HWND setColorButton;
+	HWND addScriptButton;
+	HWND setFontButtonText;
+	HWND saveTextButtonText;
+	HWND setColorButtonText;
+	HWND addScriptButtonText;
 
     COLORREF defaultObjectColor;
     std::shared_ptr<CStage> stage;

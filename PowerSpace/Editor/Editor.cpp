@@ -1,4 +1,4 @@
-#include <stdafx.h>
+﻿#include <stdafx.h>
 #include <iostream>
 #include <fstream>
 #include "Editor.h"
@@ -10,6 +10,7 @@
 #include "JsonConverter.h"
 #include "ScriptEditor.h"
 #include <JsonWorker.h>
+#include <Windowsx.h>
 #define IDC_MAIN_BUTTON 101 
 
 const int CEditor::defaultBoxMarginDividor = 4;
@@ -45,10 +46,14 @@ void CEditor::Show( int cmdShow )
 {
 	ShowWindow( handle, cmdShow );
 	renderingWindow.Show( cmdShow );
-	ShowWindow( setFontButton, cmdShow);
-	ShowWindow( saveTextButton, cmdShow );
-	ShowWindow( setColorButton, cmdShow );
-	ShowWindow( addScriptButton, cmdShow );
+	ShowWindow( setFontButton, SW_HIDE );
+	ShowWindow( saveTextButton, SW_HIDE );
+	ShowWindow( setColorButton, SW_HIDE );
+	ShowWindow( addScriptButton, SW_HIDE );
+	ShowWindow( setFontButtonText, cmdShow );
+	ShowWindow( saveTextButtonText, cmdShow );
+	ShowWindow( setColorButtonText, cmdShow );
+	ShowWindow( addScriptButtonText, cmdShow );
 }
 
 std::shared_ptr<CStage>& CEditor::GetStage()
@@ -75,29 +80,41 @@ void CEditor::OnNCCreate( HWND _handle )
 
 void CEditor::OnCreate()
 {
-	editControl.Create( handle );
+	//editControl.Create( handle );
 	CEditorWindow::RegisterClass();
 	menu = LoadMenu( GetModuleHandle( 0 ), MAKEINTRESOURCE( IDR_MENU1 ) );
 	renderingWindow.Create( handle );
-	setFontButton = CreateWindow(L"BUTTON", L"Set Font", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
+	setFontButton = CreateWindow( L"BUTTON", L"Set Font", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
 		10, 10, 100, 100, handle, (HMENU)IDC_MAIN_BUTTON,
-		*(HINSTANCE*)GetWindowLongPtr(handle, GWLP_HINSTANCE), NULL);
+		*(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
 	saveTextButton = CreateWindow( L"BUTTON", L"Save Text", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
 		10, 10, 100, 100, handle, (HMENU)IDC_MAIN_BUTTON,
 		*(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
 	setColorButton = CreateWindow( L"BUTTON", L"Set Color", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
 		10, 10, 100, 100, handle, (HMENU)IDC_MAIN_BUTTON,
-        *(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
+		*(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
 	addScriptButton = CreateWindow( L"BUTTON", L"Add Script", WS_TABSTOP | WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
 		10, 10, 100, 100, handle, (HMENU)IDC_MAIN_BUTTON,
-        *(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
+		*(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
 
-	EnableWindow( editControl.GetHandle(), false );
+	setFontButtonText = CreateWindow( L"EDIT", L"Current Text", WS_VISIBLE | WS_CHILD,
+		110, 110, 100, 100, handle, NULL, *(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
+	saveTextButtonText = CreateWindow( L"EDIT", L"Save Text Text", WS_VISIBLE | WS_CHILD,
+		110, 110, 100, 100, handle, NULL, *(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
+	setColorButtonText = CreateWindow( L"EDIT", L"Current Color", WS_VISIBLE | WS_CHILD,
+		110, 110, 100, 100, handle, NULL, *(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
+	addScriptButtonText = CreateWindow( L"EDIT", L"Current Script", WS_VISIBLE | WS_CHILD,
+		110, 110, 100, 100, handle, NULL, *(HINSTANCE*)GetWindowLongPtr( handle, GWLP_HINSTANCE ), NULL );
+
+	//EnableWindow( editControl.GetHandle(), false );
 	EnableWindow( setFontButton, false );
 	EnableWindow( saveTextButton, false );
 	EnableWindow( setColorButton, false );
 	EnableWindow( addScriptButton, false );
-
+	Edit_Enable( setFontButtonText, FALSE );
+	Edit_Enable( saveTextButtonText, FALSE );
+	Edit_Enable( setColorButtonText, FALSE );
+	Edit_Enable( addScriptButtonText, FALSE );
 }
 
 CEditor* CEditor::GetWindowByHandle( HWND handle )
@@ -109,21 +126,35 @@ void CEditor::SetActiveId( const IdType& id )
 {
 	activeId = id;
 	wchar_t firstLetter = id[0];
-	if ( firstLetter ==  L't') {
+	// Проверка на TextBox
+	if( firstLetter ==  L't') {
 		EnableWindow( setFontButton, true );
 		EnableWindow( setColorButton, true );
 		EnableWindow( addScriptButton, true );
-	}
-	else {
-		if (id == CObjectIdGenerator::GetEmptyId()) {
+		EnableWindow( saveTextButton, true );
+		ShowWindow( setFontButton, SW_SHOW );
+		ShowWindow( setColorButton, SW_SHOW );
+		ShowWindow( addScriptButton, SW_SHOW );
+		ShowWindow( saveTextButton, SW_SHOW );
+	} else {
+		if( id == CObjectIdGenerator::GetEmptyId() ) {
 			EnableWindow( setFontButton, false );
 			EnableWindow( setColorButton, false );
 			EnableWindow( addScriptButton, false );
-		}
-		else {
+			EnableWindow( saveTextButton, false );
+			ShowWindow( setFontButton, SW_HIDE );
+			ShowWindow( setColorButton, SW_HIDE );
+			ShowWindow( addScriptButton, SW_HIDE );
+			ShowWindow( saveTextButton, SW_HIDE );
+		} else {
 			EnableWindow( setFontButton, false );
 			EnableWindow( setColorButton, true );
 			EnableWindow( addScriptButton, true );
+			EnableWindow( saveTextButton, false );
+			ShowWindow( setFontButton, SW_HIDE );
+			ShowWindow( setColorButton, SW_SHOW );
+			ShowWindow( addScriptButton, SW_SHOW );
+			ShowWindow( saveTextButton, SW_HIDE );
 		}
 	}
 }
@@ -217,7 +248,7 @@ void CEditor::OnSize()
 	int middleX, nWidth, nHeight;
 	int RELATIVE_WIDTH = 3;
 	int RELATIVE_HEIGHT = 4;
-	int RELATIVE_TOOLBAR = 16;
+	int RELATIVE_TOOLBAR = 24;
 	::GetClientRect( handle, &rect );
 	middleX = (rect.left + rect.right) / RELATIVE_HEIGHT;
 	nWidth = (rect.right - rect.left) * RELATIVE_WIDTH / RELATIVE_HEIGHT;
@@ -228,14 +259,19 @@ void CEditor::OnSize()
 	nHeight = (rect.bottom - currentTop);
 
 	SetWindowPos( renderingWindow.GetHandle(), HWND_TOP, middleX, currentTop, nWidth, nHeight, 0 );
-	int widthOfButton = nWidth / RELATIVE_WIDTH;
+	int widthOfButton = nWidth / RELATIVE_WIDTH / 2;
 	int yOfButton = nHeight * RELATIVE_WIDTH / RELATIVE_HEIGHT;
 	int cyOfButton = nHeight / RELATIVE_TOOLBAR;
 	SetWindowPos( editControl.GetHandle(), HWND_TOP, rect.left, currentTop, widthOfButton, yOfButton, 0 );
-	SetWindowPos( setFontButton, HWND_TOP, rect.left, currentTop + yOfButton, widthOfButton, cyOfButton, 0 );
-	SetWindowPos( saveTextButton, HWND_TOP, rect.left, currentTop + yOfButton + cyOfButton, widthOfButton, cyOfButton, 0 );
-	SetWindowPos( setColorButton, HWND_TOP, rect.left, currentTop + yOfButton + cyOfButton * 2, widthOfButton, cyOfButton, 0 );
-	SetWindowPos( addScriptButton, HWND_TOP, rect.left, currentTop + yOfButton + cyOfButton * 3, widthOfButton, cyOfButton, 0 );
+	SetWindowPos( setFontButton, HWND_TOP, rect.left + widthOfButton, toolbarRect.bottom, widthOfButton, cyOfButton, 0 );
+	SetWindowPos( saveTextButton, HWND_TOP, rect.left + widthOfButton, toolbarRect.bottom + cyOfButton, widthOfButton, cyOfButton, 0 );
+	SetWindowPos( setColorButton, HWND_TOP, rect.left + widthOfButton, toolbarRect.bottom + cyOfButton * 2, widthOfButton, cyOfButton, 0 );
+	SetWindowPos( addScriptButton, HWND_TOP, rect.left + widthOfButton, toolbarRect.bottom + cyOfButton * 3, widthOfButton, cyOfButton, 0 );
+
+	SetWindowPos( setFontButtonText, HWND_TOP, rect.left + 1, toolbarRect.bottom + 1, widthOfButton - 2, cyOfButton - 2, 0 );
+	SetWindowPos( saveTextButtonText, HWND_TOP, rect.left + 1, toolbarRect.bottom + 1 + cyOfButton, widthOfButton - 2, cyOfButton - 2, 0 );
+	SetWindowPos( setColorButtonText, HWND_TOP, rect.left + 1, toolbarRect.bottom + 1 + cyOfButton * 2, widthOfButton - 2, cyOfButton - 2, 0 );
+	SetWindowPos( addScriptButtonText, HWND_TOP, rect.left + 1, toolbarRect.bottom + 1 + cyOfButton * 3, widthOfButton - 2, cyOfButton - 2, 0 );
 
 	SendMessage(handleToolbar, TB_AUTOSIZE, 0, 0);
 }
@@ -319,14 +355,14 @@ void CEditor::OnCommandMenu( WPARAM wParam, LPARAM lParam )
 		}
         case IDC_MAIN_BUTTON:
         {
-            if( (HWND)lParam == saveTextButton ) {
+			HWND button = reinterpret_cast<HWND>(lParam);
+			if( button == saveTextButton ) {
                 GetText();
-            } else if( (HWND)lParam == setColorButton ) {
+            } else if( button == setColorButton ) {
                 onColorSelect();
-            } else if( (HWND)lParam == addScriptButton ) {
+            } else if( button == addScriptButton ) {
                 onFileSelect();
-			}
-			else if ((HWND)lParam == setFontButton) {
+			} else if ( button == setFontButton ) {
 				onFontSelect();
 			}
             break;
