@@ -27,7 +27,7 @@ CScript::CScript( TPath _path )
 
 const TPath& CScript::GetPath() const
 {
-	return path;
+    return path;
 }
 
 ScriptName CScript::GetName() const
@@ -37,10 +37,10 @@ ScriptName CScript::GetName() const
 
 std::wstring CScript::ToWString() const
 {
-	return CJsonConverter::ToJsonObject( *this )->ToJson();
+    return CJsonConverter::ToJsonObject( *this )->ToJson();
 }
 
 IJsonPtr CScript::ToJson() const
 {
-	return CJsonConverter::ToJsonObject( *this );
+    return CJsonConverter::ToJsonObject( *this );
 }

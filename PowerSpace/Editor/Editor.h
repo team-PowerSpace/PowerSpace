@@ -57,6 +57,7 @@ protected:
     void OnSize();
     void GetText();
 
+    void OnOpen();
     void OnSave() const;
 
 private:

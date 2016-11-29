@@ -5,13 +5,13 @@
 
 #define MAX_RESOURCE_LENGTH 100
 
-const int CEditorRenderingWindow::DefaultHeight = 600;
-const int CEditorRenderingWindow::DefaultWidth = 1000;
-const int CEditorRenderingWindow::MarkerHalfSize = 5;
-const int CEditorRenderingWindow::RotateMarkerShift = 20;
-const COLORREF CEditorRenderingWindow::BackgroundColor = RGB( 255, 255, 255 );
-const COLORREF CEditorRenderingWindow::MarkerColor = RGB( 0, 0, 255 );
-const COLORREF CEditorRenderingWindow::AccentMarkerColor = RGB( 0, 255, 0 );
+const int CEditorRenderingWindow::defaultHeight = 600;
+const int CEditorRenderingWindow::defaultWidth = 1000;
+const int CEditorRenderingWindow::markerHalfSize = 5;
+const int CEditorRenderingWindow::rotateMarkerShift = 20;
+const COLORREF CEditorRenderingWindow::backgroundColor = RGB( 255, 255, 255 );
+const COLORREF CEditorRenderingWindow::markerColor = RGB( 0, 0, 255 );
+const COLORREF CEditorRenderingWindow::borderColor = RGB( 0, 0, 0 );
 
 Marker::Marker( const RECT& location, const TMarkerType type, const int id ) :
     location( location ), type( type ), index( id )
@@ -56,8 +56,7 @@ LPCTSTR Marker::GetCursor() const
 }
 
 CEditorRenderingWindow::CEditorRenderingWindow() :
-    bitmap( 0 ), bitmapContext( 0 ), bitmapHeight( 1 ), bitmapWidth( 1 ), backgroundBrush( 0 ),
-    markerBrush( 0 ), markerPen( 0 ), currentMovingState( MS_None )
+    bitmap( 0 ), bitmapContext( 0 ), bitmapHeight( 1 ), bitmapWidth( 1 ), backgroundBrush( 0 ), currentMovingState( MS_None )
 {
     canvasPoint.x = 0;
     canvasPoint.y = 0;
@@ -72,11 +71,10 @@ bool CEditorRenderingWindow::Create( HWND hWndParent, const wchar_t * classname 
         CW_USEDEFAULT, CW_USEDEFAULT, hWndParent, 0, instance, this );
 
     // Will be destroyed in OnDestroy
-    markerPen = CreatePen( PS_DASH, 1, MarkerColor );
-    markerBrush = CreateSolidBrush( MarkerColor );
-    accentMarkerPen = CreatePen( PS_DASH, 1, AccentMarkerColor );
-    accentMarkerBrush = CreateSolidBrush( AccentMarkerColor );
-    backgroundBrush = CreateSolidBrush( BackgroundColor );
+    markerPen = CreatePen( PS_SOLID, 1, markerColor );
+    markerBrush = CreateSolidBrush( markerColor );
+    backgroundBrush = CreateSolidBrush( backgroundColor );
+    borderPen = CreatePen( PS_SOLID, 1, borderColor );
 
     return (handle != 0);
 }
@@ -91,7 +89,7 @@ HWND CEditorRenderingWindow::GetHandle() const
     return handle;
 }
 
-void CEditorRenderingWindow::ReDraw() const
+void CEditorRenderingWindow::Redraw() const
 {
     RECT rect;
     GetClientRect( handle, &rect );
@@ -101,31 +99,31 @@ void CEditorRenderingWindow::ReDraw() const
 void CEditorRenderingWindow::OnDestroy()
 {
     destroyDoubleBuffer();
-    ::DeleteObject( backgroundBrush );
-    ::DeleteObject( markerBrush );
-    ::DeleteObject( markerPen );
-    ::DeleteObject( accentMarkerBrush );
-    ::DeleteObject( accentMarkerPen );
+    DeleteObject( backgroundBrush );
+    DeleteObject( markerBrush );
+    DeleteObject( markerPen );
+    DeleteObject( borderPen );
 
-    ::PostQuitMessage( 0 );
+    PostQuitMessage( 0 );
 }
 
 void CEditorRenderingWindow::DrawSizeableRectangle( HDC paintDC, const RECT & rectangle, const IdType& id, const double angle )
 {
     SelectObject( paintDC, GetStockObject( NULL_BRUSH ) );
     if( id == selectedId ) {
-        SelectObject( paintDC, accentMarkerPen );
-    } else {
         SelectObject( paintDC, markerPen );
+        Rectangle( paintDC, rectangle.left, rectangle.top, rectangle.right, rectangle.bottom );
     }
-    Rectangle( paintDC, rectangle.left, rectangle.top, rectangle.right, rectangle.bottom );
 
     rectangles.push_back( rectangle );
     rectanglesIds.push_back( id );
     angles.push_back( angle );
 
-    addMarkersForRectangle( paintDC, rectangle.left, rectangle.top, rectangle.right - rectangle.left,
-        rectangle.bottom - rectangle.top, id, static_cast<int>(rectangles.size() - 1) );
+    if( id == selectedId ) {
+        addMarkersForRectangle( paintDC, rectangle.left, rectangle.top, rectangle.right - rectangle.left,
+            rectangle.bottom - rectangle.top, id, static_cast<int>(rectangles.size() - 1) );
+    }
+    SelectObject( paintDC, borderPen );
 }
 
 LRESULT CEditorRenderingWindow::WindowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam )
@@ -170,6 +168,7 @@ LRESULT CEditorRenderingWindow::WindowProc( HWND handle, UINT message, WPARAM wP
         RECT area;
         ::GetClientRect( handle, &area );
         wndPtr->onResize( &area );
+        ::SetFocus( handle );
         return result;
     }
     case WM_MOUSEMOVE:
@@ -189,7 +188,9 @@ LRESULT CEditorRenderingWindow::WindowProc( HWND handle, UINT message, WPARAM wP
     }
     case WM_LBUTTONDBLCLK:
     {
-        wndPtr->onMouseDown( lParam );
+        MessageBox(NULL, (LPCTSTR)"Двойной клик", (LPCWSTR)"Inform",
+            MB_OK | MB_ICONINFORMATION);
+        wndPtr->onDoubleClick( lParam );
         break;
     }
     case WM_MOUSELEAVE:
@@ -269,18 +270,18 @@ void CEditorRenderingWindow::onMouseMove( const LPARAM lParam )
         SetCursor( LoadCursor( 0, IDC_SIZEALL ) );
         break;
     case TMovingState::MS_Rotating:
-        lastAngle += getAngleBetweenPoints( lastPoint, point, rectCentre );
+        lastAngle += getAngleBetweenPoints(lastPoint, point, rectCentre);
         RotateDrawableObject( selectedId, lastAngle );
         break;
     }
     lastPoint = point;
-    ReDraw();
+    Redraw();
 }
 
 void CEditorRenderingWindow::onMouseWheel( WPARAM wParam )
 {
     Scaling( static_cast<signed short>(HIWORD( wParam )) / WHEEL_DELTA );
-    ReDraw();
+    Redraw();
 }
 
 void CEditorRenderingWindow::onMouseDown( const LPARAM lparam )
@@ -304,7 +305,7 @@ void CEditorRenderingWindow::onMouseDown( const LPARAM lparam )
                 lastSize = startSize;
                 selectedId = rectanglesIds[index];
             }
-            ReDraw();
+            Redraw();
             return;
         }
     }
@@ -315,7 +316,7 @@ void CEditorRenderingWindow::onMouseDown( const LPARAM lparam )
             lastSize = startSize;
             SelectDrawableObject( rectanglesIds[i] );
             selectedId = rectanglesIds[i];
-            ReDraw();
+            Redraw();
             return;
         }
     }
@@ -366,18 +367,19 @@ void CEditorRenderingWindow::addMarkersForRectangle( HDC paintDC, const int x, c
     addMarker( paintDC, x + width / 2, y + height, TMarkerType::MT_Bottom, id, index );
     addMarker( paintDC, x, y + height, TMarkerType::MT_LeftBottom, id, index );
     addMarker( paintDC, x, y + height / 2, TMarkerType::MT_Left, id, index );
-    addMarker( paintDC, x + width / 2, y - RotateMarkerShift, TMarkerType::MT_Rotate, id, index );
+    addMarker( paintDC, x + width / 2, y - rotateMarkerShift, TMarkerType::MT_Rotate, id, index );
 }
 
 void  CEditorRenderingWindow::addMarker( HDC paintDC, const int x, const int y, const TMarkerType type, const IdType& id, const int index )
 {
     RECT location;
-    location.left = x - MarkerHalfSize;
-    location.top = y - MarkerHalfSize;
-    location.right = x + MarkerHalfSize;
-    location.bottom = y + MarkerHalfSize;
-    ::FillRect( paintDC, &location, ((id == selectedId) ? accentMarkerBrush : markerBrush) );
+    location.left = x - markerHalfSize;
+    location.top = y - markerHalfSize;
+    location.right = x + markerHalfSize;
+    location.bottom = y + markerHalfSize;
+    FillRect( paintDC, &location, markerBrush );
     markers.emplace_back( location, type, index );
+    UNREFERENCED_PARAMETER( id );
 }
 
 void CEditorRenderingWindow::destroyDoubleBuffer()
@@ -466,4 +468,87 @@ POINT CEditorRenderingWindow::getRectangleCentre( const RECT& rect ) const
 {
     POINT centre = { (rect.left + rect.right) / 2, (rect.bottom + rect.top) / 2 };
     return centre;
+}
+
+void CEditorRenderingWindow::onDoubleClick(const LPARAM lparam)
+{
+    POINT point = getPointByLParam(lparam);
+    for (int i = static_cast<int>(markers.size()) - 1; i >= 0; i--) {
+        if (contains(markers[i].GetLocation(), point)) {
+            int index = markers[i].GetIndex();
+            sizingMarkerType = markers[i].GetType();
+            if (sizingMarkerType == TMarkerType::MT_Rotate) {
+                currentMovingState = TMovingState::MS_Rotating;
+                SelectDrawableObject(rectanglesIds[index]);
+                startAngle = angles[index];
+                lastAngle = startAngle;
+                rectCentre = getRectangleCentre(rectangles[index]);
+                selectedId = rectanglesIds[index];
+            }
+            else {
+                currentMovingState = TMovingState::MS_Sizing;
+                SelectDrawableObject(rectanglesIds[index]);
+                startSize = rectangles[index];
+                lastSize = startSize;
+                selectedId = rectanglesIds[index];
+            }
+            Redraw();
+            return;
+        }
+    }
+    for (int i = static_cast<int>(rectangles.size()) - 1; i >= 0; i--) {
+        if (contains(rectangles[i], point)) {
+            currentMovingState = TMovingState::MS_Moving;
+            startSize = rectangles[i];
+            lastSize = startSize;
+            SelectDrawableObject(rectanglesIds[i]);
+            selectedId = rectanglesIds[i];
+            Redraw();
+            return;
+        }
+    }
+    lastPoint = point;
+    selectedId = CObjectIdGenerator::GetEmptyId();
+    SelectDrawableObject(CObjectIdGenerator::GetEmptyId());
+    currentMovingState = TMovingState::MS_MovingCanvas;
+    wchar_t firstLetter = selectedId[0];
+    if (firstLetter == L't') {
+        DialogBox( GetModuleHandle(0), MAKEINTRESOURCE(IDD_DIALOG1), NULL, (DLGPROC)dialogProc );
+        ShowWindow(handle, SW_SHOW);
+    }
+}
+
+INT_PTR CEditorRenderingWindow::dialogProc(HWND hwnd, UINT msg, WPARAM wParam)
+{
+    switch (msg)
+    {
+        case WM_INITDIALOG:
+        {
+            return FALSE;
+        }
+        case WM_COMMAND:
+        {
+            switch (LOWORD(wParam))
+            {
+            case IDOK:
+            {
+                char buf[250];
+                GetDlgItemText(hwnd, IDC_EDIT1, (LPWSTR)buf, sizeof(buf));
+
+                return FALSE;
+            }
+            case IDCANCEL:
+            {
+                EndDialog(hwnd, 0);
+                return FALSE;
+            }
+            }
+        }
+        case WM_CLOSE:
+        {
+            EndDialog(hwnd, 0);
+            return FALSE;
+        }
+    }
+    return FALSE;
 }

@@ -39,7 +39,7 @@ public:
     bool Create( HWND hWndParent, const wchar_t* classname );
     void Show( int cmdShow ) const;
     HWND GetHandle() const;
-    void ReDraw() const;
+    void Redraw() const;
 
 protected:
     void OnDestroy();
@@ -60,25 +60,25 @@ protected:
     virtual void RotateDrawableObject( const IdType& id, const double newAngle ) = 0;
 
     static LRESULT __stdcall WindowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
+    static INT_PTR CALLBACK dialogProc( HWND hwnd, UINT msg, WPARAM wParam );
 
 private:
-    static const int DefaultWidth;
-    static const int DefaultHeight;
-    static const int MarkerHalfSize;
-    static const int RotateMarkerShift;
-    static const COLORREF BackgroundColor;
-    static const COLORREF MarkerColor;
-    static const COLORREF AccentMarkerColor;
+    static const int defaultWidth;
+    static const int defaultHeight;
+    static const int markerHalfSize;
+    static const int rotateMarkerShift;
+    static const COLORREF backgroundColor;
+    static const COLORREF markerColor;
+    static const COLORREF borderColor;
 
     HWND handle;
     HWND dialog;
     HBITMAP bitmap;
     HDC bitmapContext;
     HBRUSH backgroundBrush;
+    HPEN borderPen;
     HBRUSH markerBrush;
     HPEN markerPen;
-    HBRUSH accentMarkerBrush;
-    HPEN accentMarkerPen;
 
     int bitmapWidth;
     int bitmapHeight;
@@ -108,6 +108,7 @@ private:
     void onMouseDown( const LPARAM lparam );
     void onMouseUpOrLeave( const LPARAM lparam );
     void onResize( const RECT* area );
+    void onDoubleClick( const LPARAM lParam );
 
     void drawEraseRectangle( HDC paintDC, const int width, const int height ) const;
 

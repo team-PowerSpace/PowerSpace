@@ -19,49 +19,66 @@ using JsonObjectDescription = struct
     JsonObjectType type;
 };
 
+class IJsonTreeVisitor;
+
 class IJsonObject
 {
 public:
     virtual ~IJsonObject() {}
 
     virtual JSON ToJson( int depth = 0 ) const = 0;
+    virtual void Accept( IJsonTreeVisitor& visitor ) const = 0;
+};
+
+class CJsonObject : IJsonObject
+{
+public:
+    virtual ~CJsonObject() {}
+
+    virtual JSON ToJson( int depth = 0 ) const = 0;
+    virtual void Accept( IJsonTreeVisitor& visitor ) const = 0;
 
     JsonName name;
 };
 
-using IJsonPtr = std::shared_ptr<IJsonObject>;
+using IJsonPtr = std::shared_ptr<CJsonObject>;
 
-
-class CJsonArray : public IJsonObject
+class CJsonArray : public CJsonObject
 {
 public:
-    virtual ~CJsonArray();
+    virtual ~CJsonArray() {}
     CJsonArray( const JsonName& _name, const JsonObjectBody& _body );
     CJsonArray( const JsonName& _name = L"" );
 
     JSON ToJson( int depth = 0 ) const;
 
+    void Accept( IJsonTreeVisitor& visitor ) const override;
+
     std::vector<IJsonPtr> objects;
 
 };
 
-class CJsonWString : public IJsonObject
+class CJsonWString : public CJsonObject
 {
 public:
-    virtual ~CJsonWString();
+    virtual ~CJsonWString() {}
     CJsonWString( const JsonName& _name, const JsonObjectBody& _body );
     JSON ToJson( int depth = 0 ) const;
+
+    void Accept( IJsonTreeVisitor& visitor ) const override;
 
     JsonContent content;
 };
 
-class CJsonMap : public IJsonObject
+class CJsonMap : public CJsonObject
 {
 public:
-    virtual ~CJsonMap();
+    virtual ~CJsonMap() {}
     CJsonMap( const JsonName& _name = L"" );
     CJsonMap( const JsonName& _name, const JsonObjectBody& _body );
     JSON ToJson( int depth = 0 ) const;
+
+    void Accept( IJsonTreeVisitor& visitor ) const override;
 
     std::unordered_map<JsonKey, IJsonPtr> objects;
 };

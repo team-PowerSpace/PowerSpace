@@ -161,6 +161,9 @@
     <ClInclude Include="Common\CScriptHolder.h">
       <Filter>Editor\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Json\JsonTreeVisitor.h">
+      <Filter>Json\Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PowerSpace.cpp">
@@ -243,6 +246,9 @@
     </ClCompile>
     <ClCompile Include="ScriptEngine\CDrawableBuilder.cpp">
       <Filter>ScriptEngine\Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Json\JsonTreeVisitor.cpp">
+      <Filter>Json\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

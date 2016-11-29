@@ -15,8 +15,8 @@ public:
     typedef struct
     {
         PyObject_HEAD
-            float scale;
-        float angle;
+            double scale;
+        double angle;
         int xPos, yPos;
     } engine_PythonViewportObject;
 
@@ -42,18 +42,18 @@ public:
 
     std::shared_ptr<PyObject> GetpObject() const;
 
-    static float PythonViewport_get_scale( engine_PythonViewportObject *self, void *closure );
+    static double PythonViewport_get_scale( engine_PythonViewportObject *self, void *closure );
 
-    static float PythonViewport_get_angle( engine_PythonViewportObject *self, void *closure );
+    static double PythonViewport_get_angle( engine_PythonViewportObject *self, void *closure );
 
     static int PythonViewport_get_xPos( engine_PythonViewportObject *self, void *closure );
 
     static int PythonViewport_get_yPos( engine_PythonViewportObject *self, void *closure );
 
     /*setters for the object*/
-    static int PythonViewport_set_scale( engine_PythonViewportObject *self, float value, void *closure );
+    static int PythonViewport_set_scale( engine_PythonViewportObject *self, double value, void *closure );
 
-    static int PythonViewport_set_angle( engine_PythonViewportObject *self, float value, void *closure );
+    static int PythonViewport_set_angle( engine_PythonViewportObject *self, double value, void *closure );
 
     static int PythonViewport_set_xPos( engine_PythonViewportObject *self, int value, void *closure );
 

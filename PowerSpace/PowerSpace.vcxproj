@@ -166,6 +166,7 @@
     <ClInclude Include="Editor\Editor.h" />
     <ClInclude Include="Editor\EditorWindow.h" />
     <ClInclude Include="Editor\EditorRenderingWindow.h" />
+    <ClInclude Include="Json\JsonTreeVisitor.h" />
     <ClInclude Include="Json\JsonConverter.h" />
     <ClInclude Include="Json\JsonObject.h" />
     <ClInclude Include="Json\JsonWorker.h" />
@@ -207,6 +208,7 @@
     </ClCompile>
     <ClCompile Include="Editor\EditorWindow.cpp" />
     <ClCompile Include="Editor\EditorRenderingWindow.cpp" />
+    <ClCompile Include="Json\JsonTreeVisitor.cpp" />
     <ClCompile Include="Json\JsonConverter.cpp" />
     <ClCompile Include="Json\JsonObject.cpp" />
     <ClCompile Include="Json\JsonWorker.cpp" />

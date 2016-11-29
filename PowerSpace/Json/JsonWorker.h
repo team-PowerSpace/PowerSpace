@@ -31,7 +31,7 @@ public:
         int depth
         );
 
-    static std::vector<std::shared_ptr<IJsonObject>> ReadObjects( const JSON& description );
+    static std::vector<IJsonPtr> ReadObjects( const JSON& description );
 
     static JsonObjectDescription GetNextObjectDescription( const JSON& description, JsonPosition position = 0 );
 
