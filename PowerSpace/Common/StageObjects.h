@@ -8,22 +8,22 @@ class CDrawable;
 class CRectangleObject : public CDrawable
 {
 public:
-	explicit CRectangleObject( COLORREF _color, TBox _box, double _angle );
+    explicit CRectangleObject( COLORREF _color, TBox _box, double _angle );
     CRectangleObject( COLORREF _color, TBox _box, double _angle, const std::unordered_map<EventType, std::vector<CScript>>& _scripts );
-	void Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const;
-	std::wstring ToWString() const;
-	IJsonPtr ToJson() const;
+    void Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const;
+    std::wstring ToWString() const;
+    IJsonPtr ToJson() const;
 };
 
 // object of the stage, represents an ellipse
 class CEllipseObject : public CDrawable
 {
 public:
-	explicit CEllipseObject( COLORREF _color, TBox _box, double _angle );
+    explicit CEllipseObject( COLORREF _color, TBox _box, double _angle );
     CEllipseObject( COLORREF _color, TBox _box, double _angle, const std::unordered_map<EventType, std::vector<CScript>>& _scripts );
-	void Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const;
-	std::wstring ToWString() const;
-	IJsonPtr ToJson() const;
+    void Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const;
+    std::wstring ToWString() const;
+    IJsonPtr ToJson() const;
 
 };
 
@@ -31,23 +31,23 @@ public:
 class CTextBoxObject : public CDrawable
 {
 public:
-	explicit CTextBoxObject( COLORREF _color, TBox _box, double _angle, const std::wstring& _contents );
+    explicit CTextBoxObject( COLORREF _color, TBox _box, double _angle, const std::wstring& _contents );
     CTextBoxObject( COLORREF _color, TBox _box, double _angle, const std::wstring& _contents, const std::unordered_map<EventType, std::vector<CScript>>& _scripts );
-	void Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const;
-	std::wstring ToWString() const;
-	IJsonPtr ToJson() const;
-	std::wstring GetContents() const;
-	std::string GetText() const;
-	unsigned int GetFontSize() const;
-	unsigned long int GetFontColor() const;
-	void SetContents( const std::wstring &_contents );
-	void SetFont( HFONT newFont );
-	void SetFontColor( COLORREF color_ );
+    void Draw( HDC hdc, const CViewport& viewport, const CCanvas& canvas ) const;
+    std::wstring ToWString() const;
+    IJsonPtr ToJson() const;
+    std::wstring GetContents() const;
+    std::string GetText() const;
+    unsigned int GetFontSize() const;
+    unsigned long int GetFontColor() const;
+    void SetContents( const std::wstring &_contents );
+    void SetFont( HFONT newFont );
+    void SetFontColor( COLORREF color_ );
 private:
-	// text, that is stored in the text box
-	std::wstring contents;
-	// font of the text
-	HFONT font;
-	COLORREF fontColor;
-	unsigned int fontSize;
+    // text, that is stored in the text box
+    std::wstring contents;
+    // font of the text
+    HFONT font;
+    COLORREF fontColor;
+    unsigned int fontSize;
 };
