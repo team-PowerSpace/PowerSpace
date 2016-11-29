@@ -477,21 +477,21 @@ void CEditorRenderingWindow::onDoubleClick(const LPARAM lparam)
             selectedId = rectanglesIds[i];
 			wchar_t firstLetter = selectedId[0];
 			if( firstLetter == L't' ) {
-				DialogBox( GetModuleHandle( 0 ), MAKEINTRESOURCE( IDD_DIALOG1 ), NULL, (DLGPROC)dialogProc );
-				ShowWindow( handle, SW_SHOW );
+				HWND handleSetText = CreateDialog( GetModuleHandle( 0 ), MAKEINTRESOURCE( IDD_DIALOG1 ), handle, (DLGPROC)dialogSetText );
+				ShowWindow( handleSetText, SW_SHOW );
 			}
 			return;
         }
     }
 }
 
-INT_PTR CEditorRenderingWindow::dialogProc(HWND hwnd, UINT msg, WPARAM wParam)
+INT_PTR CEditorRenderingWindow::dialogSetText(HWND hwnd, UINT msg, WPARAM wParam)
 {
     switch (msg)
     {
         case WM_INITDIALOG:
         {
-            return FALSE;
+            return TRUE;
         }
         case WM_COMMAND:
         {

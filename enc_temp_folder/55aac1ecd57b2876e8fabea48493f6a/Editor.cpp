@@ -217,7 +217,11 @@ void CEditor::createToolbar()
     SendMessage( handleToolbar, TB_AUTOSIZE, 0, 0 );
     ShowWindow( handleToolbar, TRUE );
 
-	//DialogBox( hInstance, MAKEINTRESOURCE( IDD_DIALOG1 ), handle, (DLGPROC)dialogSetText );
+	//HWND handleSetText = 
+		DialogBox( hInstance, MAKEINTRESOURCE( IDD_DIALOG1 ), handle, (DLGPROC)dialogSetText );
+	int i = 0;
+	i++;
+	//ShowWindow( handleSetText, SW_SHOW );
 }
 
 

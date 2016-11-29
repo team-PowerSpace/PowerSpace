@@ -90,4 +90,6 @@ private:
     COLORREF defaultObjectColor;
     std::shared_ptr<CStage> stage;
     IdType activeId;
+
+	static BOOL CALLBACK dialogSetText( HWND hwnd, UINT msg, WPARAM wParam );
 };

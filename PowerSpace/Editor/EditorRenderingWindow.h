@@ -60,7 +60,7 @@ protected:
     virtual void RotateDrawableObject( const IdType& id, const double newAngle ) = 0;
 
     static LRESULT __stdcall WindowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
-    static INT_PTR CALLBACK dialogProc( HWND hwnd, UINT msg, WPARAM wParam );
+    static INT_PTR CALLBACK dialogSetText( HWND hwnd, UINT msg, WPARAM wParam );
 
 private:
     static const int defaultWidth;
@@ -72,7 +72,6 @@ private:
     static const COLORREF borderColor;
 
     HWND handle;
-    HWND dialog;
     HBITMAP bitmap;
     HDC bitmapContext;
     HBRUSH backgroundBrush;
