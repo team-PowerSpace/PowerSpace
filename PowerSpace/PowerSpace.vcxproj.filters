@@ -278,9 +278,6 @@
     <Image Include="bitmaps\delete.bmp">
       <Filter>Root\Resource Files</Filter>
     </Image>
-    <Image Include="bitmaps\bitmap1.bmp">
-      <Filter>Root\Resource Files</Filter>
-    </Image>
     <Image Include="bitmaps\edit.bmp">
       <Filter>Root\Resource Files</Filter>
     </Image>
