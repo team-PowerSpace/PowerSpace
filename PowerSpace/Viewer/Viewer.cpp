@@ -7,11 +7,7 @@ CViewer::CViewer( CStage _stage )
 
 CViewer::~CViewer()
 {
-    try {
-        Py_Finalize(); //shutting down Python here
-    } catch( ... ) {
-        ::MessageBox(0, L"Python finalization crashed", L"Crash", MB_OK);
-    }
+    Py_Finalize(); //shutting down Python here
 }
 
 bool CViewer::Create()
