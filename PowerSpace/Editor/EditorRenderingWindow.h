@@ -60,7 +60,7 @@ protected:
     virtual void RotateDrawableObject( const IdType& id, const double newAngle ) = 0;
 
     static LRESULT __stdcall WindowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
-	static INT_PTR CALLBACK dialogProc( HWND hwnd, UINT msg, WPARAM wParam );
+    static INT_PTR CALLBACK dialogProc( HWND hwnd, UINT msg, WPARAM wParam );
 
 private:
     static const int defaultWidth;
@@ -108,7 +108,7 @@ private:
     void onMouseDown( const LPARAM lparam );
     void onMouseUpOrLeave( const LPARAM lparam );
     void onResize( const RECT* area );
-	void onDoubleClick( const LPARAM lParam );
+    void onDoubleClick( const LPARAM lParam );
 
     void drawEraseRectangle( HDC paintDC, const int width, const int height ) const;
 

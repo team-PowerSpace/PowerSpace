@@ -1,9 +1,9 @@
 #include <stdafx.h>
 #include "Viewer.h"
 
-CViewer::CViewer( CStage _stage, CViewport _viewport )
-    : stage( _stage ), canvas(), viewport( _viewport ), \
-    viewerWindow( stage, viewport, canvas )
+CViewer::CViewer( CStage _stage )
+    : stage( _stage ), canvas(), \
+    viewerWindow( stage, canvas )
 {}
 
 CViewer::~CViewer()

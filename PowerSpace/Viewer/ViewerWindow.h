@@ -17,7 +17,7 @@ enum TMovingState_Viewer
 class CViewerWindow
 {
 public:
-    CViewerWindow( CStage& stage, CViewport& _viewport, CCanvas& _canvas );
+    CViewerWindow( CStage& stage, CCanvas& _canvas );
     ~CViewerWindow();
 
     // all the WinAPI stuff
@@ -26,6 +26,8 @@ public:
     bool Create();
 
     void Show() const;
+
+    void Redraw() const;
 
     HWND GetHandle() const;
 
@@ -44,6 +46,8 @@ private:
     static const wchar_t* ClassName; // win32 features
     static const wchar_t* ViewerApplicationName;
 
+    const double scalingFactor = 1.2;
+
     const int windowHeight; // window params
     const int windowWidth;
     int bitmapWidth; // canvas params
@@ -55,6 +59,8 @@ private:
     int colorBuf; // Bufferized color of object for clever selection
 
     bool viewerIsRunning; // Pause/Play indicator
+
+    void scaling( const int direction );
 
     static LRESULT __stdcall WindowProc( HWND handle, UINT message, WPARAM wParam, LPARAM lParam );
 
@@ -71,6 +77,8 @@ private:
     void onMouseMove( const WPARAM wParam, const LPARAM lParam );
 
     void onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lParam );
+
+    void onMouseWheel( WPARAM wParam );
 
     void onCommand( WPARAM wParam, LPARAM lParam );
 

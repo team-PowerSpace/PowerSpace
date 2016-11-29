@@ -7,8 +7,9 @@ const UINT TICK_LENGTH = 1000;
 const double SPEED_MULTIPLIER = 1.1;
 UINT SPEED = TICK_LENGTH;
 
-CViewerWindow::CViewerWindow( CStage& _stage, CViewport& _viewport, CCanvas& _canvas ) :
-    windowHeight( 600 ), windowWidth( 800 ), viewport( _viewport ), canvas( _canvas ),
+
+CViewerWindow::CViewerWindow( CStage& _stage, CCanvas& _canvas ) :
+    windowHeight( 600 ), windowWidth( 800 ), viewport( _stage.GetViewPort() ), canvas( _canvas ),
     handle( nullptr ), stage( _stage ), scriptEngine( stage ), activeId( CObjectIdGenerator::GetEmptyId() ), colorBuf( -1 ),
     viewerIsRunning( true ), currentMovingState( MSV_None )
 {}
@@ -70,9 +71,21 @@ void CViewerWindow::Show() const
     ::UpdateWindow( handle );
 }
 
+void CViewerWindow::Redraw() const
+{
+    RECT rect;
+    GetClientRect( handle, &rect );
+    InvalidateRect( handle, &rect, true );
+}
+
 HWND CViewerWindow::GetHandle() const
 {
     return handle;
+}
+
+void CViewerWindow::scaling( const int direction )
+{
+    viewport.SetScale( viewport.GetScale() * pow( scalingFactor, direction ) );
 }
 
 //
@@ -93,28 +106,27 @@ LRESULT CViewerWindow::WindowProc( HWND handle, UINT msg, WPARAM wParam, LPARAM 
     switch( msg ) {
     case WM_CREATE:
         wndPtr->onCreate();
+        ::SetFocus( handle );
         return 0;
 
     case WM_CLOSE:
         wndPtr->onClose();
         return 0;
-
     case WM_PAINT:
         wndPtr->onPaint();
         return 0;
-
     case WM_SIZE:
         wndPtr->onSize();
         return 0;
-
     case WM_MOUSEMOVE:
         wndPtr->onMouseMove( wParam, lParam );
         return 0;
-
+    case WM_MOUSEWHEEL:
+        wndPtr->onMouseWheel( wParam );
+        return 0;
     case WM_LBUTTONDOWN:
         wndPtr->onMouseClick( msg, wParam, lParam );
         return 0;
-
     //case WM_LBUTTONDBLCLK:
     //    wndPtr->onMouseClick( msg, wParam, lParam);
     //    return 0;
@@ -361,6 +373,12 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
     RECT rect;
     ::GetClientRect( handle, &rect );
     ::InvalidateRect( handle, &rect, false );
+}
+
+void CViewerWindow::onMouseWheel( WPARAM wParam )
+{
+    scaling( static_cast<signed short>(HIWORD( wParam )) / WHEEL_DELTA );
+    Redraw();
 }
 
 void CViewerWindow::onCommand( WPARAM wParam, LPARAM lParam )
