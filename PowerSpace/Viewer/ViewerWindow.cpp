@@ -181,7 +181,7 @@ void CViewerWindow::onTimer()
 		return;
 
 	// testing the on-tick rotation
-	viewport.SetAngle( viewport.GetAngle() + 0.1 );
+	//viewport.SetAngle( viewport.GetAngle() + 0.1 );
 
 	for( auto pair : stage.GetObjects() ) {
 		//auto scripts = pair.second->GetScripts( EventType::EventTick );
