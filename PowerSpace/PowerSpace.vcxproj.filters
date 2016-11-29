@@ -155,9 +155,6 @@
     <ClInclude Include="ScriptEngine\CViewPortWrap.h">
       <Filter>ScriptEngine\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Editor\ProtertyEditor.h">
-      <Filter>Editor</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PowerSpace.cpp">
@@ -234,9 +231,6 @@
     </ClCompile>
     <ClCompile Include="ScriptEngine\CViewPortWrap.cpp">
       <Filter>ScriptEngine\Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor\ProtertyEditor.cpp">
-      <Filter>Editor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,6 @@
 ﻿#include <stdafx.h>
 #include <Winuser.h>
 #include "EditorRenderingWindow.h"
-#include "ProtertyEditor.h"
 #include "resource.h"
 
 #include "Editor.h"
@@ -287,8 +286,6 @@ void CEditorRenderingWindow::onRButtonMouseDown( const LPARAM lparam )
 {
 	onLButtonMouseDown( lparam );
 	IDrawablePtr object = reinterpret_cast<CEditorWindow*>(this)->GetStage()->GetObjectById( selectedId );
-	ProtertyEditor propertyDialog;
-	propertyDialog.Create( handle, object );
 }
 
 void CEditorRenderingWindow::onLButtonMouseDown( const LPARAM lparam )
