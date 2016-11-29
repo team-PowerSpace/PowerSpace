@@ -88,6 +88,8 @@ private:
 	HWND editControlScript;
 	HWND editControlNoFont;
 	HWND editControlNoText;
+	HWND editControlNoColor;
+	HWND editControlNoScript;
 
     COLORREF defaultObjectColor;
     std::shared_ptr<CStage> stage;
