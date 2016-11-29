@@ -332,7 +332,22 @@ void CViewerWindow::onMouseClick( UINT msg, const WPARAM wParam, const LPARAM lP
 
 	UNREFERENCED_PARAMETER( msg );
 
-	POINT mouseCoords = getMouseCoords( lParam );
+	POINT screenMouseCoords = getMouseCoords( lParam ), mouseCoords;
+
+	float cosine = static_cast<float>(cos( viewport.GetAngle() ));
+	float sine = static_cast<float>(sin( viewport.GetAngle() ));
+
+	XFORM xForm;
+	xForm.eM11 = static_cast<float>(cosine);
+	xForm.eM12 = static_cast<float>(sine);
+	xForm.eM21 = static_cast<float>(-sine);
+	xForm.eM22 = static_cast<float>(cosine);
+	xForm.eDx = static_cast<float>(0.0);
+	xForm.eDy = static_cast<float>(0.0);
+
+	mouseCoords.x = static_cast<LONG>(screenMouseCoords.x * xForm.eM11 + screenMouseCoords.y * xForm.eM21);
+	mouseCoords.y = static_cast<LONG>(screenMouseCoords.x * xForm.eM12 + screenMouseCoords.y * xForm.eM22);
+	
 	prevPoint = mouseCoords;
 	// storage space for usual color of currently active object
 	IdType prevActiveId = activeId;
@@ -467,7 +482,7 @@ void CViewerWindow::updateColorWithBuffer( IdType prevActiveId, ColorBufferActio
 	{
 		if( activeId != CObjectIdGenerator::GetEmptyId() ) {
 			colorBuf = stage.GetObjectById( activeId )->GetColor();
-			stage.GetObjectById( activeId )->SetColor( static_cast<COLORREF> (colorBuf * 0.9) );
+			stage.GetObjectById( activeId )->SetColor( static_cast<COLORREF> (colorBuf * 0.5) );
 		}
 		break;
 	}
